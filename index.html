@@ -76,8 +76,20 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
   .card h3{font-size:16.5px;margin:0 0 8px;letter-spacing:-.005em}
   .card p{margin:0;color:var(--sub);font-size:14.5px}
+  .card p + p{margin-top:10px}
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+
+  /* featured card */
+  .card.featured{border-color:var(--accent);border-width:1.5px;padding:26px 26px 24px}
+  .card .eyebrow{color:var(--accent);font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px}
+  .card.featured h3{font-size:19px}
+  .steps{list-style:none;margin:16px 0;padding:0;counter-reset:step}
+  .steps li{counter-increment:step;display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:14.5px;color:var(--sub)}
+  .steps li:first-child{border-top:none}
+  .steps li::before{content:counter(step);flex:none;width:22px;height:22px;border-radius:50%;background:var(--chip);color:var(--chip-ink);
+    font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .steps li strong{color:var(--ink)}
 
   /* year-in-review themes */
   .theme{margin-bottom:26px}
@@ -137,6 +149,20 @@
       <div class="stat"><div class="n">3</div><div class="l">agentic-eng. builds</div></div>
     </div>
 
+    <div class="card featured">
+      <p class="eyebrow">Featured build</p>
+      <h3>An agent that triages its own production logs</h3>
+      <p>Most "AI wrote some code" stories stop at code review. This one runs unattended against production. Once a week, a Claude Code command connects to our log aggregator, pulls the highest-volume error patterns, and works through them like a careful on-call engineer would — not a script that just counts lines.</p>
+      <ol class="steps">
+        <li><span><strong>Fingerprint and dedupe first.</strong> Every distinct error pattern gets a stable fingerprint, checked against existing tickets by full-text search before anything new gets filed — so a recurring error creates one ticket, ever, not fifty.</span></li>
+        <li><span><strong>Investigate before filing.</strong> Before opening a ticket it locates the actual source line, reads the surrounding code, checks whether the same pattern exists elsewhere in the codebase, and looks at git history to see if a fix is already in flight. The ticket ships with a concrete before/after code suggestion attached — not just a stack trace for someone else to decode later.</span></li>
+        <li><span><strong>A dashboard that doesn't oversell itself.</strong> Every run regenerates a live status page: colour-coded severity, before/after volume bars, a trend badge per issue. When a pattern stops firing, it's labelled <em>silent</em>, not <em>fixed</em> — silence isn't proof of a fix, and the tool doesn't get to claim credit it hasn't earned.</span></li>
+        <li><span><strong>Verify, don't assume.</strong> A separate verify mode re-checks the log volume after a deploy to confirm a fix actually worked, instead of treating "ticket closed" as the end of the story.</span></li>
+      </ol>
+      <p>The hard part wasn't the log analysis — it was making it deterministic. The same command, run by a different AI session or a different teammate months from now, has to produce the identical dashboard from identical inputs. That meant writing out the exact fingerprint algorithm, the exact API quirks, and the exact layout rules as if onboarding a new engineer with zero context, because in practice, that's exactly what it is.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Observability</span><span class="tag">Automation</span></div>
+    </div>
+
     <div class="card">
       <h3>A KPI dashboard the team actually trusts</h3>
       <p>Spent two more weeks hardening a Claude Code tool that turns raw sprint history into a KPI dashboard — reviewer load, QA-bounce rate, estimation accuracy — after the team's first round of feedback. The bar wasn't "does it run," it was "does it give the same answer every time," which took more work than the original build.</p>
@@ -153,12 +179,6 @@
       <h3>A real vendor evaluation, not a demo</h3>
       <p>Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">CI/CD Security</span></div>
-    </div>
-
-    <div class="card">
-      <h3>A tool that lied consistently, fixed</h3>
-      <p>Found and fixed a determinism bug in an AI log-triage tool — same query, different answers depending on the executor. Root cause was environment filtering and un-averaged sample windows, not the fingerprinting logic itself. A tool that gives different answers on every run is worse than no tool.</p>
-      <div class="tags"><span class="tag">Observability</span><span class="tag">Automation</span></div>
     </div>
 
     <div class="card">
