@@ -1,24 +1,242 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>David Irving</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      max-width: 640px;
-      margin: 8rem auto;
-      padding: 0 1.5rem;
-      color: #222;
-      line-height: 1.5;
-    }
-    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-    p { color: #555; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>David Irving</title>
+<meta name="description" content="David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.">
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+  nav .links{display:flex;align-items:center;gap:22px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500}
+  nav a.nav-link:hover{color:var(--ink)}
+  .theme-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+  .theme-btn:hover{color:var(--ink);border-color:var(--sub)}
+  @media (max-width:520px){
+    nav .links{gap:12px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:64px 0 40px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(32px,5vw,44px);line-height:1.12;margin:0 0 16px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 20px;max-width:600px}
+  .hero .links{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+  .hero .links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .hero .links a:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* sections */
+  section.block{padding:48px 0}
+  section.block + section.block{border-top:1px solid var(--line)}
+  .block-head{margin-bottom:28px}
+  .block-head .kicker{color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
+  .block-head h2{font-size:24px;margin:0 0 6px;letter-spacing:-.01em}
+  .block-head p{color:var(--sub);font-size:14px;margin:0}
+
+  /* stats strip */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:28px}
+  .stat{background:var(--panel);padding:16px 12px;text-align:center}
+  .stat .n{font-size:20px;font-weight:700}
+  .stat .l{font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
+  @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* cards */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
+  .card h3{font-size:16.5px;margin:0 0 8px;letter-spacing:-.005em}
+  .card p{margin:0;color:var(--sub);font-size:14.5px}
+  .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+
+  /* year-in-review themes */
+  .theme{margin-bottom:26px}
+  .theme h3{font-size:16.5px;margin:0 0 8px;display:flex;align-items:baseline;gap:8px}
+  .theme h3 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+  .theme p{margin:0;color:var(--sub);font-size:14.5px}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+</style>
 </head>
 <body>
-  <h1>David Irving</h1>
-  <p>Site under construction. Portfolio and work highlights coming soon.</p>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" href="#highlights">Highlights</a>
+      <a class="nav-link" href="#year">Year in Review</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker">Vienna, Austria</p>
+    <h1>Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
+    <p class="lede">
+      I've spent the last two decades building TEAMBOX, the ERP platform for service
+      providers that's become the PSA market leader in DACH — starting as one of its
+      earliest developers, now running enterprise integrations, CI/CD, and the team
+      behind it. My current focus is agentic engineering: building AI-driven development
+      workflows into a live, twenty-year-old codebase without breaking it.
+    </p>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/spankersbro" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:davidrichardirving@gmail.com">Email</a>
+    </div>
+  </section>
+
+  <section class="block" id="highlights">
+    <div class="block-head">
+      <p class="kicker">Work Highlights · June 18 – July 9, 2026</p>
+      <h2>The last three weeks</h2>
+      <p>Updated roughly every three weeks, straight from the actual work — not a highlight reel.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">119</div><div class="l">commits</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">workstreams</div></div>
+      <div class="stat"><div class="n">~11k</div><div class="l">lines touched</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">agentic-eng. builds</div></div>
+    </div>
+
+    <div class="card">
+      <h3>A KPI dashboard the team actually trusts</h3>
+      <p>Spent two more weeks hardening a Claude Code tool that turns raw sprint history into a KPI dashboard — reviewer load, QA-bounce rate, estimation accuracy — after the team's first round of feedback. The bar wasn't "does it run," it was "does it give the same answer every time," which took more work than the original build.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Team Process</span></div>
+    </div>
+
+    <div class="card">
+      <h3>First real end-to-end test suite — and it caught a live bug</h3>
+      <p>Stood up our first real end-to-end suite against a legacy ExtJS/React hybrid frontend — and it caught a genuine race condition (a stale setTimeout navigating an unmounted modal) that intermittently left users staring at an invisible editor. Now it's a tracked bug instead of an occasional complaint.</p>
+      <div class="tags"><span class="tag">Playwright</span><span class="tag">Test Infrastructure</span></div>
+    </div>
+
+    <div class="card">
+      <h3>A real vendor evaluation, not a demo</h3>
+      <p>Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">CI/CD Security</span></div>
+    </div>
+
+    <div class="card">
+      <h3>A tool that lied consistently, fixed</h3>
+      <p>Found and fixed a determinism bug in an AI log-triage tool — same query, different answers depending on the executor. Root cause was environment filtering and un-averaged sample windows, not the fingerprinting logic itself. A tool that gives different answers on every run is worse than no tool.</p>
+      <div class="tags"><span class="tag">Observability</span><span class="tag">Automation</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Shipped an audit, reverted it the same day, kept the design anyway</h3>
+      <p>Shipped a broad exception-handling audit across ~60 files, watched it get reverted the same day during a rebase (and take unrelated infra code down with it), tracked down and restored the collateral damage, and kept the design as an architecture decision record instead of forcing the merge. Sometimes the honest outcome is "documented, not yet landed."</p>
+      <div class="tags"><span class="tag">Code Quality</span><span class="tag">Technical Judgment</span></div>
+    </div>
+
+    <div class="card">
+      <h3>A same-day fix for a multi-client outage</h3>
+      <p>Several enterprise clients lost document upload at once via an OCR integration. Root cause was two compounding issues — a missing config guard and a subtle typo in an API-token check — found and fixed same day, with structured error logging added so telemetry catches the next one before four separate client reports do.</p>
+      <div class="tags"><span class="tag">Reliability</span><span class="tag">Enterprise Integration</span></div>
+    </div>
+
+    <div class="card">
+      <h3>The unglamorous work that keeps a migration shipping</h3>
+      <p>Kept a multi-week Docker infrastructure migration merging cleanly into an active release branch — recurring conflict resolution, a CI pipeline fix, release prep. Small diffs, but this is the work that decides whether an infra migration ships quietly or breaks the release train.</p>
+      <div class="tags"><span class="tag">CI/CD</span><span class="tag">Docker Migration</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="year">
+    <div class="block-head">
+      <p class="kicker">Year in Review · July 2025 – July 2026</p>
+      <h2>The last twelve months</h2>
+      <p>A thematic look back, not a changelog — roughly 150 shipped commits across ~110 tickets.</p>
+    </div>
+
+    <div class="theme">
+      <h3><span class="dot"></span>Agentic engineering, for real</h3>
+      <p>The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured.</p>
+    </div>
+
+    <div class="theme">
+      <h3><span class="dot"></span>Performance work, told honestly</h3>
+      <p>Investigated a session-backend redesign (Redis-backed, documented in its own architecture decision record) and landed a change that cut session payload dramatically — then caught a Control-state edge case in review and reverted that specific piece the same day rather than let it ride. Followed up with safer, incremental steps: monitoring, a config switch, sampling-based measurement instead of a per-request check. The win that shipped was smaller than the one that didn't — that's the honest version.</p>
+    </div>
+
+    <div class="theme">
+      <h3><span class="dot"></span>Code quality as an ongoing habit</h3>
+      <p>Ran a systematic exception-handling audit across roughly 60 files spanning auth, transport, sync, and file storage, and wrote it up as an architecture decision record on how permission failures should signal denial instead of getting silently swallowed. Part of the audit shipped and was reverted the same day during a rebase; the design stayed as documentation rather than forcing a merge that wasn't ready.</p>
+    </div>
+
+    <div class="theme">
+      <h3><span class="dot"></span>Infrastructure that doesn't get a demo day</h3>
+      <p>A multi-week Docker migration kept shipping cleanly against an actively-changing release branch through dozens of small conflict-resolution and pipeline fixes. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
+    </div>
+
+    <div class="theme">
+      <h3><span class="dot"></span>Keeping the lights on for enterprise clients</h3>
+      <p>Same-day fixes for production issues hitting enterprise clients directly — a multi-client OCR outage traced to a config gap and a one-character typo, a Microsoft 365 integration display bug — plus the ordinary, constant work of DATEV/Abacus/BMD accounting integrations, SSO/LDAP, and e-invoicing that a 300+ customer ERP platform runs on every day.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 David Irving. Updated roughly every three weeks.</span>
+    <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    var stored = localStorage.getItem('theme');
+    if(stored) root.setAttribute('data-theme', stored);
+    btn.addEventListener('click', function(){
+      var current = root.getAttribute('data-theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  })();
+</script>
+
 </body>
 </html>
