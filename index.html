@@ -163,10 +163,18 @@
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Observability</span><span class="tag">Automation</span></div>
     </div>
 
-    <div class="card">
+    <div class="card featured">
+      <p class="eyebrow">Featured build</p>
       <h3>A KPI dashboard the team actually trusts</h3>
-      <p>Spent two more weeks hardening a Claude Code tool that turns raw sprint history into a KPI dashboard — reviewer load, QA-bounce rate, estimation accuracy — after the team's first round of feedback. The bar wasn't "does it run," it was "does it give the same answer every time," which took more work than the original build.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Team Process</span></div>
+      <p>Sprint retros used to run on gut feel and whichever ticket someone happened to remember. This is a Claude Code command that turns raw ticket history into a dashboard the team actually opens — not because it's flashy, but because two rounds of "that number's wrong" feedback got taken seriously and fixed instead of explained away.</p>
+      <ol class="steps">
+        <li><span><strong>Correct attribution, not just counting.</strong> Bounce rate — how often a ticket ping-pongs between developer and reviewer — is attributed to whoever actually owned the ticket at the time, including mid-sprint handoffs, and a QA rejection is never mistakenly pinned on the person doing the rejecting.</span></li>
+        <li><span><strong>Numbers scoped to what actually happened.</strong> Off-board tickets, work outside the sprint window, and scope changes are filtered deliberately: a 48-hour grace window separates ordinary sprint-planning carryover from genuine mid-sprint scope creep, so the metric means what it says instead of what's convenient.</span></li>
+        <li><span><strong>Built on real feedback, not first-draft numbers.</strong> Two rounds of team pushback led to real rework — splitting QA bounces from review bounces, adding a ±20% estimation-accuracy band, showing planned-vs-logged time only for developers who actually worked the sprint — not cosmetic polish.</span></li>
+        <li><span><strong>The same rigor as the log-triage tool: reproducible by design.</strong> Deterministic sorts, plain standard-library Python, no hidden state — the same sprint, run twice, produces the same numbers. A dashboard that gives a different answer depending on who ran it isn't a dashboard, it's a rumor.</span></li>
+      </ol>
+      <p>Some of it was about restraint, not features: a stacked-bar chart got built, tested against real data, and then dropped because its rounded segments visually misrepresented small proportions. The donut chart stayed; the flashier option didn't make the cut.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Team Process</span><span class="tag">Data Integrity</span></div>
     </div>
 
     <div class="card">
