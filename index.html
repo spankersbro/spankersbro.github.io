@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>David Irving</title>
-<meta name="description" content="David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.">
+<meta name="description" id="metaDesc" content="David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.">
 <style>
   :root{
     --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
@@ -37,14 +37,16 @@
   nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
   nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
-  nav .links{display:flex;align-items:center;gap:22px}
+  nav .links{display:flex;align-items:center;gap:14px}
   nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500}
   nav a.nav-link:hover{color:var(--ink)}
-  .theme-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
-    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
-  .theme-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px}
   @media (max-width:520px){
-    nav .links{gap:12px}
+    nav .links{gap:8px}
     nav a.nav-link{display:none}
   }
 
@@ -110,8 +112,11 @@
     <a href="#" class="brand">David Irving</a>
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
-      <a class="nav-link" href="#year">Year in Review</a>
-      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -119,9 +124,9 @@
 <div class="wrap">
 
   <section class="hero">
-    <p class="kicker">Vienna, Austria</p>
-    <h1>Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
-    <p class="lede">
+    <p class="kicker" data-i18n="hero-kicker">Vienna, Austria</p>
+    <h1 data-i18n="hero-h1">Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
+    <p class="lede" data-i18n="hero-lede">
       I've spent the last two decades building TEAMBOX, the ERP platform for service
       providers that's become the PSA market leader in DACH — starting as one of its
       earliest developers, now running enterprise integrations, CI/CD, and the team
@@ -131,113 +136,113 @@
     <div class="links">
       <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/spankersbro" target="_blank" rel="noopener">GitHub</a>
-      <a href="mailto:davidrichardirving@gmail.com">Email</a>
+      <a href="mailto:davidrichardirving@gmail.com" data-i18n="hero-email">Email</a>
     </div>
   </section>
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker">Work Highlights · June 18 – July 9, 2026</p>
-      <h2>The last three weeks</h2>
-      <p>Updated roughly every three weeks, straight from the actual work — not a highlight reel.</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · June 18 – July 9, 2026</p>
+      <h2 data-i18n="hl-h2">The last three weeks</h2>
+      <p data-i18n="hl-p">Updated roughly every three weeks, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">119</div><div class="l">commits</div></div>
-      <div class="stat"><div class="n">8</div><div class="l">workstreams</div></div>
-      <div class="stat"><div class="n">~11k</div><div class="l">lines touched</div></div>
-      <div class="stat"><div class="n">3</div><div class="l">agentic-eng. builds</div></div>
+      <div class="stat"><div class="n">119</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~11k</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
     </div>
 
     <div class="card featured">
-      <p class="eyebrow">Featured build</p>
-      <h3>An agent that triages its own production logs</h3>
-      <p>Most "AI wrote some code" stories stop at code review. This one runs unattended against production. Once a week, a Claude Code command connects to our log aggregator, pulls the highest-volume error patterns, and works through them like a careful on-call engineer would — not a script that just counts lines.</p>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="feat1-h3">An agent that triages its own production logs</h3>
+      <p data-i18n="feat1-p1">Most "AI wrote some code" stories stop at code review. This one runs unattended against production. Once a week, a Claude Code command connects to our log aggregator, pulls the highest-volume error patterns, and works through them like a careful on-call engineer would — not a script that just counts lines.</p>
       <ol class="steps">
-        <li><span><strong>Fingerprint and dedupe first.</strong> Every distinct error pattern gets a stable fingerprint, checked against existing tickets by full-text search before anything new gets filed — so a recurring error creates one ticket, ever, not fifty.</span></li>
-        <li><span><strong>Investigate before filing.</strong> Before opening a ticket it locates the actual source line, reads the surrounding code, checks whether the same pattern exists elsewhere in the codebase, and looks at git history to see if a fix is already in flight. The ticket ships with a concrete before/after code suggestion attached — not just a stack trace for someone else to decode later.</span></li>
-        <li><span><strong>A dashboard that doesn't oversell itself.</strong> Every run regenerates a live status page: colour-coded severity, before/after volume bars, a trend badge per issue. When a pattern stops firing, it's labelled <em>silent</em>, not <em>fixed</em> — silence isn't proof of a fix, and the tool doesn't get to claim credit it hasn't earned.</span></li>
-        <li><span><strong>Verify, don't assume.</strong> A separate verify mode re-checks the log volume after a deploy to confirm a fix actually worked, instead of treating "ticket closed" as the end of the story.</span></li>
+        <li><span data-i18n="feat1-step1"><strong>Fingerprint and dedupe first.</strong> Every distinct error pattern gets a stable fingerprint, checked against existing tickets by full-text search before anything new gets filed — so a recurring error creates one ticket, ever, not fifty.</span></li>
+        <li><span data-i18n="feat1-step2"><strong>Investigate before filing.</strong> Before opening a ticket it locates the actual source line, reads the surrounding code, checks whether the same pattern exists elsewhere in the codebase, and looks at git history to see if a fix is already in flight. The ticket ships with a concrete before/after code suggestion attached — not just a stack trace for someone else to decode later.</span></li>
+        <li><span data-i18n="feat1-step3"><strong>A dashboard that doesn't oversell itself.</strong> Every run regenerates a live status page: colour-coded severity, before/after volume bars, a trend badge per issue. When a pattern stops firing, it's labelled <em>silent</em>, not <em>fixed</em> — silence isn't proof of a fix, and the tool doesn't get to claim credit it hasn't earned.</span></li>
+        <li><span data-i18n="feat1-step4"><strong>Verify, don't assume.</strong> A separate verify mode re-checks the log volume after a deploy to confirm a fix actually worked, instead of treating "ticket closed" as the end of the story.</span></li>
       </ol>
-      <p>The hard part wasn't the log analysis — it was making it deterministic. The same command, run by a different AI session or a different teammate months from now, has to produce the identical dashboard from identical inputs. That meant writing out the exact fingerprint algorithm, the exact API quirks, and the exact layout rules as if onboarding a new engineer with zero context, because in practice, that's exactly what it is.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Observability</span><span class="tag">Automation</span></div>
+      <p data-i18n="feat1-p2">The hard part wasn't the log analysis — it was making it deterministic. The same command, run by a different AI session or a different teammate months from now, has to produce the identical dashboard from identical inputs. That meant writing out the exact fingerprint algorithm, the exact API quirks, and the exact layout rules as if onboarding a new engineer with zero context, because in practice, that's exactly what it is.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat1-tag-observability">Observability</span><span class="tag" data-i18n="feat1-tag-automation">Automation</span></div>
     </div>
 
     <div class="card featured">
-      <p class="eyebrow">Featured build</p>
-      <h3>A KPI dashboard the team actually trusts</h3>
-      <p>Sprint retros used to run on gut feel and whichever ticket someone happened to remember. This is a Claude Code command that turns raw ticket history into a dashboard the team actually opens — not because it's flashy, but because two rounds of "that number's wrong" feedback got taken seriously and fixed instead of explained away.</p>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="feat2-h3">A KPI dashboard the team actually trusts</h3>
+      <p data-i18n="feat2-p1">Sprint retros used to run on gut feel and whichever ticket someone happened to remember. This is a Claude Code command that turns raw ticket history into a dashboard the team actually opens — not because it's flashy, but because two rounds of "that number's wrong" feedback got taken seriously and fixed instead of explained away.</p>
       <ol class="steps">
-        <li><span><strong>Correct attribution, not just counting.</strong> Bounce rate — how often a ticket ping-pongs between developer and reviewer — is attributed to whoever actually owned the ticket at the time, including mid-sprint handoffs, and a QA rejection is never mistakenly pinned on the person doing the rejecting.</span></li>
-        <li><span><strong>Numbers scoped to what actually happened.</strong> Off-board tickets, work outside the sprint window, and scope changes are filtered deliberately: a 48-hour grace window separates ordinary sprint-planning carryover from genuine mid-sprint scope creep, so the metric means what it says instead of what's convenient.</span></li>
-        <li><span><strong>Built on real feedback, not first-draft numbers.</strong> Two rounds of team pushback led to real rework — splitting QA bounces from review bounces, adding a ±20% estimation-accuracy band, showing planned-vs-logged time only for developers who actually worked the sprint — not cosmetic polish.</span></li>
-        <li><span><strong>The same rigor as the log-triage tool: reproducible by design.</strong> Deterministic sorts, plain standard-library Python, no hidden state — the same sprint, run twice, produces the same numbers. A dashboard that gives a different answer depending on who ran it isn't a dashboard, it's a rumor.</span></li>
+        <li><span data-i18n="feat2-step1"><strong>Correct attribution, not just counting.</strong> Bounce rate — how often a ticket ping-pongs between developer and reviewer — is attributed to whoever actually owned the ticket at the time, including mid-sprint handoffs, and a QA rejection is never mistakenly pinned on the person doing the rejecting.</span></li>
+        <li><span data-i18n="feat2-step2"><strong>Numbers scoped to what actually happened.</strong> Off-board tickets, work outside the sprint window, and scope changes are filtered deliberately: a 48-hour grace window separates ordinary sprint-planning carryover from genuine mid-sprint scope creep, so the metric means what it says instead of what's convenient.</span></li>
+        <li><span data-i18n="feat2-step3"><strong>Built on real feedback, not first-draft numbers.</strong> Two rounds of team pushback led to real rework — splitting QA bounces from review bounces, adding a ±20% estimation-accuracy band, showing planned-vs-logged time only for developers who actually worked the sprint — not cosmetic polish.</span></li>
+        <li><span data-i18n="feat2-step4"><strong>The same rigor as the log-triage tool: reproducible by design.</strong> Deterministic sorts, plain standard-library Python, no hidden state — the same sprint, run twice, produces the same numbers. A dashboard that gives a different answer depending on who ran it isn't a dashboard, it's a rumor.</span></li>
       </ol>
-      <p>Some of it was about restraint, not features: a stacked-bar chart got built, tested against real data, and then dropped because its rounded segments visually misrepresented small proportions. The donut chart stayed; the flashier option didn't make the cut.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Team Process</span><span class="tag">Data Integrity</span></div>
+      <p data-i18n="feat2-p2">Some of it was about restraint, not features: a stacked-bar chart got built, tested against real data, and then dropped because its rounded segments visually misrepresented small proportions. The donut chart stayed; the flashier option didn't make the cut.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat2-tag-team-process">Team Process</span><span class="tag" data-i18n="feat2-tag-data-integrity">Data Integrity</span></div>
     </div>
 
     <div class="card">
-      <h3>First real end-to-end test suite — and it caught a live bug</h3>
-      <p>Stood up our first real end-to-end suite against a legacy ExtJS/React hybrid frontend — and it caught a genuine race condition (a stale setTimeout navigating an unmounted modal) that intermittently left users staring at an invisible editor. Now it's a tracked bug instead of an occasional complaint.</p>
-      <div class="tags"><span class="tag">Playwright</span><span class="tag">Test Infrastructure</span></div>
+      <h3 data-i18n="card3-h3">First real end-to-end test suite — and it caught a live bug</h3>
+      <p data-i18n="card3-p">Stood up our first real end-to-end suite against a legacy ExtJS/React hybrid frontend — and it caught a genuine race condition (a stale setTimeout navigating an unmounted modal) that intermittently left users staring at an invisible editor. Now it's a tracked bug instead of an occasional complaint.</p>
+      <div class="tags"><span class="tag">Playwright</span><span class="tag" data-i18n="card3-tag-test-infra">Test Infrastructure</span></div>
     </div>
 
     <div class="card">
-      <h3>A real vendor evaluation, not a demo</h3>
-      <p>Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">CI/CD Security</span></div>
+      <h3 data-i18n="card4-h3">A real vendor evaluation, not a demo</h3>
+      <p data-i18n="card4-p">Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card4-tag-cicd-security">CI/CD Security</span></div>
     </div>
 
     <div class="card">
-      <h3>Shipped an audit, reverted it the same day, kept the design anyway</h3>
-      <p>Shipped a broad exception-handling audit across ~60 files, watched it get reverted the same day during a rebase (and take unrelated infra code down with it), tracked down and restored the collateral damage, and kept the design as an architecture decision record instead of forcing the merge. Sometimes the honest outcome is "documented, not yet landed."</p>
-      <div class="tags"><span class="tag">Code Quality</span><span class="tag">Technical Judgment</span></div>
+      <h3 data-i18n="card5-h3">Shipped an audit, reverted it the same day, kept the design anyway</h3>
+      <p data-i18n="card5-p">Shipped a broad exception-handling audit across ~60 files, watched it get reverted the same day during a rebase (and take unrelated infra code down with it), tracked down and restored the collateral damage, and kept the design as an architecture decision record instead of forcing the merge. Sometimes the honest outcome is "documented, not yet landed."</p>
+      <div class="tags"><span class="tag" data-i18n="card5-tag-code-quality">Code Quality</span><span class="tag" data-i18n="card5-tag-technical-judgment">Technical Judgment</span></div>
     </div>
 
     <div class="card">
-      <h3>A same-day fix for a multi-client outage</h3>
-      <p>Several enterprise clients lost document upload at once via an OCR integration. Root cause was two compounding issues — a missing config guard and a subtle typo in an API-token check — found and fixed same day, with structured error logging added so telemetry catches the next one before four separate client reports do.</p>
-      <div class="tags"><span class="tag">Reliability</span><span class="tag">Enterprise Integration</span></div>
+      <h3 data-i18n="card6-h3">A same-day fix for a multi-client outage</h3>
+      <p data-i18n="card6-p">Several enterprise clients lost document upload at once via an OCR integration. Root cause was two compounding issues — a missing config guard and a subtle typo in an API-token check — found and fixed same day, with structured error logging added so telemetry catches the next one before four separate client reports do.</p>
+      <div class="tags"><span class="tag" data-i18n="card6-tag-reliability">Reliability</span><span class="tag" data-i18n="card6-tag-enterprise-integration">Enterprise Integration</span></div>
     </div>
 
     <div class="card">
-      <h3>The unglamorous work that keeps a migration shipping</h3>
-      <p>Kept a multi-week Docker infrastructure migration merging cleanly into an active release branch — recurring conflict resolution, a CI pipeline fix, release prep. Small diffs, but this is the work that decides whether an infra migration ships quietly or breaks the release train.</p>
-      <div class="tags"><span class="tag">CI/CD</span><span class="tag">Docker Migration</span></div>
+      <h3 data-i18n="card7-h3">The unglamorous work that keeps a migration shipping</h3>
+      <p data-i18n="card7-p">Kept a multi-week Docker infrastructure migration merging cleanly into an active release branch — recurring conflict resolution, a CI pipeline fix, release prep. Small diffs, but this is the work that decides whether an infra migration ships quietly or breaks the release train.</p>
+      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card7-tag-docker-migration">Docker Migration</span></div>
     </div>
   </section>
 
   <section class="block" id="year">
     <div class="block-head">
-      <p class="kicker">Year in Review · July 2025 – July 2026</p>
-      <h2>The last twelve months</h2>
-      <p>A thematic look back, not a changelog — roughly 150 shipped commits across ~110 tickets.</p>
+      <p class="kicker" data-i18n="year-kicker">Year in Review · July 2025 – July 2026</p>
+      <h2 data-i18n="year-h2">The last twelve months</h2>
+      <p data-i18n="year-p">A thematic look back, not a changelog — roughly 150 shipped commits across ~110 tickets.</p>
     </div>
 
     <div class="theme">
-      <h3><span class="dot"></span>Agentic engineering, for real</h3>
-      <p>The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured.</p>
+      <h3><span class="dot"></span><span data-i18n="theme1-h3">Agentic engineering, for real</span></h3>
+      <p data-i18n="theme1-p">The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured.</p>
     </div>
 
     <div class="theme">
-      <h3><span class="dot"></span>Performance work, told honestly</h3>
-      <p>Investigated a session-backend redesign (Redis-backed, documented in its own architecture decision record) and landed a change that cut session payload dramatically — then caught a Control-state edge case in review and reverted that specific piece the same day rather than let it ride. Followed up with safer, incremental steps: monitoring, a config switch, sampling-based measurement instead of a per-request check. The win that shipped was smaller than the one that didn't — that's the honest version.</p>
+      <h3><span class="dot"></span><span data-i18n="theme2-h3">Performance work, told honestly</span></h3>
+      <p data-i18n="theme2-p">Investigated a session-backend redesign (Redis-backed, documented in its own architecture decision record) and landed a change that cut session payload dramatically — then caught a Control-state edge case in review and reverted that specific piece the same day rather than let it ride. Followed up with safer, incremental steps: monitoring, a config switch, sampling-based measurement instead of a per-request check. The win that shipped was smaller than the one that didn't — that's the honest version.</p>
     </div>
 
     <div class="theme">
-      <h3><span class="dot"></span>Code quality as an ongoing habit</h3>
-      <p>Ran a systematic exception-handling audit across roughly 60 files spanning auth, transport, sync, and file storage, and wrote it up as an architecture decision record on how permission failures should signal denial instead of getting silently swallowed. Part of the audit shipped and was reverted the same day during a rebase; the design stayed as documentation rather than forcing a merge that wasn't ready.</p>
+      <h3><span class="dot"></span><span data-i18n="theme3-h3">Code quality as an ongoing habit</span></h3>
+      <p data-i18n="theme3-p">Ran a systematic exception-handling audit across roughly 60 files spanning auth, transport, sync, and file storage, and wrote it up as an architecture decision record on how permission failures should signal denial instead of getting silently swallowed. Part of the audit shipped and was reverted the same day during a rebase; the design stayed as documentation rather than forcing a merge that wasn't ready.</p>
     </div>
 
     <div class="theme">
-      <h3><span class="dot"></span>Infrastructure that doesn't get a demo day</h3>
-      <p>A multi-week Docker migration kept shipping cleanly against an actively-changing release branch through dozens of small conflict-resolution and pipeline fixes. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
+      <h3><span class="dot"></span><span data-i18n="theme4-h3">Infrastructure that doesn't get a demo day</span></h3>
+      <p data-i18n="theme4-p">A multi-week Docker migration kept shipping cleanly against an actively-changing release branch through dozens of small conflict-resolution and pipeline fixes. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
     </div>
 
     <div class="theme">
-      <h3><span class="dot"></span>Keeping the lights on for enterprise clients</h3>
-      <p>Same-day fixes for production issues hitting enterprise clients directly — a multi-client OCR outage traced to a config gap and a one-character typo, a Microsoft 365 integration display bug — plus the ordinary, constant work of DATEV/Abacus/BMD accounting integrations, SSO/LDAP, and e-invoicing that a 300+ customer ERP platform runs on every day.</p>
+      <h3><span class="dot"></span><span data-i18n="theme5-h3">Keeping the lights on for enterprise clients</span></h3>
+      <p data-i18n="theme5-p">Same-day fixes for production issues hitting enterprise clients directly — a multi-client OCR outage traced to a config gap and a one-character typo, a Microsoft 365 integration display bug — plus the ordinary, constant work of DATEV/Abacus/BMD accounting integrations, SSO/LDAP, and e-invoicing that a 300+ customer ERP platform runs on every day.</p>
     </div>
   </section>
 
@@ -245,25 +250,231 @@
 
 <footer>
   <div class="wrap">
-    <span>&copy; 2026 David Irving. Updated roughly every three weeks.</span>
+    <span data-i18n="footer-copy">&copy; 2026 David Irving. Updated roughly every three weeks.</span>
     <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
   </div>
 </footer>
 
 <script>
-  (function(){
-    var root = document.documentElement;
-    var btn = document.getElementById('themeBtn');
-    var stored = localStorage.getItem('theme');
-    if(stored) root.setAttribute('data-theme', stored);
-    btn.addEventListener('click', function(){
-      var current = root.getAttribute('data-theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      var next = current === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  // Capture the English source as authored in the HTML.
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-year': 'Jahresrückblick',
+    'hero-kicker': 'Wien, Österreich',
+    'hero-h1': 'Head of Enterprise, everii Group.<br>Zwanzig Jahre in einer Codebase.',
+    'hero-lede': `Ich baue seit zwei Jahrzehnten an TEAMBOX, der ERP-Plattform für Dienstleister,
+      die zum PSA-Marktführer im DACH-Raum geworden ist — angefangen als einer der ersten
+      Entwickler, heute verantwortlich für Enterprise-Integrationen, CI/CD und das Team
+      dahinter. Mein aktueller Schwerpunkt: Agentic Engineering — KI-gestützte
+      Entwicklungs-Workflows in eine lebende, zwanzig Jahre alte Codebase einbauen, ohne sie zu brechen.`,
+    'hero-email': 'E-Mail',
+    'hl-kicker': 'Arbeits-Highlights · 18. Juni – 9. Juli 2026',
+    'hl-h2': 'Die letzten drei Wochen',
+    'hl-p': 'Wird etwa alle drei Wochen aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
+    'stat-commits': 'Commits',
+    'stat-workstreams': 'Workstreams',
+    'stat-lines': 'Zeilen bearbeitet',
+    'stat-builds': 'Agentic-Eng.-Builds',
+    'eyebrow-featured': 'Vorzeigeprojekt',
+    'feat1-h3': 'Ein Agent, der seine eigenen Produktions-Logs triagiert',
+    'feat1-p1': `Die meisten „KI hat etwas Code geschrieben"-Geschichten enden bei der Codereview.
+      Diese hier läuft unbeaufsichtigt gegen die Produktion. Einmal pro Woche verbindet sich ein
+      Claude-Code-Command mit unserem Log-Aggregator, holt die Fehlermuster mit dem höchsten
+      Volumen und arbeitet sie ab wie ein sorgfältiger Bereitschaftsdienst — kein Skript, das
+      nur Zeilen zählt.`,
+    'feat1-step1': `<strong>Zuerst Fingerprint und Deduplizierung.</strong> Jedes eigenständige
+      Fehlermuster bekommt einen stabilen Fingerprint, der per Volltextsuche gegen bestehende
+      Tickets geprüft wird, bevor überhaupt etwas Neues angelegt wird — ein wiederkehrender
+      Fehler erzeugt ein Ticket, nie fünfzig.`,
+    'feat1-step2': `<strong>Untersuchen, bevor angelegt wird.</strong> Vor dem Anlegen eines
+      Tickets lokalisiert der Agent die tatsächliche Codezeile, liest den umgebenden Code, prüft,
+      ob dasselbe Muster anderswo in der Codebase vorkommt, und schaut in der Git-Historie nach,
+      ob ein Fix schon in Arbeit ist. Das Ticket kommt mit einem konkreten
+      Vorher/Nachher-Codevorschlag — nicht nur mit einem Stacktrace, den später jemand anders
+      entschlüsseln muss.`,
+    'feat1-step3': `<strong>Ein Dashboard, das sich nicht besser verkauft, als es ist.</strong>
+      Nach jedem Lauf wird eine Live-Statusseite neu generiert: farbcodierter Schweregrad,
+      Vorher/Nachher-Volumenbalken, ein Trend-Badge pro Issue. Wenn ein Muster nicht mehr
+      auftritt, heißt das <em>silent</em>, nicht <em>fixed</em> — Stille ist kein Beweis für
+      einen Fix, und das Tool bekommt keine Anerkennung, die es nicht verdient hat.`,
+    'feat1-step4': `<strong>Verifizieren statt annehmen.</strong> Ein eigener Verify-Modus prüft
+      nach einem Deploy erneut das Log-Volumen, um zu bestätigen, dass ein Fix tatsächlich
+      gewirkt hat — statt „Ticket geschlossen" als Ende der Geschichte zu behandeln.`,
+    'feat1-p2': `Die eigentliche Schwierigkeit war nicht die Log-Analyse — es war, sie
+      deterministisch zu machen. Derselbe Command, ausgeführt von einer anderen KI-Session oder
+      einem anderen Teammitglied Monate später, muss aus denselben Eingaben dasselbe Dashboard
+      erzeugen. Das bedeutete, den exakten Fingerprint-Algorithmus, die exakten API-Eigenheiten
+      und die exakten Layout-Regeln so aufzuschreiben, als würde man eine neue Kollegin oder
+      einen neuen Kollegen ganz ohne Vorwissen einarbeiten — denn genau das ist es in der Praxis.`,
+    'feat1-tag-observability': 'Observability',
+    'feat1-tag-automation': 'Automatisierung',
+    'feat2-h3': 'Ein KPI-Dashboard, dem das Team wirklich vertraut',
+    'feat2-p1': `Sprint-Retros liefen früher nach Bauchgefühl und danach, an welches Ticket sich
+      gerade jemand erinnerte. Das hier ist ein Claude-Code-Command, der rohe Ticket-Historie in
+      ein Dashboard verwandelt, das das Team tatsächlich öffnet — nicht weil es beeindruckend
+      aussieht, sondern weil zwei Runden „diese Zahl stimmt nicht"-Feedback ernst genommen und
+      behoben wurden, statt sie wegzuerklären.`,
+    'feat2-step1': `<strong>Korrekte Zuordnung, nicht nur Zählen.</strong> Die Bounce-Rate — wie
+      oft ein Ticket zwischen Entwickler:in und Review hin- und herspringt — wird der Person
+      zugeordnet, die das Ticket zu dem Zeitpunkt tatsächlich innehatte, inklusive Übergaben
+      mitten im Sprint. Eine QA-Ablehnung wird nie versehentlich der ablehnenden Person
+      angelastet.`,
+    'feat2-step2': `<strong>Zahlen, die zu dem passen, was tatsächlich passiert ist.</strong>
+      Tickets außerhalb des Boards, Arbeit außerhalb des Sprint-Fensters und Scope-Änderungen
+      werden gezielt gefiltert: Ein 48-Stunden-Kulanzfenster trennt gewöhnliche
+      Sprint-Planungs-Übernahmen von echtem Scope Creep mitten im Sprint, damit die Kennzahl
+      das misst, was sie zu messen behauptet.`,
+    'feat2-step3': `<strong>Auf Basis echten Feedbacks, nicht erster Entwürfe.</strong> Zwei
+      Runden Team-Feedback führten zu echter Überarbeitung — QA-Bounces von Review-Bounces
+      getrennt, eine ±20%-Schätzgenauigkeits-Bandbreite ergänzt, geplante versus geloggte Zeit
+      nur für tatsächlich beteiligte Entwickler:innen angezeigt — keine kosmetische Politur.`,
+    'feat2-step4': `<strong>Dieselbe Disziplin wie beim Log-Tool: reproduzierbar per Design.</strong>
+      Deterministische Sortierungen, reines Standard-Library-Python, kein versteckter Zustand —
+      derselbe Sprint, zweimal ausgeführt, liefert dieselben Zahlen. Ein Dashboard, das je nach
+      Ausführenden eine andere Antwort gibt, ist kein Dashboard, sondern ein Gerücht.`,
+    'feat2-p2': `Ein Teil davon war Zurückhaltung, keine neue Funktion: Ein gestapeltes
+      Balkendiagramm wurde gebaut, mit echten Daten getestet und dann verworfen, weil seine
+      abgerundeten Segmente kleine Anteile optisch verzerrten. Das Donut-Diagramm blieb; die
+      auffälligere Option hat es nicht geschafft.`,
+    'feat2-tag-team-process': 'Teamprozesse',
+    'feat2-tag-data-integrity': 'Datenintegrität',
+    'card3-h3': 'Erste echte End-to-End-Testsuite — und sie hat einen Live-Bug gefunden',
+    'card3-p': `Happy-Path-Abdeckung für ein Legacy-Frontend aus ExtJS und React aufgebaut — und
+      dabei eine echte Race Condition entdeckt (ein veraltetes setTimeout, das ein bereits
+      entferntes Modal navigiert), die Nutzer:innen zeitweise vor einem unsichtbaren Editor
+      stehen ließ. Jetzt ist es ein erfasster Bug statt einer gelegentlichen Beschwerde.`,
+    'card3-tag-test-infra': 'Testinfrastruktur',
+    'card4-h3': 'Eine echte Anbieterbewertung, keine Demo',
+    'card4-p': `Eine Agentic-Engineering-Plattform eines Drittanbieters gegen unsere
+      tatsächlichen CI- und Sicherheitsanforderungen getestet, nicht in einer Sandbox-Demo — und
+      daraus ein strukturiertes, konkretes Feedback-Dokument gemacht (fehlender
+      Ticketing-Adapter, ein falsch anschlagendes Test-Gate, Settings-Verschmutzung) statt eines
+      vagen Urteils. Dabei nebenbei die CI gehärtet: Dependency-Review, Security-Scanning, ein
+      IAM-Fix — unabhängig davon, wie wir uns bei der Plattform entscheiden.`,
+    'card4-tag-cicd-security': 'CI/CD-Sicherheit',
+    'card5-h3': 'Ein Audit ausgeliefert, am selben Tag zurückgerollt, das Design trotzdem behalten',
+    'card5-p': `Ein breites Exception-Handling-Audit über rund 60 Dateien ausgeliefert, es am
+      selben Tag bei einem Rebase zurückgerollt gesehen (das dabei unbeteiligten Infra-Code mit
+      sich riss), den Kollateralschaden aufgespürt und wiederhergestellt — und das Design
+      trotzdem als Architekturentscheidung dokumentiert, statt den Merge zu erzwingen. Manchmal
+      ist das ehrliche Ergebnis „dokumentiert, noch nicht gelandet".`,
+    'card5-tag-code-quality': 'Codequalität',
+    'card5-tag-technical-judgment': 'Technisches Urteilsvermögen',
+    'card6-h3': 'Ein Fix am selben Tag für einen Ausfall bei mehreren Kunden',
+    'card6-p': `Mehrere Enterprise-Kunden verloren gleichzeitig den Dokumenten-Upload über eine
+      OCR-Integration. Ursache waren zwei zusammenwirkende Probleme — eine fehlende
+      Konfigurationsprüfung und ein versteckter Tippfehler in einer API-Token-Prüfung — noch am
+      selben Tag gefunden und behoben, inklusive strukturiertem Error-Logging, damit die
+      Telemetrie den nächsten Ausfall erkennt, bevor es wieder vier einzelne Kundenmeldungen
+      braucht.`,
+    'card6-tag-reliability': 'Zuverlässigkeit',
+    'card6-tag-enterprise-integration': 'Enterprise-Integration',
+    'card7-h3': 'Die unglamouröse Arbeit, die eine Migration am Laufen hält',
+    'card7-p': `Eine mehrwöchige Docker-Infrastruktur-Migration kontinuierlich sauber in einen
+      aktiven Release-Branch eingepflegt — wiederkehrende Konfliktlösung, ein CI-Pipeline-Fix,
+      Release-Vorbereitung. Kleine Diffs, aber genau diese Arbeit entscheidet, ob eine
+      Infra-Migration leise durchläuft oder den Release-Zug entgleisen lässt.`,
+    'card7-tag-docker-migration': 'Docker-Migration',
+    'year-kicker': 'Jahresrückblick · Juli 2025 – Juli 2026',
+    'year-h2': 'Die letzten zwölf Monate',
+    'year-p': 'Ein thematischer Rückblick, kein Änderungsprotokoll — rund 150 ausgelieferte Commits über etwa 110 Tickets.',
+    'theme1-h3': 'Agentic Engineering, ernst genommen',
+    'theme1-p': `Die größte Verschiebung dieses Jahr: KI-gestützte Entwicklung in eine zwanzig
+      Jahre alte Codebase einzubauen, ohne sie als Spielzeug zu behandeln. Internes
+      Claude-Code-Tooling aufgebaut und gehärtet — ein Sprint-KPI-Dashboard, ein
+      deterministisches Log-Triage-Command, die erste echte End-to-End-Testsuite — und eine
+      strukturierte Bewertung einer Agentic-Engineering-Plattform eines Drittanbieters gegen
+      unsere tatsächlichen CI- und Sicherheitsanforderungen durchgeführt statt einer
+      Sandbox-Demo. Das Commit-Volumen hat sich von Frühling bis Sommer etwa verdreifacht,
+      während die Workflows gereift sind.`,
+    'theme2-h3': 'Performance-Arbeit, ehrlich erzählt',
+    'theme2-p': `Ein Redesign des Session-Backends untersucht (Redis-basiert, dokumentiert in
+      einer eigenen Architekturentscheidung) und eine Änderung ausgeliefert, die die
+      Session-Payload drastisch reduziert hat — dann bei der Review einen
+      Control-State-Edge-Case entdeckt und genau diesen Teil noch am selben Tag zurückgerollt,
+      statt ihn laufen zu lassen. Danach mit sichereren, kleineren Schritten weitergemacht:
+      Monitoring, ein Config-Switch, stichprobenbasierte Messung statt einer Prüfung pro
+      Request. Der Gewinn, der tatsächlich ausgeliefert wurde, war kleiner als der, der es
+      nicht wurde — das ist die ehrliche Version.`,
+    'theme3-h3': 'Codequalität als ständige Gewohnheit',
+    'theme3-p': `Ein systematisches Exception-Handling-Audit über rund 60 Dateien
+      durchgeführt — Auth, Transport, Sync und File Storage — und als Architekturentscheidung
+      dokumentiert, wie Berechtigungsfehler eine Ablehnung signalisieren sollen, statt
+      stillschweigend verschluckt zu werden. Ein Teil des Audits wurde ausgeliefert und am
+      selben Tag bei einem Rebase zurückgerollt; das Design blieb als Dokumentation erhalten,
+      statt einen Merge zu erzwingen, der noch nicht bereit war.`,
+    'theme4-h3': 'Infrastruktur, die keinen Demo-Day bekommt',
+    'theme4-p': `Eine mehrwöchige Docker-Migration lief durch Dutzende kleiner
+      Konfliktlösungen und Pipeline-Fixes hindurch weiter sauber gegen einen sich laufend
+      ändernden Release-Branch. Daneben: CI-Härtung (Dependency-Review, Security-Scanning,
+      verschärfte Berechtigungen), die aus der Plattformbewertung hervorging, aber jeder
+      Pipeline zugutekommt — unabhängig davon, wie wir uns bei diesem Anbieter entscheiden.`,
+    'theme5-h3': 'Den Betrieb für Enterprise-Kunden am Laufen halten',
+    'theme5-p': `Fixes am selben Tag für Produktionsprobleme, die Enterprise-Kunden direkt
+      betrafen — ein Ausfall bei mehreren Kunden über eine OCR-Integration, zurückzuführen auf
+      eine Konfigurationslücke und einen einzelnen falschen Buchstaben, ein Anzeigefehler in
+      der Microsoft-365-Integration — dazu die gewöhnliche, ständige Arbeit an
+      DATEV/Abacus/BMD-Buchhaltungsintegrationen, SSO/LDAP und E-Invoicing, auf der eine
+      ERP-Plattform mit über 300 Kunden jeden Tag läuft.`,
+    'footer-copy': '&copy; 2026 David Irving. Wird etwa alle drei Wochen aktualisiert.'
+  };
+
+  var META_DESC = {
+    en: 'David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.',
+    de: 'David Irving — Head of Enterprise bei everii Group. Zwanzig Jahre TEAMBOX; heute mit Fokus auf Agentic Engineering.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
     });
-  })();
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
 </script>
 
 </body>
