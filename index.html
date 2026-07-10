@@ -92,6 +92,8 @@
   .steps li::before{content:counter(step);flex:none;width:22px;height:22px;border-radius:50%;background:var(--chip);color:var(--chip-ink);
     font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
   .steps li strong{color:var(--ink)}
+  .card-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
+  .card-link:hover{opacity:.8}
 
   /* year-in-review themes */
   .theme{margin-bottom:26px}
@@ -112,6 +114,7 @@
     <a href="#" class="brand">David Irving</a>
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
+      <a class="nav-link" data-i18n="nav-research" href="#research">Personal AI Research</a>
       <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
       <div class="btn-group">
         <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
@@ -213,6 +216,29 @@
     </div>
   </section>
 
+  <section class="block" id="research">
+    <div class="block-head">
+      <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
+      <h2 data-i18n="research-h2">Outside TEAMBOX: a solo AI research build</h2>
+      <p data-i18n="research-p">Built in my own time in Google AI Studio, not on the clock — a way to stress-test what Gemini can actually do on a real, messy problem instead of a toy demo.</p>
+    </div>
+
+    <div class="card featured">
+      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
+      <h3 data-i18n="research-h3">OSINT Real-Time Tracker — multilingual conflict monitoring, built solo with Gemini</h3>
+      <p data-i18n="research-p1">A maps-based dashboard that monitors global conflict events close to real time. It takes open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events a researcher can actually use.</p>
+      <ol class="steps">
+        <li><span data-i18n="research-step1"><strong>Multilingual intake, no separate translation step.</strong> Paste raw source text in Ukrainian, Arabic, French, Hebrew, or English and Gemini handles extraction directly — entities, location, and language nuance in one pass, not a translate-then-analyze pipeline.</span></li>
+        <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
+        <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
+        <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
+      </ol>
+      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API) in Google AI Studio and deployed to Cloud Run.</p>
+      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
+      <a class="card-link" href="https://david-irving-osint-real-time-tracker-435987260759.europe-west2.run.app/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
+    </div>
+  </section>
+
   <section class="block" id="year">
     <div class="block-head">
       <p class="kicker" data-i18n="year-kicker">Year in Review · July 2025 – July 2026</p>
@@ -281,6 +307,7 @@
   });
 
   I18N.de = {
+    'nav-research': 'Persönliche KI-Recherche',
     'nav-year': 'Jahresrückblick',
     'hero-kicker': 'Wien, Österreich',
     'hero-h1': 'Head of Enterprise, everii Group.<br>Zwanzig Jahre in einer Codebase.',
@@ -397,6 +424,39 @@
       Release-Vorbereitung. Kleine Diffs, aber genau diese Arbeit entscheidet, ob eine
       Infra-Migration leise durchläuft oder den Release-Zug entgleisen lässt.`,
     'card7-tag-docker-migration': 'Docker-Migration',
+    'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
+    'research-h2': 'Außerhalb von TEAMBOX: ein Solo-KI-Recherche-Projekt',
+    'research-p': 'In meiner eigenen Zeit in Google AI Studio gebaut, nicht während der Arbeitszeit — ein Weg zu testen, was Gemini an einem echten, unübersichtlichen Problem tatsächlich leisten kann, statt an einer Spielzeug-Demo.',
+    'eyebrow-research': 'Persönliche KI-Recherche',
+    'research-h3': 'OSINT Real-Time Tracker — mehrsprachige Konfliktüberwachung, solo mit Gemini gebaut',
+    'research-p1': `Ein kartenbasiertes Dashboard, das globale Konfliktereignisse nahezu in
+      Echtzeit überwacht. Es nimmt Open-Source-Berichte — Social-Media-Posts, Agenturmeldungen,
+      Funktranskripte — in der jeweiligen Originalsprache auf und macht daraus strukturierte,
+      geolokalisierte, glaubwürdigkeitsbewertete Ereignisse, mit denen Forschende tatsächlich
+      arbeiten können.`,
+    'research-step1': `<strong>Mehrsprachige Aufnahme, ganz ohne separaten Übersetzungsschritt.</strong>
+      Rohtext auf Ukrainisch, Arabisch, Französisch, Hebräisch oder Englisch einfügen — Gemini
+      übernimmt die Extraktion direkt: Entitäten, Ort und Sprachnuancen in einem Durchgang, keine
+      Pipeline aus Übersetzen und anschließendem Analysieren.`,
+    'research-step2': `<strong>NLP-basierte Geolokalisierung.</strong> Gemini löst Ortsnamen und
+      Kontexthinweise in exakte Koordinaten auf — inklusive der Begründung hinter jeder Auflösung,
+      nicht nur ein Pin auf einer Karte.`,
+    'research-step3': `<strong>Sentiment- und Spannungsbewertung, mehr als nur positiv/negativ.</strong>
+      Jeder Bericht bekommt einen Sentiment-Score, einen Spannungswert von 1–10, eine dominante
+      Emotion sowie eine Einschätzung umgangssprachlicher Nuancen in der Originalsprache, die rein
+      keyword-basierte Tools komplett übersehen.`,
+    'research-step4': `<strong>Eine transparente, fünfparametrige Glaubwürdigkeitsbewertung.</strong>
+      Jedes Ereignis wird von 0–100 bewertet — Quellenreputation, Gegenprüfung, Beleglage,
+      kontextuelle Plausibilität und Aktualität — mit sichtbarer Begründung statt einer
+      Black-Box-Vertrauensangabe.`,
+    'research-p2': `Das ist ein persönliches Forschungsprojekt, kein produktionsreifes
+      Intelligence-Produkt — der Live-Feed nutzt Gemini Search Grounding gegen offene Quellen,
+      mit einem dokumentierten Offline-Fallback-Datensatz, falls diese Ernte fehlschlägt.
+      Komplett (React, Express, Gemini API) in Google AI Studio gebaut und auf Cloud Run
+      deployed.`,
+    'research-tag-nlp': 'NLP / Geolokalisierung',
+    'research-tag-poc': 'Proof of Concept',
+    'research-link': 'Live-App ansehen →',
     'year-kicker': 'Jahresrückblick · Juli 2025 – Juli 2026',
     'year-h2': 'Die letzten zwölf Monate',
     'year-p': 'Ein thematischer Rückblick, kein Änderungsprotokoll — rund 150 ausgelieferte Commits über etwa 110 Tickets.',
