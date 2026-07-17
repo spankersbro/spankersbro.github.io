@@ -73,6 +73,7 @@
   .stat .n{font-size:20px;font-weight:700}
   .stat .l{font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
   @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stats-note{color:var(--sub);font-size:12px;margin:-20px 0 28px}
 
   /* cards */
   .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
@@ -154,81 +155,82 @@
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker" data-i18n="hl-kicker">Work Highlights · June 18 – July 9, 2026</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · June 26 – July 17, 2026</p>
       <h2 data-i18n="hl-h2">The last three weeks</h2>
       <p data-i18n="hl-p">Updated roughly every three weeks, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">119</div><div class="l" data-i18n="stat-commits">commits</div></div>
-      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
-      <div class="stat"><div class="n">~11k</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">189</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">9</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~94k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
       <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
     </div>
+    <p class="stats-note" data-i18n="stats-note">*Dominated by a large, mostly-mechanical test-suite rewrite — hand-authored business logic is a smaller slice of that total.</p>
 
     <div class="card featured" id="feat1">
       <a class="card-anchor" href="#feat1" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat1-h3">An agent that triages its own production logs</h3>
-      <p data-i18n="feat1-p1">Most "AI wrote some code" stories stop at code review. This one runs unattended against production. Once a week, a Claude Code command connects to our log aggregator, pulls the highest-volume error patterns, and works through them like a careful on-call engineer would — not a script that just counts lines.</p>
+      <h3 data-i18n="feat1-h3">Rewrote the PHP test suite from the ground up — and it kept finding real bugs</h3>
+      <p data-i18n="feat1-p1">Migrated the entire PHP test suite to Pest 3 across 25 modules, collapsing a custom dual-runner setup — separate "live" and unit test classes, two bespoke base classes — into one unified test format. The line count went down once duplicate test variants were folded together, but nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in isolation.</p>
       <ol class="steps">
-        <li><span data-i18n="feat1-step1"><strong>Fingerprint and dedupe first.</strong> Every distinct error pattern gets a stable fingerprint, checked against existing tickets by full-text search before anything new gets filed — so a recurring error creates one ticket, ever, not fifty.</span></li>
-        <li><span data-i18n="feat1-step2"><strong>Investigate before filing.</strong> Before opening a ticket it locates the actual source line, reads the surrounding code, checks whether the same pattern exists elsewhere in the codebase, and looks at git history to see if a fix is already in flight. The ticket ships with a concrete before/after code suggestion attached — not just a stack trace for someone else to decode later.</span></li>
-        <li><span data-i18n="feat1-step3"><strong>A dashboard that doesn't oversell itself.</strong> Every run regenerates a live status page: colour-coded severity, before/after volume bars, a trend badge per issue. When a pattern stops firing, it's labelled <em>silent</em>, not <em>fixed</em> — silence isn't proof of a fix, and the tool doesn't get to claim credit it hasn't earned.</span></li>
-        <li><span data-i18n="feat1-step4"><strong>Verify, don't assume.</strong> A separate verify mode re-checks the log volume after a deploy to confirm a fix actually worked, instead of treating "ticket closed" as the end of the story.</span></li>
+        <li><span data-i18n="feat1-step1"><strong>One test format, not two.</strong> Every module's paired live/non-live test classes merged into a single Pest-style file, retiring two custom base classes that existed only to work around the old split.</span></li>
+        <li><span data-i18n="feat1-step2"><strong>Merging exposed what isolation had been hiding.</strong> A field-cache poisoning bug that crossed module boundaries, several mock/real class collisions, and a shared-state bug quietly affecting dozens of test files — all surfaced only once the tests ran together instead of apart.</span></li>
+        <li><span data-i18n="feat1-step3"><strong>Logged for continuity, on purpose.</strong> Every fix and decision recorded in a running delivery doc, because a rewrite this size can't live entirely in one person's head across weeks of work.</span></li>
+        <li><span data-i18n="feat1-step4"><strong>Verified module by module, not just declared done.</strong> Each migrated module re-run against the full suite before being marked complete, so "the tests pass" still meant what it meant before the rewrite.</span></li>
       </ol>
-      <p data-i18n="feat1-p2">The hard part wasn't the log analysis — it was making it deterministic. The same command, run by a different AI session or a different teammate months from now, has to produce the identical dashboard from identical inputs. That meant writing out the exact fingerprint algorithm, the exact API quirks, and the exact layout rules as if onboarding a new engineer with zero context, because in practice, that's exactly what it is.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat1-tag-observability">Observability</span><span class="tag" data-i18n="feat1-tag-automation">Automation</span></div>
+      <p data-i18n="feat1-p2">The rewrite itself is done across all 25 modules. The bugs it surfaced weren't the point of the exercise — but they were the real payoff.</p>
+      <div class="tags"><span class="tag" data-i18n="feat1-tag-test-infra">Testing Infrastructure</span><span class="tag">Pest 3</span><span class="tag">PHP</span><span class="tag" data-i18n="feat1-tag-refactor">Large-Scale Refactor</span></div>
     </div>
 
     <div class="card featured" id="feat2">
       <a class="card-anchor" href="#feat2" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat2-h3">A KPI dashboard the team actually trusts</h3>
-      <p data-i18n="feat2-p1">Sprint retros used to run on gut feel and whichever ticket someone happened to remember. This is a Claude Code command that turns raw ticket history into a dashboard the team actually opens — not because it's flashy, but because two rounds of "that number's wrong" feedback got taken seriously and fixed instead of explained away.</p>
+      <h3 data-i18n="feat2-h3">A CLI flag that never worked, and the migration pipeline hardening that found it</h3>
+      <p data-i18n="feat2-p1">Took over hardening a Doctrine-based migration pipeline enough to trust it in production — and found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out. An untrimmed-whitespace bug, invisible for years behind a short-flag fallback path.</p>
       <ol class="steps">
-        <li><span data-i18n="feat2-step1"><strong>Correct attribution, not just counting.</strong> Bounce rate — how often a ticket ping-pongs between developer and reviewer — is attributed to whoever actually owned the ticket at the time, including mid-sprint handoffs, and a QA rejection is never mistakenly pinned on the person doing the rejecting.</span></li>
-        <li><span data-i18n="feat2-step2"><strong>Numbers scoped to what actually happened.</strong> Off-board tickets, work outside the sprint window, and scope changes are filtered deliberately: a 48-hour grace window separates ordinary sprint-planning carryover from genuine mid-sprint scope creep, so the metric means what it says instead of what's convenient.</span></li>
-        <li><span data-i18n="feat2-step3"><strong>Built on real feedback, not first-draft numbers.</strong> Two rounds of team pushback led to real rework — splitting QA bounces from review bounces, adding a ±20% estimation-accuracy band, showing planned-vs-logged time only for developers who actually worked the sprint — not cosmetic polish.</span></li>
-        <li><span data-i18n="feat2-step4"><strong>The same rigor as the log-triage tool: reproducible by design.</strong> Deterministic sorts, plain standard-library Python, no hidden state — the same sprint, run twice, produces the same numbers. A dashboard that gives a different answer depending on who ran it isn't a dashboard, it's a rumor.</span></li>
+        <li><span data-i18n="feat2-step1"><strong>Fixed with a regression test, not just a patch.</strong> The parsing bug got a test that pins the correct behaviour down, so it can't silently regress again.</span></li>
+        <li><span data-i18n="feat2-step2"><strong>A real deployment blocker, found and closed.</strong> Old-system installs couldn't mark the migration baseline as applied because the metadata storage table didn't exist yet — the kind of gap that only shows up the first time someone actually runs the migration for real.</span></li>
+        <li><span data-i18n="feat2-step3"><strong>Chased an intermittent CI failure to the actual cause.</strong> Went through retry logic, then in-process table drops, before landing on the real fix: reusing a single shared database connection instead of opening a new one per test.</span></li>
+        <li><span data-i18n="feat2-step4"><strong>Cleaned up with confidence, not guesswork.</strong> Fifteen historical legacy-upgrade directories deleted once their behaviour was confirmed already migrated — and staging-scenario migrations deliberately written and reverted before merge, as a test method, not leftover cruft.</span></li>
       </ol>
-      <p data-i18n="feat2-p2">Some of it was about restraint, not features: a stacked-bar chart got built, tested against real data, and then dropped because its rounded segments visually misrepresented small proportions. The donut chart stayed; the flashier option didn't make the cut.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat2-tag-team-process">Team Process</span><span class="tag" data-i18n="feat2-tag-data-integrity">Data Integrity</span></div>
+      <p data-i18n="feat2-p2">The unglamorous work — flag parsing, table-existence checks, connection reuse — is what actually decides whether a migration pipeline is safe to run against production, not the headline feature.</p>
+      <div class="tags"><span class="tag" data-i18n="feat2-tag-migrations">Doctrine Migrations</span><span class="tag" data-i18n="feat2-tag-release-eng">Release Engineering</span><span class="tag">CI/CD</span></div>
     </div>
 
     <div class="card" id="card3">
       <a class="card-anchor" href="#card3" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card3-h3">First real end-to-end test suite — and it caught a live bug</h3>
-      <p data-i18n="card3-p">Stood up our first real end-to-end suite against a legacy ExtJS/React hybrid frontend — and it caught a genuine race condition (a stale setTimeout navigating an unmounted modal) that intermittently left users staring at an invisible editor. Now it's a tracked bug instead of an occasional complaint.</p>
-      <div class="tags"><span class="tag">Playwright</span><span class="tag" data-i18n="card3-tag-test-infra">Test Infrastructure</span></div>
+      <h3 data-i18n="card3-h3">Kept the end-to-end suite alive through a full application-server swap</h3>
+      <p data-i18n="card3-p">Continued building out the Playwright e2e suite from the previous cycle: swapped the test environment's application server to match production exactly, fixed a content-security-policy mismatch, and added a fallback so the app doesn't hang if translation loading fails. Shipped a container permission fix, then reverted it the same day when it didn't hold up under real use — and the suite itself caught a genuine navigation race condition in the invoicing flow, now a tracked bug instead of an intermittent complaint.</p>
+      <div class="tags"><span class="tag">Playwright</span><span class="tag" data-i18n="card3-tag-test-infra">Test Infrastructure</span><span class="tag">Docker</span></div>
     </div>
 
     <div class="card" id="card4">
       <a class="card-anchor" href="#card4" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card4-h3">A real vendor evaluation, not a demo</h3>
-      <p data-i18n="card4-p">Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card4-tag-cicd-security">CI/CD Security</span></div>
+      <h3 data-i18n="card4-h3">Third round of real feedback on the sprint KPI dashboard — and it's still standing</h3>
+      <p data-i18n="card4-p">Kept iterating the self-serve sprint-retro dashboard from stakeholder feedback: split a conflated bounce metric into its two actual failure modes, reworked a process-adherence rule that was producing misleading verdicts, and added FTE-progress tracking. Three rounds of "that's not quite right" feedback taken seriously is what turns a one-off script into a tool a team actually opens.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card4-tag-team-process">Team Process</span><span class="tag" data-i18n="card4-tag-data-integrity">Data Integrity</span></div>
     </div>
 
     <div class="card" id="card5">
       <a class="card-anchor" href="#card5" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card5-h3">Shipped an audit, reverted it the same day, kept the design anyway</h3>
-      <p data-i18n="card5-p">Shipped a broad exception-handling audit across ~60 files, watched it get reverted the same day during a rebase (and take unrelated infra code down with it), tracked down and restored the collateral damage, and kept the design as an architecture decision record instead of forcing the merge. Sometimes the honest outcome is "documented, not yet landed."</p>
-      <div class="tags"><span class="tag" data-i18n="card5-tag-code-quality">Code Quality</span><span class="tag" data-i18n="card5-tag-technical-judgment">Technical Judgment</span></div>
+      <h3 data-i18n="card5-h3">Replaced a vendor integration that couldn't be configured — shipped, reverted, relanded clean</h3>
+      <p data-i18n="card5-p">A ticketing tool's built-in GitHub integration couldn't be configured and was flooding tickets with noise, so I replaced it with a small purpose-built automation that only comments on genuinely relevant events and keeps one clean status block per ticket. The first version needed a same-day rollback once real usage surfaced problems testing hadn't shown; the relanded version added failure-visibility — a notification if the sync itself breaks — and fixed the edge cases a review had flagged.</p>
+      <div class="tags"><span class="tag">GitHub Actions</span><span class="tag" data-i18n="card5-tag-automation">Automation</span><span class="tag" data-i18n="card5-tag-technical-judgment">Technical Judgment</span></div>
     </div>
 
     <div class="card" id="card6">
       <a class="card-anchor" href="#card6" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card6-h3">A same-day fix for a multi-client outage</h3>
-      <p data-i18n="card6-p">Several enterprise clients lost document upload at once via an OCR integration. Root cause was two compounding issues — a missing config guard and a subtle typo in an API-token check — found and fixed same day, with structured error logging added so telemetry catches the next one before four separate client reports do.</p>
-      <div class="tags"><span class="tag" data-i18n="card6-tag-reliability">Reliability</span><span class="tag" data-i18n="card6-tag-enterprise-integration">Enterprise Integration</span></div>
+      <h3 data-i18n="card6-h3">Kept a third-party AI platform evaluation honest — and picked up real security hardening along the way</h3>
+      <p data-i18n="card6-p">Rewrote evaluation feedback to be constructive rather than just critical, and confirmed a prior security finding was actually resolved. Added dependency review, automated security scanning, and bot-managed dependency updates to CI — improvements that stand on their own regardless of which way the vendor decision goes.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card6-tag-vendor-eval">Vendor Evaluation</span><span class="tag" data-i18n="card6-tag-cicd-security">CI/CD Security</span></div>
     </div>
 
     <div class="card" id="card7">
       <a class="card-anchor" href="#card7" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card7-h3">The unglamorous work that keeps a migration shipping</h3>
-      <p data-i18n="card7-p">Kept a multi-week Docker infrastructure migration merging cleanly into an active release branch — recurring conflict resolution, a CI pipeline fix, release prep. Small diffs, but this is the work that decides whether an infra migration ships quietly or breaks the release train.</p>
-      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card7-tag-docker-migration">Docker Migration</span></div>
+      <h3 data-i18n="card7-h3">Deleted an entire legacy build pipeline in one commit</h3>
+      <p data-i18n="card7-p">Removed a legacy CI build system — its Ant build, checkstyle tooling, and every stale build file that depended on it — thousands of lines removed for a handful added. Part of a coordinated release-process modernisation, done as a clean deletion rather than a slow deprecation nobody gets around to finishing.</p>
+      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card7-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="card7-tag-release-eng">Release Engineering</span></div>
     </div>
   </section>
 
@@ -335,113 +337,111 @@
       dahinter. Mein aktueller Schwerpunkt: Agentic Engineering — KI-gestützte
       Entwicklungs-Workflows in eine lebende, zwanzig Jahre alte Codebase einbauen, ohne sie zu brechen.`,
     'hero-email': 'E-Mail',
-    'hl-kicker': 'Arbeits-Highlights · 18. Juni – 9. Juli 2026',
+    'hl-kicker': 'Arbeits-Highlights · 26. Juni – 17. Juli 2026',
     'hl-h2': 'Die letzten drei Wochen',
     'hl-p': 'Wird etwa alle drei Wochen aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
     'stat-lines': 'Zeilen bearbeitet',
     'stat-builds': 'Agentic-Eng.-Builds',
+    'stats-note': '*Dominiert von einem großen, überwiegend mechanischen Umbau der Testsuite — handgeschriebene Businesslogik macht davon nur einen kleineren Teil aus.',
     'eyebrow-featured': 'Vorzeigeprojekt',
-    'feat1-h3': 'Ein Agent, der seine eigenen Produktions-Logs triagiert',
-    'feat1-p1': `Die meisten „KI hat etwas Code geschrieben"-Geschichten enden bei der Codereview.
-      Diese hier läuft unbeaufsichtigt gegen die Produktion. Einmal pro Woche verbindet sich ein
-      Claude-Code-Command mit unserem Log-Aggregator, holt die Fehlermuster mit dem höchsten
-      Volumen und arbeitet sie ab wie ein sorgfältiger Bereitschaftsdienst — kein Skript, das
-      nur Zeilen zählt.`,
-    'feat1-step1': `<strong>Zuerst Fingerprint und Deduplizierung.</strong> Jedes eigenständige
-      Fehlermuster bekommt einen stabilen Fingerprint, der per Volltextsuche gegen bestehende
-      Tickets geprüft wird, bevor überhaupt etwas Neues angelegt wird — ein wiederkehrender
-      Fehler erzeugt ein Ticket, nie fünfzig.`,
-    'feat1-step2': `<strong>Untersuchen, bevor angelegt wird.</strong> Vor dem Anlegen eines
-      Tickets lokalisiert der Agent die tatsächliche Codezeile, liest den umgebenden Code, prüft,
-      ob dasselbe Muster anderswo in der Codebase vorkommt, und schaut in der Git-Historie nach,
-      ob ein Fix schon in Arbeit ist. Das Ticket kommt mit einem konkreten
-      Vorher/Nachher-Codevorschlag — nicht nur mit einem Stacktrace, den später jemand anders
-      entschlüsseln muss.`,
-    'feat1-step3': `<strong>Ein Dashboard, das sich nicht besser verkauft, als es ist.</strong>
-      Nach jedem Lauf wird eine Live-Statusseite neu generiert: farbcodierter Schweregrad,
-      Vorher/Nachher-Volumenbalken, ein Trend-Badge pro Issue. Wenn ein Muster nicht mehr
-      auftritt, heißt das <em>silent</em>, nicht <em>fixed</em> — Stille ist kein Beweis für
-      einen Fix, und das Tool bekommt keine Anerkennung, die es nicht verdient hat.`,
-    'feat1-step4': `<strong>Verifizieren statt annehmen.</strong> Ein eigener Verify-Modus prüft
-      nach einem Deploy erneut das Log-Volumen, um zu bestätigen, dass ein Fix tatsächlich
-      gewirkt hat — statt „Ticket geschlossen" als Ende der Geschichte zu behandeln.`,
-    'feat1-p2': `Die eigentliche Schwierigkeit war nicht die Log-Analyse — es war, sie
-      deterministisch zu machen. Derselbe Command, ausgeführt von einer anderen KI-Session oder
-      einem anderen Teammitglied Monate später, muss aus denselben Eingaben dasselbe Dashboard
-      erzeugen. Das bedeutete, den exakten Fingerprint-Algorithmus, die exakten API-Eigenheiten
-      und die exakten Layout-Regeln so aufzuschreiben, als würde man eine neue Kollegin oder
-      einen neuen Kollegen ganz ohne Vorwissen einarbeiten — denn genau das ist es in der Praxis.`,
-    'feat1-tag-observability': 'Observability',
-    'feat1-tag-automation': 'Automatisierung',
-    'feat2-h3': 'Ein KPI-Dashboard, dem das Team wirklich vertraut',
-    'feat2-p1': `Sprint-Retros liefen früher nach Bauchgefühl und danach, an welches Ticket sich
-      gerade jemand erinnerte. Das hier ist ein Claude-Code-Command, der rohe Ticket-Historie in
-      ein Dashboard verwandelt, das das Team tatsächlich öffnet — nicht weil es beeindruckend
-      aussieht, sondern weil zwei Runden „diese Zahl stimmt nicht"-Feedback ernst genommen und
-      behoben wurden, statt sie wegzuerklären.`,
-    'feat2-step1': `<strong>Korrekte Zuordnung, nicht nur Zählen.</strong> Die Bounce-Rate — wie
-      oft ein Ticket zwischen Entwickler:in und Review hin- und herspringt — wird der Person
-      zugeordnet, die das Ticket zu dem Zeitpunkt tatsächlich innehatte, inklusive Übergaben
-      mitten im Sprint. Eine QA-Ablehnung wird nie versehentlich der ablehnenden Person
-      angelastet.`,
-    'feat2-step2': `<strong>Zahlen, die zu dem passen, was tatsächlich passiert ist.</strong>
-      Tickets außerhalb des Boards, Arbeit außerhalb des Sprint-Fensters und Scope-Änderungen
-      werden gezielt gefiltert: Ein 48-Stunden-Kulanzfenster trennt gewöhnliche
-      Sprint-Planungs-Übernahmen von echtem Scope Creep mitten im Sprint, damit die Kennzahl
-      das misst, was sie zu messen behauptet.`,
-    'feat2-step3': `<strong>Auf Basis echten Feedbacks, nicht erster Entwürfe.</strong> Zwei
-      Runden Team-Feedback führten zu echter Überarbeitung — QA-Bounces von Review-Bounces
-      getrennt, eine ±20%-Schätzgenauigkeits-Bandbreite ergänzt, geplante versus geloggte Zeit
-      nur für tatsächlich beteiligte Entwickler:innen angezeigt — keine kosmetische Politur.`,
-    'feat2-step4': `<strong>Dieselbe Disziplin wie beim Log-Tool: reproduzierbar per Design.</strong>
-      Deterministische Sortierungen, reines Standard-Library-Python, kein versteckter Zustand —
-      derselbe Sprint, zweimal ausgeführt, liefert dieselben Zahlen. Ein Dashboard, das je nach
-      Ausführenden eine andere Antwort gibt, ist kein Dashboard, sondern ein Gerücht.`,
-    'feat2-p2': `Ein Teil davon war Zurückhaltung, keine neue Funktion: Ein gestapeltes
-      Balkendiagramm wurde gebaut, mit echten Daten getestet und dann verworfen, weil seine
-      abgerundeten Segmente kleine Anteile optisch verzerrten. Das Donut-Diagramm blieb; die
-      auffälligere Option hat es nicht geschafft.`,
-    'feat2-tag-team-process': 'Teamprozesse',
-    'feat2-tag-data-integrity': 'Datenintegrität',
-    'card3-h3': 'Erste echte End-to-End-Testsuite — und sie hat einen Live-Bug gefunden',
-    'card3-p': `Happy-Path-Abdeckung für ein Legacy-Frontend aus ExtJS und React aufgebaut — und
-      dabei eine echte Race Condition entdeckt (ein veraltetes setTimeout, das ein bereits
-      entferntes Modal navigiert), die Nutzer:innen zeitweise vor einem unsichtbaren Editor
-      stehen ließ. Jetzt ist es ein erfasster Bug statt einer gelegentlichen Beschwerde.`,
+    'feat1-h3': 'Die PHP-Testsuite von Grund auf neu geschrieben — und dabei ständig echte Bugs gefunden',
+    'feat1-p1': `Die komplette PHP-Testsuite über 25 Module hinweg auf Pest 3 migriert und dabei
+      ein selbstgebautes Dual-Runner-Setup — getrennte „Live"- und Unit-Testklassen, zwei eigene
+      Basisklassen — in ein einheitliches Testformat zusammengeführt. Die Zeilenzahl sank, sobald
+      doppelte Testvarianten zusammengelegt wurden, aber fast jedes Modul förderte mindestens
+      einen bisher unsichtbaren Bug zutage, sobald die Tests nicht mehr isoliert liefen.`,
+    'feat1-step1': `<strong>Ein Testformat statt zwei.</strong> Die zusammengehörigen
+      Live-/Non-Live-Testklassen jedes Moduls in eine einzige Pest-Datei zusammengeführt und
+      zwei eigene Basisklassen abgeschafft, die nur wegen der alten Trennung existierten.`,
+    'feat1-step2': `<strong>Das Zusammenführen hat gezeigt, was die Isolation verdeckt hat.</strong>
+      Ein Field-Cache-Bug, der Modulgrenzen überschritt, mehrere Mock/Real-Klassenkollisionen und
+      ein Shared-State-Bug, der still und leise Dutzende Testdateien beeinflusst hatte — alles
+      erst sichtbar, als die Tests gemeinsam statt getrennt liefen.`,
+    'feat1-step3': `<strong>Bewusst für Kontinuität über Sessions hinweg protokolliert.</strong>
+      Jede Entscheidung und jeder Fix in einem laufenden Änderungsprotokoll festgehalten, weil
+      ein Umbau dieser Größe nicht allein im Kopf einer Person über Wochen hinweg leben kann.`,
+    'feat1-step4': `<strong>Modul für Modul verifiziert, nicht nur für fertig erklärt.</strong>
+      Jedes migrierte Modul erneut gegen die volle Suite laufen lassen, bevor es als
+      abgeschlossen markiert wurde — „die Tests sind grün" bedeutete danach noch dasselbe wie
+      vor dem Umbau.`,
+    'feat1-p2': `Der Umbau selbst ist für alle 25 Module abgeschlossen. Die dabei gefundenen Bugs
+      waren nicht der Zweck der Übung — aber der eigentliche Gewinn.`,
+    'feat1-tag-test-infra': 'Testinfrastruktur',
+    'feat1-tag-refactor': 'Große Refaktorisierung',
+    'feat2-h3': 'Ein CLI-Flag, das nie funktioniert hat — und die Pipeline-Härtung, die es gefunden hat',
+    'feat2-p1': `Die Härtung einer Doctrine-basierten Migrationspipeline übernommen, bis sie
+      produktionsreif war — und dabei entdeckt, dass das Long-Flag-Parsing des CLI-Frameworks im
+      gesamten Code nie wirklich funktioniert hat, sondern still auf Standardwerte zurückfiel
+      statt einen Fehler zu werfen. Ein Bug durch nicht getrimmten Leerraum, jahrelang unsichtbar
+      hinter einem Short-Flag-Fallback.`,
+    'feat2-step1': `<strong>Mit einem Regressionstest behoben, nicht nur gepatcht.</strong> Der
+      Parsing-Bug bekam einen Test, der das korrekte Verhalten fixiert, damit er nicht wieder
+      still zurückkommen kann.`,
+    'feat2-step2': `<strong>Ein echter Deployment-Blocker gefunden und geschlossen.</strong>
+      Alt-System-Installationen konnten die Migrations-Baseline nicht als angewendet markieren,
+      weil die Metadaten-Tabelle noch nicht existierte — die Art von Lücke, die erst beim ersten
+      echten Migrationslauf auffällt.`,
+    'feat2-step3': `<strong>Einer zeitweiligen CI-Fehlfunktion bis zur echten Ursache
+      nachgegangen.</strong> Über Retry-Logik und In-Process-Tabellenlöschungen bis zur
+      eigentlichen Lösung: eine einzige gemeinsame Datenbankverbindung statt einer neuen pro
+      Test.`,
+    'feat2-step4': `<strong>Mit Zuversicht aufgeräumt, nicht auf Verdacht.</strong> Fünfzehn
+      historische Legacy-Upgrade-Verzeichnisse gelöscht, nachdem ihr Verhalten nachweislich
+      bereits migriert war — und Staging-Szenario-Migrationen bewusst geschrieben und vor dem
+      Merge zurückgerollt, als Testmethode, nicht als Restmüll.`,
+    'feat2-p2': `Die unglamouröse Arbeit — Flag-Parsing, Tabellenprüfungen, Connection-Reuse —
+      entscheidet tatsächlich darüber, ob eine Migrationspipeline sicher gegen Produktion laufen
+      darf, nicht das Feature mit der Schlagzeile.`,
+    'feat2-tag-migrations': 'Doctrine-Migrationen',
+    'feat2-tag-release-eng': 'Release-Engineering',
+    'card3-h3': 'Die End-to-End-Suite durch einen kompletten Anwendungsserver-Wechsel am Leben gehalten',
+    'card3-p': `Den Playwright-E2E-Aufbau aus dem letzten Zyklus weitergeführt: den
+      Anwendungsserver der Testumgebung exakt an die Produktion angeglichen, eine
+      Content-Security-Policy-Diskrepanz behoben und einen Fallback ergänzt, damit die App nicht
+      hängen bleibt, wenn das Laden der Übersetzungen fehlschlägt. Einen
+      Container-Berechtigungsfix ausgeliefert und noch am selben Tag zurückgerollt, als er sich
+      unter echter Nutzung nicht hielt — und die Suite selbst hat dabei eine echte
+      Navigations-Race-Condition im Rechnungsablauf gefunden, jetzt ein erfasster Bug statt einer
+      gelegentlichen Beschwerde.`,
     'card3-tag-test-infra': 'Testinfrastruktur',
-    'card4-h3': 'Eine echte Anbieterbewertung, keine Demo',
-    'card4-p': `Eine Agentic-Engineering-Plattform eines Drittanbieters gegen unsere
-      tatsächlichen CI- und Sicherheitsanforderungen getestet, nicht in einer Sandbox-Demo — und
-      daraus ein strukturiertes, konkretes Feedback-Dokument gemacht (fehlender
-      Ticketing-Adapter, ein falsch anschlagendes Test-Gate, Settings-Verschmutzung) statt eines
-      vagen Urteils. Dabei nebenbei die CI gehärtet: Dependency-Review, Security-Scanning, ein
-      IAM-Fix — unabhängig davon, wie wir uns bei der Plattform entscheiden.`,
-    'card4-tag-cicd-security': 'CI/CD-Sicherheit',
-    'card5-h3': 'Ein Audit ausgeliefert, am selben Tag zurückgerollt, das Design trotzdem behalten',
-    'card5-p': `Ein breites Exception-Handling-Audit über rund 60 Dateien ausgeliefert, es am
-      selben Tag bei einem Rebase zurückgerollt gesehen (das dabei unbeteiligten Infra-Code mit
-      sich riss), den Kollateralschaden aufgespürt und wiederhergestellt — und das Design
-      trotzdem als Architekturentscheidung dokumentiert, statt den Merge zu erzwingen. Manchmal
-      ist das ehrliche Ergebnis „dokumentiert, noch nicht gelandet".`,
-    'card5-tag-code-quality': 'Codequalität',
+    'card4-h3': 'Dritte Runde echten Feedbacks zum Sprint-KPI-Dashboard — und es steht immer noch',
+    'card4-p': `Das Self-Service-Sprint-Retro-Dashboard weiter nach Stakeholder-Feedback
+      iteriert: eine vermischte Bounce-Kennzahl in ihre zwei tatsächlichen Fehlerarten
+      aufgeteilt, eine Process-Adherence-Regel überarbeitet, die irreführende Ergebnisse
+      lieferte, und eine FTE-Fortschrittsanzeige ergänzt. Drei Runden ernst genommenes
+      „das stimmt nicht ganz"-Feedback sind es, die aus einem einmaligen Skript ein Tool machen,
+      das ein Team tatsächlich öffnet.`,
+    'card4-tag-team-process': 'Teamprozesse',
+    'card4-tag-data-integrity': 'Datenintegrität',
+    'card5-h3': 'Eine unkonfigurierbare Vendor-Integration ersetzt — ausgeliefert, zurückgerollt, sauber neu gelandet',
+    'card5-p': `Die eingebaute GitHub-Integration eines Ticketing-Tools ließ sich nicht
+      konfigurieren und überflutete Tickets mit Rauschen, also wurde sie durch eine kleine,
+      zweckgebaute Automatisierung ersetzt, die nur bei wirklich relevanten Ereignissen
+      kommentiert und einen einzigen sauberen Status-Block pro Ticket pflegt. Die erste Version
+      brauchte noch am selben Tag einen Rollback, als echte Nutzung Probleme zeigte, die im Test
+      nicht sichtbar waren; die neu gelandete Version ergänzte Fehler-Sichtbarkeit — eine
+      Benachrichtigung, wenn der Sync selbst kaputtgeht — und behob die von einer Review
+      markierten Randfälle.`,
+    'card5-tag-automation': 'Automatisierung',
     'card5-tag-technical-judgment': 'Technisches Urteilsvermögen',
-    'card6-h3': 'Ein Fix am selben Tag für einen Ausfall bei mehreren Kunden',
-    'card6-p': `Mehrere Enterprise-Kunden verloren gleichzeitig den Dokumenten-Upload über eine
-      OCR-Integration. Ursache waren zwei zusammenwirkende Probleme — eine fehlende
-      Konfigurationsprüfung und ein versteckter Tippfehler in einer API-Token-Prüfung — noch am
-      selben Tag gefunden und behoben, inklusive strukturiertem Error-Logging, damit die
-      Telemetrie den nächsten Ausfall erkennt, bevor es wieder vier einzelne Kundenmeldungen
-      braucht.`,
-    'card6-tag-reliability': 'Zuverlässigkeit',
-    'card6-tag-enterprise-integration': 'Enterprise-Integration',
-    'card7-h3': 'Die unglamouröse Arbeit, die eine Migration am Laufen hält',
-    'card7-p': `Eine mehrwöchige Docker-Infrastruktur-Migration kontinuierlich sauber in einen
-      aktiven Release-Branch eingepflegt — wiederkehrende Konfliktlösung, ein CI-Pipeline-Fix,
-      Release-Vorbereitung. Kleine Diffs, aber genau diese Arbeit entscheidet, ob eine
-      Infra-Migration leise durchläuft oder den Release-Zug entgleisen lässt.`,
-    'card7-tag-docker-migration': 'Docker-Migration',
+    'card6-h3': 'Eine Bewertung einer KI-Plattform eines Drittanbieters ehrlich gehalten — und dabei echte Sicherheitshärtung mitgenommen',
+    'card6-p': `Feedback aus der Bewertung konstruktiv statt nur kritisch umgeschrieben und einen
+      früheren Sicherheitsbefund als tatsächlich behoben bestätigt. Dependency-Review,
+      automatisiertes Security-Scanning und bot-gesteuerte Dependency-Updates zur CI
+      hinzugefügt — Verbesserungen, die unabhängig davon bestehen, wie die Entscheidung über den
+      Anbieter ausfällt.`,
+    'card6-tag-vendor-eval': 'Anbieterbewertung',
+    'card6-tag-cicd-security': 'CI/CD-Sicherheit',
+    'card7-h3': 'Eine komplette Legacy-Build-Pipeline in einem einzigen Commit gelöscht',
+    'card7-p': `Ein Legacy-CI-Build-System entfernt — den zugehörigen Ant-Build, das
+      Checkstyle-Tooling und jede veraltete Build-Datei, die davon abhing — Tausende Zeilen
+      entfernt für eine Handvoll hinzugefügter. Teil einer koordinierten Modernisierung des
+      Release-Prozesses, umgesetzt als klare Löschung statt einer langsamen Deprecation, die nie
+      jemand zu Ende bringt.`,
+    'card7-tag-techdebt': 'Technische Schulden',
+    'card7-tag-release-eng': 'Release-Engineering',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
     'research-h2': 'Außerhalb von TEAMBOX: ein Solo-KI-Recherche-Projekt',
     'research-p': 'In meiner eigenen Zeit in Google AI Studio gebaut, nicht während der Arbeitszeit — ein Weg zu testen, was Gemini an einem echten, unübersichtlichen Problem tatsächlich leisten kann, statt an einer Spielzeug-Demo.',
