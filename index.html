@@ -219,15 +219,16 @@
     <div class="card featured" id="feat4">
       <a class="card-anchor" href="#feat4" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat4-h3">A CLI flag that never worked, and the migration pipeline hardening that found it</h3>
-      <p data-i18n="feat4-p1">Took over hardening a Doctrine-based migration pipeline enough to trust it in production — and found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out. An untrimmed-whitespace bug, invisible for years behind a short-flag fallback path.</p>
+      <h3 data-i18n="feat4-h3">Replaced an entire bespoke migration system with Doctrine — and caught a CLI flag that had never worked</h3>
+      <p data-i18n="feat4-p1">Built and shipped, solo, a full replacement of a homegrown YAML-driven schema and upgrade system with Doctrine Migrations: 279 YAML schema files, 99 legacy upgrade scripts, and 7 schema classes deleted outright, a net reduction of roughly 10,000 lines across 524 files, as one continuous piece of work. Along the way, found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out: an untrimmed-whitespace bug, invisible for years behind a short-flag fallback path.</p>
       <ol class="steps">
-        <li><span data-i18n="feat4-step1"><strong>Fixed with a regression test, not just a patch.</strong> The parsing bug got a test that pins the correct behaviour down, so it can't silently regress again.</span></li>
-        <li><span data-i18n="feat4-step2"><strong>A real deployment blocker, found and closed.</strong> Old-system installs couldn't mark the migration baseline as applied because the metadata storage table didn't exist yet — the kind of gap that only shows up the first time someone actually runs the migration for real.</span></li>
-        <li><span data-i18n="feat4-step3"><strong>Chased an intermittent CI failure to the actual cause.</strong> Went through retry logic, then in-process table drops, before landing on the real fix: reusing a single shared database connection instead of opening a new one per test.</span></li>
-        <li><span data-i18n="feat4-step4"><strong>Cleaned up with confidence, not guesswork.</strong> Fifteen historical legacy-upgrade directories deleted once their behaviour was confirmed already migrated — and staging-scenario migrations deliberately written and reverted before merge, as a test method, not leftover cruft.</span></li>
+        <li><span data-i18n="feat4-step1"><strong>A replacement, not a patch.</strong> The old DatabaseSchema/TableSchema system and its YAML fixtures are gone; a FixtureManager and Doctrine Migrations now own schema and test-database setup end to end.</span></li>
+        <li><span data-i18n="feat4-step2"><strong>More reliable than what it replaced.</strong> Added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system simply didn't defend against.</span></li>
+        <li><span data-i18n="feat4-step3"><strong>Fixed with a regression test, not just a patch.</strong> The long-flag parsing bug got a test that pins the correct behaviour down, so it can't silently regress again.</span></li>
+        <li><span data-i18n="feat4-step4"><strong>A real deployment blocker, found and closed.</strong> Old-system installs couldn't mark the migration baseline as applied because the metadata storage table didn't exist yet — the kind of gap that only shows up the first time someone actually runs the migration for real.</span></li>
+        <li><span data-i18n="feat4-step5"><strong>Chased an intermittent CI failure to the actual cause, then cleaned up with confidence.</strong> Went through retry logic, then in-process table drops, before landing on the real fix: reusing a single shared database connection instead of opening a new one per test. Fifteen historical legacy-upgrade directories were deleted only once their behaviour was confirmed already migrated, and staging-scenario migrations were deliberately written and reverted before merge as a test method, not leftover cruft.</span></li>
       </ol>
-      <p data-i18n="feat4-p2">The unglamorous work — flag parsing, table-existence checks, connection reuse — is what actually decides whether a migration pipeline is safe to run against production, not the headline feature.</p>
+      <p data-i18n="feat4-p2">Deleting a bespoke system wholesale and rebuilding it on Doctrine is what made this migration pipeline fundamentally different from what came before — the flag parsing, table-existence checks, and connection reuse are what made it safe to actually run against production.</p>
       <div class="tags"><span class="tag" data-i18n="feat4-tag-migrations">Doctrine Migrations</span><span class="tag" data-i18n="feat4-tag-release-eng">Release Engineering</span><span class="tag">CI/CD</span></div>
     </div>
 
@@ -470,30 +471,39 @@
       waren nicht der Zweck der Übung — aber der eigentliche Gewinn.`,
     'feat3-tag-test-infra': 'Testinfrastruktur',
     'feat3-tag-refactor': 'Große Refaktorisierung',
-    'feat4-h3': 'Ein CLI-Flag, das nie funktioniert hat — und die Pipeline-Härtung, die es gefunden hat',
-    'feat4-p1': `Die Härtung einer Doctrine-basierten Migrationspipeline übernommen, bis sie
-      produktionsreif war — und dabei entdeckt, dass das Long-Flag-Parsing des CLI-Frameworks im
-      gesamten Code nie wirklich funktioniert hat, sondern still auf Standardwerte zurückfiel
-      statt einen Fehler zu werfen. Ein Bug durch nicht getrimmten Leerraum, jahrelang unsichtbar
-      hinter einem Short-Flag-Fallback.`,
-    'feat4-step1': `<strong>Mit einem Regressionstest behoben, nicht nur gepatcht.</strong> Der
-      Parsing-Bug bekam einen Test, der das korrekte Verhalten fixiert, damit er nicht wieder
-      still zurückkommen kann.`,
-    'feat4-step2': `<strong>Ein echter Deployment-Blocker gefunden und geschlossen.</strong>
+    'feat4-h3': 'Ein komplettes bespoke Migrationssystem durch Doctrine ersetzt — und dabei ein CLI-Flag erwischt, das nie funktioniert hatte',
+    'feat4-p1': `Im Alleingang ein komplett selbstgebautes YAML-basiertes Schema- und
+      Upgrade-System durch Doctrine Migrations ersetzt und produktiv gebracht: 279
+      YAML-Schema-Dateien, 99 Legacy-Upgrade-Skripte und 7 Schema-Klassen restlos gelöscht, eine
+      Netto-Reduktion von rund 10.000 Zeilen über 524 Dateien, als ein durchgehendes Stück Arbeit.
+      Dabei entdeckt, dass das Long-Flag-Parsing des CLI-Frameworks im gesamten Code nie wirklich
+      funktioniert hat, sondern still auf Standardwerte zurückfiel statt einen Fehler zu werfen:
+      ein Bug durch nicht getrimmten Leerraum, jahrelang unsichtbar hinter einem
+      Short-Flag-Fallback.`,
+    'feat4-step1': `<strong>Ein Ersatz, kein Patch.</strong> Das alte DatabaseSchema/TableSchema-
+      System und seine YAML-Fixtures sind weg; ein FixtureManager und Doctrine Migrations
+      übernehmen Schema- und Test-Datenbank-Setup jetzt durchgängig.`,
+    'feat4-step2': `<strong>Zuverlässiger als das, was es ersetzt hat.</strong> MySQL-
+      Reconnect-on-Disconnect-Handling und ein Advisory-Lock rund um den Baseline-Migrations-Guard
+      ergänzt — Fehlerfälle, gegen die sich das alte System schlicht nicht abgesichert hatte.`,
+    'feat4-step3': `<strong>Mit einem Regressionstest behoben, nicht nur gepatcht.</strong> Der
+      Long-Flag-Parsing-Bug bekam einen Test, der das korrekte Verhalten fixiert, damit er nicht
+      wieder still zurückkommen kann.`,
+    'feat4-step4': `<strong>Ein echter Deployment-Blocker gefunden und geschlossen.</strong>
       Alt-System-Installationen konnten die Migrations-Baseline nicht als angewendet markieren,
       weil die Metadaten-Tabelle noch nicht existierte — die Art von Lücke, die erst beim ersten
       echten Migrationslauf auffällt.`,
-    'feat4-step3': `<strong>Einer zeitweiligen CI-Fehlfunktion bis zur echten Ursache
-      nachgegangen.</strong> Über Retry-Logik und In-Process-Tabellenlöschungen bis zur
-      eigentlichen Lösung: eine einzige gemeinsame Datenbankverbindung statt einer neuen pro
-      Test.`,
-    'feat4-step4': `<strong>Mit Zuversicht aufgeräumt, nicht auf Verdacht.</strong> Fünfzehn
-      historische Legacy-Upgrade-Verzeichnisse gelöscht, nachdem ihr Verhalten nachweislich
-      bereits migriert war — und Staging-Szenario-Migrationen bewusst geschrieben und vor dem
-      Merge zurückgerollt, als Testmethode, nicht als Restmüll.`,
-    'feat4-p2': `Die unglamouröse Arbeit — Flag-Parsing, Tabellenprüfungen, Connection-Reuse —
-      entscheidet tatsächlich darüber, ob eine Migrationspipeline sicher gegen Produktion laufen
-      darf, nicht das Feature mit der Schlagzeile.`,
+    'feat4-step5': `<strong>Einer zeitweiligen CI-Fehlfunktion bis zur echten Ursache
+      nachgegangen, dann mit Zuversicht aufgeräumt.</strong> Über Retry-Logik und
+      In-Process-Tabellenlöschungen bis zur eigentlichen Lösung: eine einzige gemeinsame
+      Datenbankverbindung statt einer neuen pro Test. Fünfzehn historische
+      Legacy-Upgrade-Verzeichnisse wurden erst gelöscht, nachdem ihr Verhalten nachweislich
+      bereits migriert war, und Staging-Szenario-Migrationen wurden bewusst geschrieben und vor
+      dem Merge zurückgerollt — als Testmethode, nicht als Restmüll.`,
+    'feat4-p2': `Ein bespoke System restlos zu löschen und auf Doctrine neu aufzubauen macht diese
+      Migrationspipeline grundlegend anders als alles, was davor kam — Flag-Parsing,
+      Tabellenprüfungen und Connection-Reuse sind das, was sie sicher genug für den echten
+      Produktionsbetrieb gemacht hat.`,
     'feat4-tag-migrations': 'Doctrine-Migrationen',
     'feat4-tag-release-eng': 'Release-Engineering',
     'card3-h3': 'Die End-to-End-Suite durch einen kompletten Anwendungsserver-Wechsel am Leben gehalten',
