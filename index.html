@@ -75,12 +75,21 @@
   @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
 
   /* cards */
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
-  .card h3{font-size:16.5px;margin:0 0 8px;letter-spacing:-.005em}
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
+  .card h3{font-size:16.5px;margin:0 0 8px;letter-spacing:-.005em;padding-right:28px}
   .card p{margin:0;color:var(--sub);font-size:14.5px}
   .card p + p{margin-top:10px}
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+
+  /* per-card permalink, for grabbing a direct link to one highlight */
+  .card-anchor{position:absolute;top:16px;right:16px;width:26px;height:26px;display:flex;align-items:center;
+    justify-content:center;color:var(--sub);text-decoration:none;border:1px solid var(--line);border-radius:7px;
+    font-size:12px;line-height:1;opacity:0;transition:opacity .15s,color .15s,border-color .15s;background:var(--panel)}
+  .card:hover .card-anchor,.card-anchor:focus-visible{opacity:1}
+  .card-anchor:hover{color:var(--accent);border-color:var(--accent)}
+  .card-anchor.copied{opacity:1;color:var(--accent);border-color:var(--accent)}
+  @media (hover:none){.card-anchor{opacity:1}}
 
   /* featured card */
   .card.featured{border-color:var(--accent);border-width:1.5px;padding:26px 26px 24px}
@@ -157,7 +166,8 @@
       <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
     </div>
 
-    <div class="card featured">
+    <div class="card featured" id="feat1">
+      <a class="card-anchor" href="#feat1" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="feat1-h3">An agent that triages its own production logs</h3>
       <p data-i18n="feat1-p1">Most "AI wrote some code" stories stop at code review. This one runs unattended against production. Once a week, a Claude Code command connects to our log aggregator, pulls the highest-volume error patterns, and works through them like a careful on-call engineer would — not a script that just counts lines.</p>
@@ -171,7 +181,8 @@
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat1-tag-observability">Observability</span><span class="tag" data-i18n="feat1-tag-automation">Automation</span></div>
     </div>
 
-    <div class="card featured">
+    <div class="card featured" id="feat2">
+      <a class="card-anchor" href="#feat2" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="feat2-h3">A KPI dashboard the team actually trusts</h3>
       <p data-i18n="feat2-p1">Sprint retros used to run on gut feel and whichever ticket someone happened to remember. This is a Claude Code command that turns raw ticket history into a dashboard the team actually opens — not because it's flashy, but because two rounds of "that number's wrong" feedback got taken seriously and fixed instead of explained away.</p>
@@ -185,31 +196,36 @@
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat2-tag-team-process">Team Process</span><span class="tag" data-i18n="feat2-tag-data-integrity">Data Integrity</span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card3">
+      <a class="card-anchor" href="#card3" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <h3 data-i18n="card3-h3">First real end-to-end test suite — and it caught a live bug</h3>
       <p data-i18n="card3-p">Stood up our first real end-to-end suite against a legacy ExtJS/React hybrid frontend — and it caught a genuine race condition (a stale setTimeout navigating an unmounted modal) that intermittently left users staring at an invisible editor. Now it's a tracked bug instead of an occasional complaint.</p>
       <div class="tags"><span class="tag">Playwright</span><span class="tag" data-i18n="card3-tag-test-infra">Test Infrastructure</span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card4">
+      <a class="card-anchor" href="#card4" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <h3 data-i18n="card4-h3">A real vendor evaluation, not a demo</h3>
       <p data-i18n="card4-p">Evaluated a third-party AI agent development platform against our actual CI and security requirements, not a sandbox demo — then wrote up a structured, specific feedback doc (missing ticketing-system adapter, a false-positive test gate, settings pollution) instead of a vague verdict. Picked up hardened CI along the way: dependency review, security scanning, an IAM fix — independent of what we decide about the platform.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card4-tag-cicd-security">CI/CD Security</span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card5">
+      <a class="card-anchor" href="#card5" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <h3 data-i18n="card5-h3">Shipped an audit, reverted it the same day, kept the design anyway</h3>
       <p data-i18n="card5-p">Shipped a broad exception-handling audit across ~60 files, watched it get reverted the same day during a rebase (and take unrelated infra code down with it), tracked down and restored the collateral damage, and kept the design as an architecture decision record instead of forcing the merge. Sometimes the honest outcome is "documented, not yet landed."</p>
       <div class="tags"><span class="tag" data-i18n="card5-tag-code-quality">Code Quality</span><span class="tag" data-i18n="card5-tag-technical-judgment">Technical Judgment</span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card6">
+      <a class="card-anchor" href="#card6" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <h3 data-i18n="card6-h3">A same-day fix for a multi-client outage</h3>
       <p data-i18n="card6-p">Several enterprise clients lost document upload at once via an OCR integration. Root cause was two compounding issues — a missing config guard and a subtle typo in an API-token check — found and fixed same day, with structured error logging added so telemetry catches the next one before four separate client reports do.</p>
       <div class="tags"><span class="tag" data-i18n="card6-tag-reliability">Reliability</span><span class="tag" data-i18n="card6-tag-enterprise-integration">Enterprise Integration</span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="card7">
+      <a class="card-anchor" href="#card7" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <h3 data-i18n="card7-h3">The unglamorous work that keeps a migration shipping</h3>
       <p data-i18n="card7-p">Kept a multi-week Docker infrastructure migration merging cleanly into an active release branch — recurring conflict resolution, a CI pipeline fix, release prep. Small diffs, but this is the work that decides whether an infra migration ships quietly or breaks the release train.</p>
       <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card7-tag-docker-migration">Docker Migration</span></div>
@@ -223,7 +239,8 @@
       <p data-i18n="research-p">Built in my own time in Google AI Studio, not on the clock — a way to stress-test what Gemini can actually do on a real, messy problem instead of a toy demo.</p>
     </div>
 
-    <div class="card featured">
+    <div class="card featured" id="research-osint">
+      <a class="card-anchor" href="#research-osint" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
       <h3 data-i18n="research-h3">OSINT Real-Time Tracker — multilingual conflict monitoring, built solo with Gemini</h3>
       <p data-i18n="research-p1">A maps-based dashboard that monitors global conflict events close to real time. It takes open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events a researcher can actually use.</p>
@@ -232,9 +249,10 @@
         <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
         <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
         <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
+        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CERT-UA for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
       </ol>
-      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API) in Google AI Studio and deployed to Cloud Run.</p>
-      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
+      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
+      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
       <a class="card-link" href="https://david-irving-osint-real-time-tracker-435987260759.europe-west2.run.app/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
     </div>
   </section>
@@ -452,9 +470,17 @@
     'research-p2': `Das ist ein persönliches Forschungsprojekt, kein produktionsreifes
       Intelligence-Produkt — der Live-Feed nutzt Gemini Search Grounding gegen offene Quellen,
       mit einem dokumentierten Offline-Fallback-Datensatz, falls diese Ernte fehlschlägt.
-      Komplett (React, Express, Gemini API) in Google AI Studio gebaut und auf Cloud Run
-      deployed.`,
+      Komplett (React, Express, Gemini API, Firestore) in Google AI Studio gebaut und auf
+      Cloud Run deployed.`,
+    'research-step5': `<strong>Ein autonomer Harvester, kein reines manuelles Tool.</strong>
+      Ein Hintergrund-Scheduler führt dieselbe suchgestützte Pipeline einmal pro Stunde
+      unbeaufsichtigt aus und zielt auf eine feste Liste maßgeblicher Quellen — ISW für
+      Frontberichte aus der Ukraine, UKMTO für Seefahrtswarnungen im Roten Meer, IAEA für die
+      nukleare Sicherheitsüberwachung in Saporischschja, CERT-UA für Cyber-Vorfälle — statt
+      eines offenen Crawls, wobei jede Ernte samt vollständigem Audit-Trail in Firestore
+      gespeichert wird.`,
     'research-tag-nlp': 'NLP / Geolokalisierung',
+    'research-tag-automation': 'Automatisierte Ernte',
     'research-tag-poc': 'Proof of Concept',
     'research-link': 'Live-App ansehen →',
     'year-kicker': 'Jahresrückblick · Juli 2025 – Juli 2026',
@@ -507,6 +533,8 @@
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var COPY_LABEL = { en: 'Copy link', de: 'Link kopieren' };
+  var COPIED_LABEL = { en: 'Copied!', de: 'Kopiert!' };
 
   var langBtn = document.getElementById('langBtn');
   var metaDesc = document.getElementById('metaDesc');
@@ -524,6 +552,11 @@
     langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
     langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
     langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    document.querySelectorAll('.card-anchor').forEach(function(a){
+      if(a.classList.contains('copied')) return;
+      a.setAttribute('aria-label', COPY_LABEL[lang] || COPY_LABEL.en);
+      a.setAttribute('title', COPY_LABEL[lang] || COPY_LABEL.en);
+    });
     localStorage.setItem('lang', lang);
   }
 
@@ -533,6 +566,28 @@
   langBtn.addEventListener('click', function(){
     var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
     applyLang(current === 'de' ? 'en' : 'de');
+  });
+
+  /* ---------- per-card permalink (copy link, for pulling a highlight into a LinkedIn post) ---------- */
+  document.querySelectorAll('.card-anchor').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var url = location.origin + location.pathname + a.getAttribute('href');
+      var lang = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+      var reset = function(){
+        a.classList.remove('copied');
+        a.textContent = '🔗';
+        a.setAttribute('aria-label', COPY_LABEL[lang] || COPY_LABEL.en);
+        a.setAttribute('title', COPY_LABEL[lang] || COPY_LABEL.en);
+      };
+      navigator.clipboard.writeText(url).then(function(){
+        a.classList.add('copied');
+        a.textContent = '✓';
+        a.setAttribute('aria-label', COPIED_LABEL[lang] || COPIED_LABEL.en);
+        a.setAttribute('title', COPIED_LABEL[lang] || COPIED_LABEL.en);
+        setTimeout(reset, 1500);
+      });
+    });
   });
 })();
 </script>
