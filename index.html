@@ -296,8 +296,8 @@
   <section class="block" id="research">
     <div class="block-head">
       <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
-      <h2 data-i18n="research-h2">Outside TEAMBOX: a solo AI research build</h2>
-      <p data-i18n="research-p">Built in my own time in Google AI Studio, not on the clock — a way to stress-test what Gemini can actually do on a real, messy problem instead of a toy demo.</p>
+      <h2 data-i18n="research-h2">Outside TEAMBOX: solo AI research builds</h2>
+      <p data-i18n="research-p">Built in my own time in Google AI Studio, not on the clock — a way to stress-test what Gemini can actually do on real, messy problems instead of toy demos.</p>
     </div>
 
     <div class="card featured" id="research-osint">
@@ -315,6 +315,22 @@
       <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
       <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
       <a class="card-link" href="https://david-irving-osint-real-time-tracker-435987260759.europe-west2.run.app/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
+    </div>
+
+    <div class="card featured" id="research-crimes">
+      <a class="card-anchor" href="#research-crimes" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
+      <h3 data-i18n="crimes-h3">Crimes of the 1% — a structured, sourced database of financial crime and litigation among the ultra-wealthy</h3>
+      <p data-i18n="crimes-p1">A database that catalogs corporate and executive-level financial crime — fraud, market manipulation, tax evasion, state capture — against the actual enforcement outcome on record: criminal conviction, settlement, deferred prosecution, or litigation still in progress. Built the same way as the OSINT tracker: solo, in Google AI Studio, testing whether an LLM can hold a large, sourced, structured dataset together instead of just summarizing text.</p>
+      <ol class="steps">
+        <li><span data-i18n="crimes-step1"><strong>Sourced by design, not by afterthought.</strong> Every case record carries one or more citations classified by document type — DOJ filing, SEC order, court judgment, EPA record, ICIJ archive — instead of a single unlabeled link.</span></li>
+        <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and a "worker-wage-equivalent" figure — how many years of an average worker's pay the penalty represents — and a companion inequality dashboard turns the dataset into charts by sector and crime type.</span></li>
+        <li><span data-i18n="crimes-step3"><strong>Two Gemini-powered lenses on the same data.</strong> An AI Fact-Finder modal answers ad-hoc questions against the dataset, and an AI Patterns modal surfaces cross-case trends — which sectors recur, which enforcement types are most common — the same "structured reasoning over messy real data" test as the OSINT build.</span></li>
+        <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets someone propose a new entry for review, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
+      </ol>
+      <p data-i18n="crimes-p2">Early-stage research build — React, TypeScript and Firebase/Firestore, seeded with an initial dataset rather than a continuously fact-checked ledger. Treat individual case entries as a starting point for your own verification, not a settled record.</p>
+      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="crimes-tag-firestore">Firestore</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
+      <a class="card-link" href="https://1percentcrimes.ai.studio/" target="_blank" rel="noopener" data-i18n="crimes-link">View live app →</a>
     </div>
   </section>
 
@@ -616,8 +632,8 @@
       Subagenten, als jede Prompt-Engineering-Entscheidung.`,
     'agentic1-tag-automation': 'Prozessautomatisierung',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
-    'research-h2': 'Außerhalb von TEAMBOX: ein Solo-KI-Recherche-Projekt',
-    'research-p': 'In meiner eigenen Zeit in Google AI Studio gebaut, nicht während der Arbeitszeit — ein Weg zu testen, was Gemini an einem echten, unübersichtlichen Problem tatsächlich leisten kann, statt an einer Spielzeug-Demo.',
+    'research-h2': 'Außerhalb von TEAMBOX: Solo-KI-Recherche-Projekte',
+    'research-p': 'In meiner eigenen Zeit in Google AI Studio gebaut, nicht während der Arbeitszeit — ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos.',
     'eyebrow-research': 'Persönliche KI-Recherche',
     'research-h3': 'OSINT Real-Time Tracker — mehrsprachige Konfliktüberwachung, solo mit Gemini gebaut',
     'research-p1': `Ein kartenbasiertes Dashboard, das globale Konfliktereignisse nahezu in
@@ -656,6 +672,33 @@
     'research-tag-automation': 'Automatisierte Ernte',
     'research-tag-poc': 'Proof of Concept',
     'research-link': 'Live-App ansehen →',
+    'crimes-h3': 'Crimes of the 1% — eine strukturierte, belegte Datenbank zu Finanzkriminalität und Rechtsstreitigkeiten der Superreichen',
+    'crimes-p1': `Eine Datenbank, die Wirtschafts- und Führungskräftekriminalität — Betrug, Marktmanipulation,
+      Steuerhinterziehung, State Capture — dem tatsächlichen Ausgang gegenüberstellt: strafrechtliche
+      Verurteilung, Vergleich, Deferred Prosecution Agreement oder noch laufendes Verfahren. Genauso
+      gebaut wie der OSINT-Tracker: solo, in Google AI Studio, als Test, ob ein LLM einen großen,
+      belegten, strukturierten Datensatz zusammenhalten kann, statt nur Text zusammenzufassen.`,
+    'crimes-step1': `<strong>Von Grund auf belegt, nicht nachträglich.</strong> Jeder Fall trägt eine
+      oder mehrere Quellenangaben, klassifiziert nach Dokumenttyp — DOJ-Unterlage, SEC-Anordnung,
+      Gerichtsurteil, EPA-Akte, ICIJ-Archiv — statt eines einzelnen, unbeschrifteten Links.`,
+    'crimes-step2': `<strong>Mehr als eine Dollarsumme.</strong> Jeder Eintrag rechnet eine Geldstrafe
+      in einen systemischen Wirkungswert und eine „Arbeiter-Lohn-Äquivalent"-Kennzahl um — wie viele
+      Jahre eines durchschnittlichen Arbeiterlohns die Strafe entspricht —, ein begleitendes
+      Ungleichheits-Dashboard macht aus dem Datensatz Diagramme nach Branche und Deliktart.`,
+    'crimes-step3': `<strong>Zwei Gemini-gestützte Sichten auf dieselben Daten.</strong> Ein
+      KI-Fact-Finder-Modal beantwortet Ad-hoc-Fragen zum Datensatz, ein KI-Muster-Modal zeigt
+      fallübergreifende Trends — welche Branchen sich wiederholen, welche Sanktionsarten am
+      häufigsten sind — derselbe Test auf „strukturiertes Reasoning über unübersichtliche
+      Realdaten" wie beim OSINT-Projekt.`,
+    'crimes-step4': `<strong>Ein Einreichungsweg, keine geschlossene Datenbank.</strong> Ein
+      Formular zur Fall-Einreichung erlaubt es, einen neuen Eintrag zur Prüfung vorzuschlagen —
+      der Datensatz ist also nicht auf das beschränkt, was ich selbst recherchiere.`,
+    'crimes-p2': `Frühes Forschungsprojekt — React, TypeScript und Firebase/Firestore, mit einem
+      initialen Datensatz befüllt statt einem laufend faktengeprüften Register. Einzelne
+      Falleinträge als Ausgangspunkt für die eigene Verifikation verstehen, nicht als
+      abgeschlossenen Befund.`,
+    'crimes-tag-firestore': 'Firestore',
+    'crimes-link': 'Live-App ansehen →',
     'year-kicker': 'Jahresrückblick · Juli 2025 – Juli 2026',
     'year-h2': 'Die letzten zwölf Monate',
     'year-p': 'Ein thematischer Rückblick, kein Änderungsprotokoll — rund 150 ausgelieferte Commits über etwa 110 Tickets.',
