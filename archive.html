@@ -36,16 +36,16 @@
 
   /* nav */
   nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
-  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
-  nav .links{display:flex;align-items:center;gap:14px}
-  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
   nav a.nav-link:hover{color:var(--ink)}
   .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
     width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
-    font-family:inherit;padding:0}
+    font-family:inherit;padding:0;flex-shrink:0}
   .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
-  .btn-group{display:flex;align-items:center;gap:8px}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
   @media (max-width:520px){
     nav .links{gap:8px}
     nav a.nav-link{display:none}
