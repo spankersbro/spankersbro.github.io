@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — David Irving</title>
+<meta name="description" id="metaDesc" content="Privacy policy (Datenschutzerklärung) for davidirving.dev — what data this site processes and why.">
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  @media (max-width:520px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:64px 0 32px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(28px,5vw,38px);line-height:1.15;margin:0 0 16px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:16px;color:var(--sub);margin:0;max-width:600px}
+
+  /* sections */
+  section.block{padding:0 0 40px}
+  section.block + section.block{border-top:1px solid var(--line);padding-top:40px}
+  .block-head{margin-bottom:20px}
+  .block-head .kicker{color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
+  .block-head h2{font-size:20px;margin:0 0 6px;letter-spacing:-.01em}
+
+  /* legal content card */
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
+  .card p{margin:0;color:var(--sub);font-size:14.5px}
+  .card p + p{margin-top:12px}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-impressum" href="impressum.html">Impressum</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Legal</p>
+    <h1 data-i18n="hero-h1">Privacy Policy</h1>
+  </section>
+
+  <section class="block" id="privacy-intro">
+    <div class="card">
+      <p data-i18n="dsg-intro">This site is operated by David Richard Irving as a personal project. Below is what data this specific site processes and why. For any privacy question or to exercise your GDPR rights (access, correction, deletion — Art. 15/16/17 GDPR), contact davidrichardirving@gmail.com.</p>
+    </div>
+  </section>
+
+  <section class="block" id="privacy-site">
+    <div class="block-head">
+      <p class="kicker" data-i18n="dsg-site-kicker">davidirving.dev</p>
+      <h2 data-i18n="dsg-site-h2">What this site collects</h2>
+    </div>
+    <div class="card">
+      <p data-i18n="dsg-site-p">Google AdSense serves ads using cookies for ad personalization. These only load after you accept the cookie banner. See Google's own privacy policy for how AdSense processes data. No other tracking, no analytics, no account system, no server-side data collection beyond standard web server logs (IP address, timestamp — routine hosting operation, not used for tracking).</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="index.html" data-i18n="footer-home">← Back to homepage</a>
+      <a href="impressum.html" data-i18n="footer-impressum">Impressum</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-impressum': 'Impressum',
+    'hero-kicker': 'Rechtliches',
+    'hero-h1': 'Datenschutzerklärung',
+    'dsg-intro': 'Diese Website wird von David Richard Irving als persönliches Projekt betrieben. Im Folgenden: welche Daten diese Website verarbeitet und warum. Für Datenschutzanfragen oder zur Ausübung Ihrer DSGVO-Rechte (Auskunft, Berichtigung, Löschung — Art. 15/16/17 DSGVO) kontaktieren Sie davidrichardirving@gmail.com.',
+    'dsg-site-kicker': 'davidirving.dev',
+    'dsg-site-h2': 'Was diese Website verarbeitet',
+    'dsg-site-p': 'Google AdSense schaltet Werbung mithilfe von Cookies zur Anzeigenpersonalisierung. Diese werden erst geladen, nachdem Sie den Cookie-Banner akzeptiert haben. Informationen zur Datenverarbeitung durch AdSense finden Sie in der Datenschutzerklärung von Google. Kein weiteres Tracking, keine Analyse-Tools, kein Benutzerkonto-System, keine serverseitige Datenerfassung über die üblichen Webserver-Logs hinaus (IP-Adresse, Zeitstempel — routinemäßiger Hosting-Betrieb, nicht zu Tracking-Zwecken genutzt).',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-home': '← Zurück zur Startseite',
+    'footer-impressum': 'Impressum'
+  };
+
+  var META_DESC = {
+    en: 'Privacy policy (Datenschutzerklärung) for davidirving.dev — what data this site processes and why.',
+    de: 'Datenschutzerklärung für davidirving.dev — welche Daten diese Website verarbeitet und warum.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
