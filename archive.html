@@ -243,14 +243,14 @@
       <a class="card-anchor" href="#c2-feat1" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="c2-feat1-h3">Rewrote the PHP test suite from the ground up — and it kept finding real bugs</h3>
-      <p data-i18n="c2-feat1-p1">Migrated the entire PHP test suite to Pest 3 across 25 modules, collapsing a custom dual-runner setup — separate "live" and unit test classes, two bespoke base classes — into one unified test format. The line count went down once duplicate test variants were folded together, but nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in isolation.</p>
+      <p data-i18n="c2-feat1-p1">Migrated the entire PHP test suite to Pest 3 across two dozen modules, collapsing a custom dual-runner setup — separate "live" and unit test classes, two bespoke base classes — into one unified test format. The line count went down once duplicate test variants were folded together, but nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in isolation.</p>
       <ol class="steps">
         <li><span data-i18n="c2-feat1-step1"><strong>One test format, not two.</strong> Every module's paired live/non-live test classes merged into a single Pest-style file, retiring two custom base classes that existed only to work around the old split.</span></li>
         <li><span data-i18n="c2-feat1-step2"><strong>Merging exposed what isolation had been hiding.</strong> A field-cache poisoning bug that crossed module boundaries, several mock/real class collisions, and a shared-state bug quietly affecting dozens of test files — all surfaced only once the tests ran together instead of apart.</span></li>
         <li><span data-i18n="c2-feat1-step3"><strong>Logged for continuity, on purpose.</strong> Every fix and decision recorded in a running delivery doc, because a rewrite this size can't live entirely in one person's head across weeks of work.</span></li>
         <li><span data-i18n="c2-feat1-step4"><strong>Verified module by module, not just declared done.</strong> Each migrated module re-run against the full suite before being marked complete, so "the tests pass" still meant what it meant before the rewrite.</span></li>
       </ol>
-      <p data-i18n="c2-feat1-p2">The rewrite itself is done across all 25 modules. The bugs it surfaced weren't the point of the exercise — but they were the real payoff.</p>
+      <p data-i18n="c2-feat1-p2">The rewrite itself is done across all two dozen modules. The bugs it surfaced weren't the point of the exercise — but they were the real payoff.</p>
       <div class="tags"><span class="tag" data-i18n="c2-feat1-tag-test-infra">Testing Infrastructure</span><span class="tag">Pest 3</span><span class="tag">PHP</span><span class="tag" data-i18n="c2-feat1-tag-refactor">Large-Scale Refactor</span></div>
     </div>
 
@@ -258,7 +258,7 @@
       <a class="card-anchor" href="#c2-feat2" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="c2-feat2-h3">Replaced an entire bespoke migration system with Doctrine — and caught a CLI flag that had never worked</h3>
-      <p data-i18n="c2-feat2-p1">Built and shipped, solo, a full replacement of a homegrown YAML-driven schema and upgrade system with Doctrine Migrations: 279 YAML schema files, 99 legacy upgrade scripts, and 7 schema classes deleted outright, a net reduction of roughly 10,000 lines across 524 files, as one continuous piece of work. Along the way, found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out: an untrimmed-whitespace bug, invisible for years behind a short-flag fallback path.</p>
+      <p data-i18n="c2-feat2-p1">Built and shipped, solo, a full replacement of a homegrown YAML-driven schema and upgrade system with Doctrine Migrations: hundreds of YAML schema files and legacy upgrade scripts, plus several schema classes, deleted outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. Along the way, found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out — an untrimmed-whitespace bug that had gone unnoticed for years behind a short-flag fallback path, the kind any long-lived codebase accumulates.</p>
       <ol class="steps">
         <li><span data-i18n="c2-feat2-step1"><strong>A replacement, not a patch.</strong> The old DatabaseSchema/TableSchema system and its YAML fixtures are gone; a FixtureManager and Doctrine Migrations now own schema and test-database setup end to end.</span></li>
         <li><span data-i18n="c2-feat2-step2"><strong>More reliable than what it replaced.</strong> Added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system simply didn't defend against.</span></li>
@@ -581,7 +581,7 @@
     'c2-p': 'Auf der Startseite durch den Zyklus 10.–31. Juli ersetzt — hier vollständig erhalten.',
     'c2-stats-note': '*Dominiert von einem großen, überwiegend mechanischen Umbau der Testsuite — handgeschriebene Businesslogik macht davon nur einen kleineren Teil aus.',
     'c2-feat1-h3': 'Die PHP-Testsuite von Grund auf neu geschrieben — und dabei ständig echte Bugs gefunden',
-    'c2-feat1-p1': `Die komplette PHP-Testsuite über 25 Module hinweg auf Pest 3 migriert und dabei
+    'c2-feat1-p1': `Die komplette PHP-Testsuite über rund zwei Dutzend Module hinweg auf Pest 3 migriert und dabei
       ein selbstgebautes Dual-Runner-Setup — getrennte „Live"- und Unit-Testklassen, zwei eigene
       Basisklassen — in ein einheitliches Testformat zusammengeführt. Die Zeilenzahl sank, sobald
       doppelte Testvarianten zusammengelegt wurden, aber fast jedes Modul förderte mindestens
@@ -600,19 +600,19 @@
       Jedes migrierte Modul erneut gegen die volle Suite laufen lassen, bevor es als
       abgeschlossen markiert wurde — „die Tests sind grün" bedeutete danach noch dasselbe wie
       vor dem Umbau.`,
-    'c2-feat1-p2': `Der Umbau selbst ist für alle 25 Module abgeschlossen. Die dabei gefundenen Bugs
+    'c2-feat1-p2': `Der Umbau selbst ist für alle rund zwei Dutzend Module abgeschlossen. Die dabei gefundenen Bugs
       waren nicht der Zweck der Übung — aber der eigentliche Gewinn.`,
     'c2-feat1-tag-test-infra': 'Testinfrastruktur',
     'c2-feat1-tag-refactor': 'Große Refaktorisierung',
     'c2-feat2-h3': 'Ein komplettes bespoke Migrationssystem durch Doctrine ersetzt — und dabei ein CLI-Flag erwischt, das nie funktioniert hatte',
     'c2-feat2-p1': `Im Alleingang ein komplett selbstgebautes YAML-basiertes Schema- und
-      Upgrade-System durch Doctrine Migrations ersetzt und produktiv gebracht: 279
-      YAML-Schema-Dateien, 99 Legacy-Upgrade-Skripte und 7 Schema-Klassen restlos gelöscht, eine
-      Netto-Reduktion von rund 10.000 Zeilen über 524 Dateien, als ein durchgehendes Stück Arbeit.
-      Dabei entdeckt, dass das Long-Flag-Parsing des CLI-Frameworks im gesamten Code nie wirklich
-      funktioniert hat, sondern still auf Standardwerte zurückfiel statt einen Fehler zu werfen:
-      ein Bug durch nicht getrimmten Leerraum, jahrelang unsichtbar hinter einem
-      Short-Flag-Fallback.`,
+      Upgrade-System durch Doctrine Migrations ersetzt und produktiv gebracht: Hunderte
+      YAML-Schema-Dateien und Legacy-Upgrade-Skripte sowie mehrere Schema-Klassen restlos gelöscht
+      — eine Netto-Reduktion von mehreren tausend Zeilen über Hunderte Dateien, als ein
+      durchgehendes Stück Arbeit. Dabei entdeckt, dass das Long-Flag-Parsing des CLI-Frameworks im
+      gesamten Code nie wirklich funktioniert hat, sondern still auf Standardwerte zurückfiel statt
+      einen Fehler zu werfen — ein Bug durch nicht getrimmten Leerraum, jahrelang unbemerkt hinter
+      einem Short-Flag-Fallback, wie er sich in jeder langlebigen Codebase ansammelt.`,
     'c2-feat2-step1': `<strong>Ein Ersatz, kein Patch.</strong> Das alte DatabaseSchema/TableSchema-
       System und seine YAML-Fixtures sind weg; ein FixtureManager und Doctrine Migrations
       übernehmen Schema- und Test-Datenbank-Setup jetzt durchgängig.`,
