@@ -190,7 +190,6 @@
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
       <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
-      <a class="nav-link" data-i18n="nav-research" href="#research">Personal AI Research</a>
       <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
       <a class="nav-link" data-i18n="nav-archive" href="archive.html">Archive</a>
       <div class="btn-group">
@@ -208,7 +207,7 @@
     <h1 data-i18n="hero-h1">Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
     <p class="lede" data-i18n="hero-lede">
       I've spent the last two decades building TEAMBOX, the ERP platform for service
-      providers that's become the PSA market leader in DACH — starting as one of its
+      providers that's become the <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA market leader in DACH</a> — starting as one of its
       earliest developers, now running enterprise integrations, CI/CD, and the team
       behind it. My current focus is agentic engineering: building AI-driven development
       workflows into a live, twenty-year-old codebase without breaking it.
@@ -273,7 +272,7 @@
       <a class="card-anchor" href="#feat7" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="feat7-h3">Enforcing one path for schema changes surfaced a run of bugs that would have broken real deployments</h3>
-      <p data-i18n="feat7-p1">Making a proper schema-migration tool the only way schema changes happen — no more parallel legacy upgrade paths — turned up problems the old tooling had been quietly getting away with for years.</p>
+      <p data-i18n="feat7-p1">Making a proper schema-migration tool the only way schema changes happen — no more parallel legacy upgrade paths — turned up problems that had gone undetected for years, the kind any twenty-year-old codebase accumulates.</p>
       <ol class="steps">
         <li><span data-i18n="feat7-step1"><strong>A flag that had never worked.</strong> The legacy upgrade tool's CLI flag parser had no working long-form flag at all — a bug invisible for as long as everyone happened to use the short form.</span></li>
         <li><span data-i18n="feat7-step2"><strong>A crash on every real run.</strong> One of its flags crashed on every actual execution — not an edge case, the normal path.</span></li>
@@ -317,7 +316,7 @@
       <a class="card-anchor" href="#agentic-support-agent" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="agentic1-h3">An orchestration agent that tries to solve your problem before escalating it to a person</h3>
-      <p data-i18n="agentic1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely in Langdock, the company's agent platform; the underlying tools and integrations are Langdock's, the orchestration design and instruction text are what I built.</p>
+      <p data-i18n="agentic1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely on the company's internal agent-orchestration platform; the underlying tools and integrations are the platform's, the orchestration design and instruction text are what I built.</p>
       <ol class="steps">
         <li><span data-i18n="agentic1-step1"><strong>Self-help first, always disclosed.</strong> A knowledge-retrieval subagent checks an internal ticket system for a known fix, falling back to a general web search if nothing matches — and the main agent always states where an answer came from, even when someone explicitly asked to be routed straight to a person.</span></li>
         <li><span data-i18n="agentic1-step2"><strong>Root-caused real integration bugs, not just prompt tweaks.</strong> Several of the underlying issue-tracker's write actions were silently failing or returning wrong results — enum and assignee fields needed structured values instead of plain text, one optional parameter had to be omitted rather than passed empty, and a "return only these fields" option was breaking basic searches. Fixed by testing directly against the API surface until the actual contract was confirmed, not by guessing.</span></li>
@@ -325,48 +324,7 @@
         <li><span data-i18n="agentic1-step4"><strong>Security reviewed before rollout.</strong> Added a pre-publish check for least-privilege access, scoped conversation handling, and sanitized knowledge-base content — treating a support agent with write access to internal systems as something that needs a review, not just a demo.</span></li>
       </ol>
       <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Langdock</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
-    </div>
-  </section>
-
-  <section class="block" id="research">
-    <div class="block-head">
-      <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
-      <h2 data-i18n="research-h2">Outside TEAMBOX: solo AI research builds</h2>
-      <p data-i18n="research-p">Built in my own time in Google AI Studio, not on the clock — a way to stress-test what Gemini can actually do on real, messy problems instead of toy demos.</p>
-    </div>
-
-    <div class="card featured" id="research-osint">
-      <a class="card-anchor" href="#research-osint" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
-      <h3 data-i18n="research-h3">OSINT Real-Time Tracker — multilingual conflict monitoring, built solo with Gemini</h3>
-      <p data-i18n="research-p1">A maps-based dashboard that monitors global conflict events close to real time. It takes open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events a researcher can actually use.</p>
-      <ol class="steps">
-        <li><span data-i18n="research-step1"><strong>Multilingual intake, no separate translation step.</strong> Paste raw source text in Ukrainian, Arabic, French, Hebrew, or English and Gemini handles extraction directly — entities, location, and language nuance in one pass, not a translate-then-analyze pipeline.</span></li>
-        <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
-        <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
-        <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
-        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CERT-UA for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
-      </ol>
-      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
-      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
-      <a class="card-link" href="https://osint.davidirving.dev/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
-    </div>
-
-    <div class="card featured" id="research-crimes">
-      <a class="card-anchor" href="#research-crimes" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
-      <h3 data-i18n="crimes-h3">Crimes of the 1% — a structured, sourced database of financial crime and litigation among the ultra-wealthy</h3>
-      <p data-i18n="crimes-p1">A database that catalogs corporate and executive-level financial crime — fraud, market manipulation, tax evasion, state capture — against the actual enforcement outcome on record: criminal conviction, settlement, deferred prosecution, or litigation still in progress. Built the same way as the OSINT tracker: solo, in Google AI Studio, testing whether an LLM can hold a large, sourced, structured dataset together instead of just summarizing text.</p>
-      <ol class="steps">
-        <li><span data-i18n="crimes-step1"><strong>Sourced by design, not by afterthought.</strong> Every case record carries one or more citations classified by document type — DOJ filing, SEC order, court judgment, EPA record, ICIJ archive — instead of a single unlabeled link.</span></li>
-        <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and a "worker-wage-equivalent" figure — how many years of an average worker's pay the penalty represents — and a companion inequality dashboard turns the dataset into charts by sector and crime type.</span></li>
-        <li><span data-i18n="crimes-step3"><strong>Two Gemini-powered lenses on the same data.</strong> An AI Fact-Finder modal answers ad-hoc questions against the dataset, and an AI Patterns modal surfaces cross-case trends — which sectors recur, which enforcement types are most common — the same "structured reasoning over messy real data" test as the OSINT build.</span></li>
-        <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets someone propose a new entry for review, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
-      </ol>
-      <p data-i18n="crimes-p2">Early-stage research build — React, TypeScript and Firebase/Firestore, seeded with an initial dataset rather than a continuously fact-checked ledger. Treat individual case entries as a starting point for your own verification, not a settled record.</p>
-      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="crimes-tag-firestore">Firestore</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
-      <a class="card-link" href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" data-i18n="crimes-link">View live app →</a>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
     </div>
   </section>
 
@@ -400,6 +358,47 @@
     <div class="theme">
       <h3><span class="dot"></span><span data-i18n="theme5-h3">Keeping the lights on for enterprise clients</span></h3>
       <p data-i18n="theme5-p">Same-day fixes for production issues hitting enterprise clients directly — a multi-client OCR outage traced to a config gap and a one-character typo, a Microsoft 365 integration display bug — plus the ordinary, constant work of DATEV/Abacus/BMD accounting integrations, SSO/LDAP, and e-invoicing that a 300+ customer ERP platform runs on every day.</p>
+    </div>
+  </section>
+
+  <section class="block" id="research">
+    <div class="block-head">
+      <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
+      <h2 data-i18n="research-h2">Outside TEAMBOX: independent AI research builds</h2>
+      <p data-i18n="research-p">A way to stress-test what Gemini can actually do on real, messy problems instead of toy demos — built independently of TEAMBOX, in Google AI Studio.</p>
+    </div>
+
+    <div class="card" id="research-osint">
+      <a class="card-anchor" href="#research-osint" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
+      <h3 data-i18n="research-h3">OSINT Real-Time Tracker — multilingual conflict monitoring, built solo with Gemini</h3>
+      <p data-i18n="research-p1">A maps-based dashboard that monitors global conflict events close to real time. It takes open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events a researcher can actually use.</p>
+      <ol class="steps">
+        <li><span data-i18n="research-step1"><strong>Multilingual intake, no separate translation step.</strong> Paste raw source text in Ukrainian, Arabic, French, Hebrew, or English and Gemini handles extraction directly — entities, location, and language nuance in one pass, not a translate-then-analyze pipeline.</span></li>
+        <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
+        <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
+        <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
+        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CERT-UA for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
+      </ol>
+      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
+      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
+      <a class="card-link" href="https://osint.davidirving.dev/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
+    </div>
+
+    <div class="card" id="research-crimes">
+      <a class="card-anchor" href="#research-crimes" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
+      <h3 data-i18n="crimes-h3">Crimes of the 1% — a structured, sourced database of financial crime and litigation among the ultra-wealthy</h3>
+      <p data-i18n="crimes-p1">A database that catalogs corporate and executive-level financial crime — fraud, market manipulation, tax evasion, state capture — against the actual enforcement outcome on record: criminal conviction, settlement, deferred prosecution, or litigation still in progress. Built the same way as the OSINT tracker: solo, in Google AI Studio, testing whether an LLM can hold a large, sourced, structured dataset together instead of just summarizing text.</p>
+      <ol class="steps">
+        <li><span data-i18n="crimes-step1"><strong>Sourced by design, not by afterthought.</strong> Every case record carries one or more citations classified by document type — DOJ filing, SEC order, court judgment, EPA record, ICIJ archive — instead of a single unlabeled link.</span></li>
+        <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and a "worker-wage-equivalent" figure — how many years of an average worker's pay the penalty represents — and a companion inequality dashboard turns the dataset into charts by sector and crime type.</span></li>
+        <li><span data-i18n="crimes-step3"><strong>Two Gemini-powered lenses on the same data.</strong> An AI Fact-Finder modal answers ad-hoc questions against the dataset, and an AI Patterns modal surfaces cross-case trends — which sectors recur, which enforcement types are most common — the same "structured reasoning over messy real data" test as the OSINT build.</span></li>
+        <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets someone propose a new entry for review, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
+      </ol>
+      <p data-i18n="crimes-p2">Early-stage research build — React, TypeScript and Firebase/Firestore, seeded with an initial dataset rather than a continuously fact-checked ledger. Treat individual case entries as a starting point for your own verification, not a settled record.</p>
+      <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="crimes-tag-firestore">Firestore</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
+      <a class="card-link" href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" data-i18n="crimes-link">View live app →</a>
     </div>
   </section>
 
@@ -486,13 +485,12 @@
 
   I18N.de = {
     'nav-agentic': 'Agentic Engineering',
-    'nav-research': 'Persönliche KI-Recherche',
     'nav-year': 'Jahresrückblick',
     'nav-archive': 'Archiv',
     'hero-kicker': 'Wien, Österreich',
     'hero-h1': 'Head of Enterprise, everii Group.<br>Zwanzig Jahre in einer Codebase.',
     'hero-lede': `Ich baue seit zwei Jahrzehnten an TEAMBOX, der ERP-Plattform für Dienstleister,
-      die zum PSA-Marktführer im DACH-Raum geworden ist — angefangen als einer der ersten
+      die zum <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA-Marktführer im DACH-Raum</a> geworden ist — angefangen als einer der ersten
       Entwickler, heute verantwortlich für Enterprise-Integrationen, CI/CD und das Team
       dahinter. Mein aktueller Schwerpunkt: Agentic Engineering — KI-gestützte
       Entwicklungs-Workflows in eine lebende, zwanzig Jahre alte Codebase einbauen, ohne sie zu brechen.`,
@@ -565,8 +563,9 @@
     'feat6-tag-e2e': 'e2e-Tests',
     'feat7-h3': 'Ein einziger Pfad für Schemaänderungen deckte eine Reihe von Bugs auf, die echte Deployments gebrochen hätten',
     'feat7-p1': `Ein richtiges Schema-Migrationstool als einzigen Weg für Schemaänderungen
-      durchzusetzen — keine parallelen Legacy-Upgrade-Pfade mehr — förderte Probleme zutage, mit
-      denen das alte Tooling jahrelang durchgekommen war.`,
+      durchzusetzen — keine parallelen Legacy-Upgrade-Pfade mehr — förderte Probleme zutage, die
+      jahrelang unentdeckt geblieben waren, wie sie sich in jeder zwanzig Jahre alten Codebase
+      ansammeln.`,
     'feat7-step1': `<strong>Ein Flag, das nie funktioniert hatte.</strong> Der CLI-Flag-Parser
       des Legacy-Upgrade-Tools hatte überhaupt kein funktionierendes Langform-Flag — ein Bug,
       unsichtbar, solange jeder zufällig die Kurzform benutzte.`,
@@ -616,9 +615,10 @@
     'agentic1-p1': `Einen KI-Agenten samt zwei zweckgebauter Subagenten gebaut, der Kolleg:innen bei
       alltäglichen Problemen mit Firmen-Tools hilft — zuerst wird eine interne Wissensdatenbank
       und das Web nach einer bestehenden Antwort durchsucht, dann wird bei Bedarf namentlich an
-      die tatsächlich zuständige Person eskaliert. Vollständig in Langdock orchestriert, der
-      Agent-Plattform des Unternehmens; die zugrunde liegenden Tools und Integrationen stammen
-      von Langdock, das Orchestrierungsdesign und der Instruktionstext stammen von mir.`,
+      die tatsächlich zuständige Person eskaliert. Vollständig auf der internen
+      Agent-Orchestrierungsplattform des Unternehmens orchestriert; die zugrunde liegenden Tools
+      und Integrationen stammen von der Plattform, das Orchestrierungsdesign und der
+      Instruktionstext stammen von mir.`,
     'agentic1-step1': `<strong>Erst Selbsthilfe, immer offengelegt.</strong> Ein
       Wissensabruf-Subagent prüft ein internes Ticketsystem auf eine bekannte Lösung und weicht
       bei keinem Treffer auf eine allgemeine Websuche aus — und der Hauptagent nennt immer die
@@ -646,8 +646,8 @@
       Subagenten, als jede Prompt-Engineering-Entscheidung.`,
     'agentic1-tag-automation': 'Prozessautomatisierung',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
-    'research-h2': 'Außerhalb von TEAMBOX: Solo-KI-Recherche-Projekte',
-    'research-p': 'In meiner eigenen Zeit in Google AI Studio gebaut, nicht während der Arbeitszeit — ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos.',
+    'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
+    'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio.',
     'eyebrow-research': 'Persönliche KI-Recherche',
     'research-h3': 'OSINT Real-Time Tracker — mehrsprachige Konfliktüberwachung, solo mit Gemini gebaut',
     'research-p1': `Ein kartenbasiertes Dashboard, das globale Konfliktereignisse nahezu in
