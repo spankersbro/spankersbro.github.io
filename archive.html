@@ -112,6 +112,7 @@
   footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
   footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -425,7 +426,11 @@
 <footer>
   <div class="wrap">
     <span data-i18n="footer-copy">&copy; 2026 David Irving. Full archive, appended every cycle.</span>
-    <a href="index.html" data-i18n="footer-home">← Back to homepage</a>
+    <div class="footer-links">
+      <a href="index.html" data-i18n="footer-home">← Back to homepage</a>
+      <a href="impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
   </div>
 </footer>
 
@@ -850,7 +855,9 @@
       Infra-Migration leise ausgeliefert wird oder den Release-Zug zum Entgleisen bringt.`,
     'c1-card7-tag-docker-migration': 'Docker-Migration',
     'footer-copy': '&copy; 2026 David Irving. Vollständiges Archiv, bei jedem Zyklus ergänzt.',
-    'footer-home': '← Zurück zur Startseite'
+    'footer-home': '← Zurück zur Startseite',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
   };
 
   var META_DESC = {
