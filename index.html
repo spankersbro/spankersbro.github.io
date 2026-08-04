@@ -342,7 +342,7 @@
 
     <div class="theme">
       <h3><span class="dot"></span><span data-i18n="theme2-h3">Performance work, told honestly</span></h3>
-      <p data-i18n="theme2-p">Investigated a session-backend redesign (Redis-backed, documented in its own architecture decision record) and landed a change that cut session payload dramatically — then caught a Control-state edge case in review and reverted that specific piece the same day rather than let it ride. Followed up with safer, incremental steps: monitoring, a config switch, sampling-based measurement instead of a per-request check. The win that shipped was smaller than the one that didn't — that's the honest version.</p>
+      <p data-i18n="theme2-p">Investigated a Redis-backed session-backend redesign aimed at cutting session payload size, documented in its own architecture decision record. Testing surfaced a Control-state edge case that made the approach unsafe to ship as designed, so it was shelved rather than forced through — a well-documented research trail, not a shipped win.</p>
     </div>
 
     <div class="theme">
@@ -352,7 +352,7 @@
 
     <div class="theme">
       <h3><span class="dot"></span><span data-i18n="theme4-h3">Infrastructure that doesn't get a demo day</span></h3>
-      <p data-i18n="theme4-p">A multi-week Docker migration kept shipping cleanly against an actively-changing release branch through dozens of small conflict-resolution and pipeline fixes. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
+      <p data-i18n="theme4-p">Supported the CTO and development team through a multi-week Docker migration against an actively-changing release branch. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
     </div>
 
     <div class="theme">
@@ -726,14 +726,12 @@
       Sandbox-Demo. Das Commit-Volumen hat sich von Frühling bis Sommer etwa verdreifacht,
       während die Workflows gereift sind.`,
     'theme2-h3': 'Performance-Arbeit, ehrlich erzählt',
-    'theme2-p': `Ein Redesign des Session-Backends untersucht (Redis-basiert, dokumentiert in
-      einer eigenen Architekturentscheidung) und eine Änderung ausgeliefert, die die
-      Session-Payload drastisch reduziert hat — dann bei der Review einen
-      Control-State-Edge-Case entdeckt und genau diesen Teil noch am selben Tag zurückgerollt,
-      statt ihn laufen zu lassen. Danach mit sichereren, kleineren Schritten weitergemacht:
-      Monitoring, ein Config-Switch, stichprobenbasierte Messung statt einer Prüfung pro
-      Request. Der Gewinn, der tatsächlich ausgeliefert wurde, war kleiner als der, der es
-      nicht wurde — das ist die ehrliche Version.`,
+    'theme2-p': `Ein Redis-basiertes Redesign des Session-Backends untersucht, das die
+      Session-Payload verkleinern sollte, dokumentiert in einer eigenen
+      Architekturentscheidung. Beim Testen zeigte sich ein Control-State-Edge-Case, der den
+      Ansatz in der geplanten Form unsicher zum Ausliefern machte — daher wurde er verworfen,
+      statt erzwungen zu werden: eine gut dokumentierte Forschungsspur, kein ausgelieferter
+      Gewinn.`,
     'theme3-h3': 'Codequalität als ständige Gewohnheit',
     'theme3-p': `Ein systematisches Exception-Handling-Audit über rund 60 Dateien
       durchgeführt — Auth, Transport, Sync und File Storage — und als Architekturentscheidung
@@ -742,11 +740,11 @@
       selben Tag bei einem Rebase zurückgerollt; das Design blieb als Dokumentation erhalten,
       statt einen Merge zu erzwingen, der noch nicht bereit war.`,
     'theme4-h3': 'Infrastruktur, die keinen Demo-Day bekommt',
-    'theme4-p': `Eine mehrwöchige Docker-Migration lief durch Dutzende kleiner
-      Konfliktlösungen und Pipeline-Fixes hindurch weiter sauber gegen einen sich laufend
-      ändernden Release-Branch. Daneben: CI-Härtung (Dependency-Review, Security-Scanning,
-      verschärfte Berechtigungen), die aus der Plattformbewertung hervorging, aber jeder
-      Pipeline zugutekommt — unabhängig davon, wie wir uns bei diesem Anbieter entscheiden.`,
+    'theme4-p': `Unterstützte den CTO und das Entwicklungsteam bei einer mehrwöchigen
+      Docker-Migration gegen einen sich laufend ändernden Release-Branch. Daneben: CI-Härtung
+      (Dependency-Review, Security-Scanning, verschärfte Berechtigungen), die aus der
+      Plattformbewertung hervorging, aber jeder Pipeline zugutekommt — unabhängig davon, wie
+      wir uns bei diesem Anbieter entscheiden.`,
     'theme5-h3': 'Den Betrieb für Enterprise-Kunden am Laufen halten',
     'theme5-p': `Fixes am selben Tag für Produktionsprobleme, die Enterprise-Kunden direkt
       betrafen — ein Ausfall bei mehreren Kunden über eine OCR-Integration, zurückzuführen auf
