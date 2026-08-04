@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Strategies — David Irving</title>
+<meta name="description" id="metaDesc" content="Long-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — from David Irving.">
+<link rel="canonical" href="https://davidirving.dev/strategies/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Agentic Strategies — David Irving">
+<meta property="og:description" content="Long-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — from David Irving.">
+<meta property="og:url" content="https://davidirving.dev/strategies/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Agentic Strategies — David Irving">
+<meta name="twitter:description" content="Long-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — from David Irving.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Agentic Strategies",
+  "url": "https://davidirving.dev/strategies/",
+  "description": "Long-form writeups on the actual workflow behind agentic development, from David Irving.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" }
+}
+</script>
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  @media (max-width:520px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:64px 0 32px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(28px,5vw,38px);line-height:1.15;margin:0 0 16px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:16px;color:var(--sub);margin:0;max-width:600px}
+
+  section.block{padding:0 0 48px}
+
+  /* card */
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
+  .card h3{font-size:18px;margin:0 0 8px;letter-spacing:-.005em}
+  .card p{margin:0;color:var(--sub);font-size:14.5px}
+  .card p + p{margin-top:10px}
+  .card .eyebrow{color:var(--accent);font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px}
+  .card .meta{color:var(--sub);font-size:12.5px;margin:0 0 6px}
+  .card-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
+  .card-link:hover{opacity:.8}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">How the work actually gets built, not just what shipped</h1>
+    <p class="lede" data-i18n="hero-lede">Long-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — for anyone doing this kind of work themselves.</p>
+  </section>
+
+  <section class="block">
+    <div class="card">
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <p class="meta" data-i18n="post1-meta">August 2026</p>
+      <h3><a style="color:inherit;text-decoration:none" href="implementer-reviewer-tester.html" data-i18n="post1-h3">Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code</a></h3>
+      <p data-i18n="post1-p">A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.</p>
+      <a class="card-link" href="implementer-reviewer-tester.html" data-i18n="post1-link">Read the full writeup →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'hero-kicker': 'Agentic Strategies',
+    'hero-h1': 'Wie die Arbeit tatsächlich entsteht, nicht nur was am Ende steht',
+    'hero-lede': 'Ausführlichere Texte über den eigentlichen Workflow hinter Agentic Development — Scoping, Review-Disziplin, Verifikation — für alle, die diese Art von Arbeit selbst machen.',
+    'eyebrow-strategy': 'Agentic Strategies',
+    'post1-meta': 'August 2026',
+    'post1-h3': 'Implementer, Reviewer, Tester: Ein Workflow, um Features mit Claude Code schnell auszuliefern',
+    'post1-p': 'Ein praxiserprobter Workflow für KI-gestützte Feature-Entwicklung — Scoping-Disziplin, getrennte Implementer-/Reviewer-/Tester-Rollen, und warum die Geschwindigkeit der Verifikation wichtiger war als die Tippgeschwindigkeit.',
+    'post1-link': 'Den vollständigen Text lesen →',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Long-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — from David Irving.',
+    de: 'Ausführlichere Texte über den eigentlichen Workflow hinter Agentic Development — Scoping, Review-Disziplin, Verifikation — von David Irving.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

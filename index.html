@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>David Irving</title>
 <meta name="description" id="metaDesc" content="David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.">
+<link rel="canonical" href="https://davidirving.dev/">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="David Irving — Head of Enterprise, everii Group">
+<meta property="og:description" content="Twenty years building TEAMBOX, the PSA market leader in DACH. Now focused on agentic engineering.">
+<meta property="og:url" content="https://davidirving.dev/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="David Irving — Head of Enterprise, everii Group">
+<meta name="twitter:description" content="Twenty years building TEAMBOX, the PSA market leader in DACH. Now focused on agentic engineering.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "David Irving",
+  "url": "https://davidirving.dev/",
+  "jobTitle": "Head of Enterprise",
+  "worksFor": { "@type": "Organization", "name": "everii Group GmbH" },
+  "sameAs": [
+    "https://www.linkedin.com/in/davidrichardirving",
+    "https://github.com/spankersbro"
+  ]
+}
+</script>
 <meta name="google-adsense-account" content="ca-pub-3864037717989109">
 <!-- adsbygoogle.js is intentionally NOT loaded here as a static tag. It only gets injected
      by JS, and only after the cookie-consent banner below records an "accepted" choice
@@ -190,6 +213,7 @@
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
       <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
       <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
       <a class="nav-link" data-i18n="nav-archive" href="archive.html">Archive</a>
       <div class="btn-group">
@@ -264,7 +288,7 @@
         <li><span data-i18n="feat6-step3"><strong>Immutable once set, on purpose.</strong> The external ID locks after creation to guarantee uniqueness — a constraint added deliberately, not a limitation discovered later.</span></li>
         <li><span data-i18n="feat6-step4"><strong>Caught its own regressions before anyone else did.</strong> A literal external ID of "0" was being treated as unset, and client search silently broke the moment IDs stopped being purely numeric — both found and fixed in review, before either could reach a real client.</span></li>
       </ol>
-      <p data-i18n="feat6-p2">Still in progress, behind a feature flag, with a permanent end-to-end test suite added alongside it — the kind of change where "ship it behind a flag and watch closely" is the responsible call, not a hedge.</p>
+      <p data-i18n="feat6-p2">Shipped behind its feature flag for a staged rollout, with a permanent end-to-end test suite added alongside it. The workflow behind how it actually got built — implementer, reviewer, and tester run as separate, independently-checked roles — is written up in full in <a href="strategies/implementer-reviewer-tester.html">Agentic Strategies →</a>.</p>
       <div class="tags"><span class="tag">Feature</span><span class="tag" data-i18n="feat6-tag-data-model">Data Model</span><span class="tag" data-i18n="feat6-tag-feature-flag">Feature Flag</span><span class="tag" data-i18n="feat6-tag-e2e">e2e Testing</span></div>
     </div>
 
@@ -325,6 +349,23 @@
       </ol>
       <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="strategies">
+    <div class="block-head">
+      <p class="kicker" data-i18n="strategies-kicker">Agentic Strategies · Methodology</p>
+      <h2 data-i18n="strategies-h2">How the work actually gets built, not just what shipped</h2>
+      <p data-i18n="strategies-p">Longer-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — for anyone doing this kind of work themselves, not just a list of what got built.</p>
+    </div>
+
+    <div class="card" id="strategy-implementer-reviewer-tester">
+      <a class="card-anchor" href="#strategy-implementer-reviewer-tester" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <h3 data-i18n="strategy1-h3">Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code</h3>
+      <p data-i18n="strategy1-p1">Recently shipped a full production feature — new client/project number handling with edge cases nobody had scoped up front — in meaningfully less time than the "cheapest possible version" would have taken, using Claude Code as implementer, reviewer, and tester in separate, deliberately isolated roles.</p>
+      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy1-tag-review">Review Discipline</span><span class="tag" data-i18n="strategy1-tag-testing">Verification</span></div>
+      <a class="card-link" href="strategies/implementer-reviewer-tester.html" data-i18n="strategy1-link">Read the full writeup →</a>
     </div>
   </section>
 
@@ -554,10 +595,10 @@
       Eine externe ID mit dem Literal "0" wurde fälschlich als nicht gesetzt behandelt, und die
       Kundensuche brach still, sobald IDs nicht mehr rein numerisch waren — beides im Review
       gefunden und behoben, bevor es einen echten Kunden erreichen konnte.`,
-    'feat6-p2': `Noch in Arbeit, hinter einem Feature-Flag, mit einer dauerhaften
-      End-to-End-Testsuite daneben aufgebaut — die Art von Änderung, bei der "hinter einem Flag
-      ausliefern und genau beobachten" die verantwortungsvolle Entscheidung ist, keine
-      Absicherung nach unten.`,
+    'feat6-p2': `Ausgeliefert, hinter seinem Feature-Flag für einen stufenweisen Rollout, mit
+      einer dauerhaften End-to-End-Testsuite daneben aufgebaut. Wie das Ganze tatsächlich
+      entstanden ist — Implementierung, Review und Test als getrennte, unabhängig geprüfte
+      Rollen — steht ausführlich unter <a href="strategies/implementer-reviewer-tester.html">Agentic Strategies →</a>.`,
     'feat6-tag-data-model': 'Datenmodell',
     'feat6-tag-feature-flag': 'Feature-Flag',
     'feat6-tag-e2e': 'e2e-Tests',
@@ -645,6 +686,19 @@
       welche Aktionen beim Haupt-, menschzugewandten Agenten liegen und welche bei einem
       Subagenten, als jede Prompt-Engineering-Entscheidung.`,
     'agentic1-tag-automation': 'Prozessautomatisierung',
+    'strategies-kicker': 'Agentic Strategies · Methodik',
+    'strategies-h2': 'Wie die Arbeit tatsächlich entsteht, nicht nur was am Ende steht',
+    'strategies-p': 'Ausführlichere Texte über den eigentlichen Workflow hinter Agentic Development — Scoping, Review-Disziplin, Verifikation — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
+    'eyebrow-strategy': 'Agentic Strategies',
+    'strategy1-h3': 'Implementer, Reviewer, Tester: Ein Workflow, um Features mit Claude Code schnell auszuliefern',
+    'strategy1-p1': `Vor kurzem ein vollständiges Produktions-Feature ausgeliefert — neue
+      Kunden-/Projektnummer-Logik mit Randfällen, die niemand vorher erkannt hatte — in deutlich
+      weniger Zeit, als die "billigste mögliche Version" gebraucht hätte, mit Claude Code als
+      Implementer, Reviewer und Tester in getrennten, bewusst isolierten Rollen.`,
+    'strategy1-tag-review': 'Review-Disziplin',
+    'strategy1-tag-testing': 'Verifikation',
+    'strategy1-link': 'Den vollständigen Text lesen →',
+    'nav-strategies': 'Agentic Strategies',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
     'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
     'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio.',
