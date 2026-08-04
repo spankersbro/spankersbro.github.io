@@ -91,6 +91,9 @@
   .article li{margin-bottom:10px}
   .article li:last-child{margin-bottom:0}
   .article strong{color:var(--ink)}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
 
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
@@ -125,6 +128,34 @@
   </section>
 
   <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Implementer, reviewer, and tester run as separate roles connected by arrows, ending in a verified result">
+        <rect x="16" y="50" width="150" height="70" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="91" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Implementer(s)</text>
+        <text x="91" y="99" text-anchor="middle" font-size="10.5" fill="var(--sub)">parallel or sequential</text>
+
+        <rect x="245" y="50" width="150" height="70" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Reviewer</text>
+        <text x="320" y="99" text-anchor="middle" font-size="10.5" fill="var(--sub)">zero shared context</text>
+
+        <rect x="474" y="50" width="150" height="70" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="549" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Tester</text>
+        <text x="549" y="99" text-anchor="middle" font-size="10.5" fill="var(--sub)">browser + backend</text>
+
+        <path d="M170 85 H241" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
+        <path d="M399 85 H470" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
+
+        <defs>
+          <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <text x="320" y="155" text-anchor="middle" font-size="11.5" fill="var(--sub)">Each role only sees what it needs — findings get reported with evidence, not just a conclusion</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">The workflow, as a shape: three separate roles, each checking the last.</p>
+    </div>
 
     <h2 data-i18n="why-h2">Why this exists</h2>
     <p data-i18n="why-p">This is a workflow I used recently to ship a real production feature — new alphanumeric client/project number support, including several downstream effects on invoicing and reporting that nobody had scoped up front — end to end with Claude Code doing most of the implementation. None of what follows is exotic. It's the same discipline you'd want from a good human team: scope before you build, separate the person writing the code from the person checking it, and verify claims instead of trusting them. The difference with AI agents is that you can run implementer, reviewer, and tester as genuinely separate, cheap, parallel roles instead of hoping one person wears all three hats carefully.</p>
@@ -232,6 +263,7 @@
     'hero-h1': 'Implementer, Reviewer, Tester: Ein Workflow, um Features mit Claude Code schnell auszuliefern',
     'hero-lede': 'Ein praxiserprobter Workflow für KI-gestützte Feature-Entwicklung — Scoping-Disziplin, getrennte Implementer-/Reviewer-/Tester-Rollen, und warum die Geschwindigkeit der Verifikation wichtiger war als die Tippgeschwindigkeit.',
     'meta-date': 'Veröffentlicht im August 2026',
+    'diagram1-caption': 'Der Workflow als Form: drei getrennte Rollen, jede prüft die vorherige.',
 
     'why-h2': 'Warum das hier existiert',
     'why-p': `Das ist ein Workflow, mit dem ich vor kurzem ein echtes Produktions-Feature

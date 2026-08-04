@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent — David Irving</title>
+<meta name="description" id="metaDesc" content="How persistent per-project instructions, one shared style guide, and a memory system that survives between sessions keep several AI-assisted projects consistent instead of drifting apart.">
+<link rel="canonical" href="https://davidirving.dev/strategies/instructions-style-memory.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent">
+<meta property="og:description" content="How persistent per-project instructions, one shared style guide, and a memory system that survives between sessions keep several AI-assisted projects consistent instead of drifting apart.">
+<meta property="og:url" content="https://davidirving.dev/strategies/instructions-style-memory.html">
+<meta property="article:published_time" content="2026-08-04">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent">
+<meta name="twitter:description" content="How persistent per-project instructions, one shared style guide, and a memory system that survives between sessions keep several AI-assisted projects consistent instead of drifting apart.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent",
+  "description": "How persistent per-project instructions, one shared style guide, and a memory system that survives between sessions keep several AI-assisted projects consistent instead of drifting apart.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-04",
+  "dateModified": "2026-08-04",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/instructions-style-memory.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article strong{color:var(--ink)}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent</h1>
+    <p class="lede" data-i18n="hero-lede">Persistent per-project instructions, one shared style guide, and a memory system that survives between sessions — the scaffolding that stops several AI-assisted projects from drifting apart.</p>
+    <p class="meta-row" data-i18n="meta-date">Published August 2026</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three pillars — instructions, style, and memory — feeding into one consistent outcome across projects">
+        <rect x="20" y="20" width="180" height="80" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="110" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Instructions</text>
+        <text x="110" y="75" text-anchor="middle" font-size="10.5" fill="var(--sub)">per-project, read every session</text>
+
+        <rect x="230" y="20" width="180" height="80" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Style</text>
+        <text x="320" y="75" text-anchor="middle" font-size="10.5" fill="var(--sub)">one voice, shared across projects</text>
+
+        <rect x="440" y="20" width="180" height="80" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="530" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Memory</text>
+        <text x="530" y="75" text-anchor="middle" font-size="10.5" fill="var(--sub)">lessons that survive between sessions</text>
+
+        <path d="M110 100 V140 M320 100 V140 M530 100 V140" stroke="var(--sub)" stroke-width="1.5" fill="none"/>
+        <path d="M110 140 H530" stroke="var(--sub)" stroke-width="1.5" fill="none"/>
+        <path d="M320 140 V160" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
+
+        <rect x="200" y="170" width="240" height="42" rx="10" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="320" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-ink)">Consistent across every project</text>
+
+        <defs>
+          <marker id="arrow3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram2-caption">Three separate pieces of scaffolding, one outcome: nothing has to be re-explained or relearned.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p">Every one of my public projects — this site, and a couple of independent AI-research builds — gets touched by an AI coding agent regularly, often across sessions weeks apart. Left alone, that produces a specific, boring failure mode: each project drifts its own way, voice and quality bar diverge, and every new session re-litigates decisions a previous one already made. None of what follows fixes that with a clever prompt. It's three plain pieces of scaffolding — a persistent instructions file per project, one shared style guide across all of them, and a memory system that survives between sessions — doing for an AI collaborator roughly what onboarding docs and a style guide do for a human one.</p>
+
+    <h3 data-i18n="s1-h3">1. A persistent instructions file per project, checked into the repo</h3>
+    <p data-i18n="s1-p">Each project carries its own instructions file that an agent reads automatically at the start of every session: what the project is, its conventions, its guardrails, what's still outstanding. It's not a one-off prompt — it's versioned alongside the code, so it accumulates the same way documentation should: corrected when it's wrong, extended when something new is learned, never re-explained from scratch. The value isn't the file's existence, it's that it's the <em>first</em> thing read, every time, so a correction made once stays made.</p>
+
+    <h3 data-i18n="s2-h3">2. One shared style guide across every public touchpoint</h3>
+    <p data-i18n="s2-p1">Several small AI-research projects, built independently and quickly, ended up with inconsistent voice — one drifted into fabricated-sounding jargon and invented precision it hadn't earned. Rather than fix each project's copy separately, I wrote one shared style doc — plain rules about tone, real citations, no fabricated verification claims, no decorative jargon — and pointed every project's own instructions file at it. A prospective client or collaborator bouncing between my site and my side projects should see one coherent, credible person, not a polished CV next to unreviewed AI-generator output.</p>
+    <p data-i18n="s2-p2">That review pass caught real problems, not just tone: two of those research projects originally shipped with wide-open database rules combined with writes going through the client SDK — meaning anyone who found the necessarily-public client config could write or delete data directly from a browser. Fixed by moving writes server-side and locking the rules down. The style guide is what made me look at those projects critically enough to find it, not a separate security audit.</p>
+
+    <h3 data-i18n="s3-h3">3. A memory system that survives between sessions</h3>
+    <p data-i18n="s3-p">The most repetitive failure with AI coding agents isn't a wrong answer — it's the same correction, given again, because the last session's lesson didn't persist anywhere. I keep a small, file-based memory system alongside each project: notes on decisions and their reasoning, corrections I've had to make more than once, and pointers to where the ground truth actually lives (an external tracker, a specific doc) rather than a stale copy of it. An index file keeps it skimmable. The discipline that matters isn't the format — it's treating a repeated correction as a signal to write something down, not just fix it again.</p>
+
+    <h3 data-i18n="s4-h3">4. Draft in private, publish deliberately</h3>
+    <p data-i18n="s4-p">Not everything an agent touches is ready for anyone else to see. I keep a strict separation: private working repos for drafts, research notes, and anything not yet reviewed, and public repos that only ever receive material copied over on purpose, one finished piece at a time — never built directly against the private source. It's a slower publishing process than "just push it," on purpose. Several real fixes (the database-rules issue above, a couple of factual corrections to claims that had drifted from what actually happened) got caught specifically because that review step existed before anything crossed from private to public.</p>
+
+    <h2 data-i18n="concl-h2">What this actually buys</h2>
+    <p data-i18n="concl-p">None of this makes an agent smarter. What it does is stop the same categories of mistake from recurring: a security pattern gets checked on every new project because it's written down once, not rediscovered by luck each time; a factual claim gets challenged the same rigorous way every time because the process is documented, not remembered ad hoc; and a public project reads as part of one coherent body of work instead of a pile of disconnected demos with wildly different quality bars. It's the same underlying idea as any other agentic-engineering discipline: don't trust an agent's output by default, and don't trust your own memory of "we fixed that already" either — write the correction down somewhere it will actually get read next time.</p>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-strategies': 'Alle Strategies',
+    'hero-kicker': 'Agentic Strategies',
+    'hero-h1': 'Instructions, Style und Memory: Wie ich mehrere KI-gestützte Projekte konsistent halte',
+    'hero-lede': 'Dauerhafte projektbezogene Instruktionen, ein gemeinsamer Style-Guide und ein Memory-System, das über Sitzungen hinweg erhalten bleibt — das Gerüst, das mehrere KI-gestützte Projekte davon abhält, auseinanderzudriften.',
+    'meta-date': 'Veröffentlicht im August 2026',
+    'diagram2-caption': 'Drei getrennte Bausteine, ein Ergebnis: nichts muss neu erklärt oder neu gelernt werden.',
+
+    'why-h2': 'Warum das hier existiert',
+    'why-p': `Jedes meiner öffentlichen Projekte — diese Website, und ein paar unabhängige
+      KI-Recherche-Projekte — wird regelmäßig von einem KI-Coding-Agenten bearbeitet, oft in
+      Sitzungen, die Wochen auseinanderliegen. Sich selbst überlassen, führt das zu einem
+      bestimmten, unspektakulären Fehlermuster: Jedes Projekt driftet auf seine eigene Art,
+      Stimme und Qualitätsanspruch laufen auseinander, und jede neue Sitzung verhandelt
+      Entscheidungen neu, die eine frühere schon getroffen hat. Nichts von dem, was folgt,
+      löst das mit einem cleveren Prompt. Es sind drei einfache Bausteine — eine dauerhafte
+      Instruktionsdatei pro Projekt, ein gemeinsamer Style-Guide über alle Projekte hinweg, und
+      ein Memory-System, das über Sitzungen hinweg erhalten bleibt — die für einen
+      KI-Mitarbeiter ungefähr das leisten, was Onboarding-Dokumente und ein Styleguide für
+      einen menschlichen leisten.`,
+
+    's1-h3': '1. Eine dauerhafte Instruktionsdatei pro Projekt, im Repo versioniert',
+    's1-p': `Jedes Projekt trägt seine eigene Instruktionsdatei, die ein Agent zu Beginn jeder
+      Sitzung automatisch liest: was das Projekt ist, seine Konventionen, seine Leitplanken,
+      was noch offen ist. Das ist kein Einmal-Prompt — sie ist zusammen mit dem Code
+      versioniert und wächst so, wie Dokumentation wachsen sollte: korrigiert, wenn sie falsch
+      ist, erweitert, wenn etwas Neues gelernt wird, nie wieder von null erklärt. Der Wert
+      liegt nicht darin, dass die Datei existiert, sondern darin, dass sie jedes Mal das
+      <em>Erste</em> ist, was gelesen wird — sodass eine einmal gemachte Korrektur auch gemacht
+      bleibt.`,
+
+    's2-h3': '2. Ein gemeinsamer Style-Guide über alle öffentlichen Berührungspunkte hinweg',
+    's2-p1': `Mehrere kleine KI-Recherche-Projekte, unabhängig voneinander und schnell gebaut,
+      endeten mit uneinheitlicher Stimme — eines driftete in erfunden wirkenden Jargon und
+      Präzision, die es sich nicht verdient hatte. Statt die Texte jedes Projekts einzeln zu
+      fixen, habe ich ein gemeinsames Style-Dokument geschrieben — einfache Regeln zu Tonfall,
+      echten Quellenangaben, keine erfundenen Verifizierungs-Behauptungen, kein dekorativer
+      Jargon — und die Instruktionsdatei jedes Projekts darauf verweisen lassen. Ein
+      potenzieller Kunde oder Kollege, der zwischen meiner Website und meinen Nebenprojekten
+      hin- und herspringt, sollte eine kohärente, glaubwürdige Person sehen, keinen polierten
+      Lebenslauf neben ungeprüftem KI-Generator-Output.`,
+    's2-p2': `Dieser Review-Durchgang fand echte Probleme, nicht nur Tonfall: Zwei dieser
+      Recherche-Projekte liefen ursprünglich mit komplett offenen Datenbank-Regeln in
+      Kombination mit Schreibzugriffen über das Client-SDK — was bedeutet hätte, dass jeder,
+      der die notwendigerweise öffentliche Client-Konfiguration findet, direkt aus dem Browser
+      schreiben oder löschen könnte. Behoben, indem Schreibzugriffe serverseitig verschoben und
+      die Regeln gesperrt wurden. Der Style-Guide war es, der mich diese Projekte kritisch
+      genug ansehen ließ, um das zu finden — nicht ein separates Sicherheitsaudit.`,
+
+    's3-h3': '3. Ein Memory-System, das über Sitzungen hinweg erhalten bleibt',
+    's3-p': `Der häufigste Fehler mit KI-Coding-Agenten ist keine falsche Antwort — es ist
+      dieselbe Korrektur, die man ein zweites Mal gibt, weil die Lektion aus der letzten
+      Sitzung nirgendwo erhalten blieb. Ich führe neben jedem Projekt ein kleines,
+      dateibasiertes Memory-System: Notizen zu Entscheidungen und ihrer Begründung,
+      Korrekturen, die ich mehr als einmal machen musste, und Verweise darauf, wo die
+      eigentliche Wahrheit tatsächlich liegt (ein externes Tracking-System, ein bestimmtes
+      Dokument) statt einer veralteten Kopie davon. Eine Index-Datei hält das Ganze
+      überschaubar. Die Disziplin, auf die es ankommt, ist nicht das Format — es ist, eine
+      wiederholte Korrektur als Signal zu behandeln, etwas aufzuschreiben, statt sie einfach
+      noch einmal zu fixen.`,
+
+    's4-h3': '4. Privat entwerfen, gezielt veröffentlichen',
+    's4-p': `Nicht alles, was ein Agent berührt, ist schon bereit, dass es jemand anderes
+      sieht. Ich halte eine strikte Trennung ein: private Arbeits-Repos für Entwürfe,
+      Recherchenotizen und alles noch nicht Geprüfte, und öffentliche Repos, die Material
+      immer nur gezielt herüberkopiert bekommen, ein fertiges Stück nach dem anderen — nie
+      direkt gegen die private Quelle gebaut. Das ist absichtlich ein langsamerer
+      Veröffentlichungsprozess als "einfach pushen". Mehrere echte Fixes (das
+      Datenbank-Regel-Problem oben, ein paar faktische Korrekturen an Behauptungen, die von dem
+      abgewichen waren, was tatsächlich passiert ist) wurden genau deshalb gefangen, weil
+      dieser Review-Schritt existierte, bevor irgendetwas von privat nach öffentlich
+      wechselte.`,
+
+    'concl-h2': 'Was das tatsächlich bringt',
+    'concl-p': `Nichts davon macht einen Agenten schlauer. Was es tut: es verhindert, dass sich
+      dieselben Fehlerkategorien wiederholen. Ein Sicherheitsmuster wird bei jedem neuen
+      Projekt geprüft, weil es einmal aufgeschrieben ist, nicht jedes Mal durch Zufall neu
+      entdeckt; eine faktische Behauptung wird jedes Mal gleich rigoros hinterfragt, weil der
+      Prozess dokumentiert ist, nicht ad hoc erinnert; und ein öffentliches Projekt liest sich
+      als Teil eines kohärenten Gesamtwerks, statt als Haufen unzusammenhängender Demos mit
+      wild unterschiedlichem Qualitätsanspruch. Es ist dieselbe Grundidee wie jede andere
+      Agentic-Engineering-Disziplin: der Ausgabe eines Agenten nicht standardmäßig vertrauen —
+      und der eigenen Erinnerung an "das haben wir doch schon gefixt" auch nicht vertrauen. Die
+      Korrektur irgendwo aufschreiben, wo sie beim nächsten Mal auch tatsächlich gelesen wird.`,
+
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'How persistent per-project instructions, one shared style guide, and a memory system that survives between sessions keep several AI-assisted projects consistent instead of drifting apart.',
+    de: 'Wie dauerhafte projektbezogene Instruktionen, ein gemeinsamer Style-Guide und ein Memory-System, das über Sitzungen hinweg erhalten bleibt, mehrere KI-gestützte Projekte konsistent halten, statt auseinanderzudriften.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

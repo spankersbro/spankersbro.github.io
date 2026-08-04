@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch — David Irving</title>
+<meta name="description" id="metaDesc" content="How a layered documentation system — one canonical guide read by three different AI tools, explicit precedence rules, and decision records that capture why, not just what — means an AI agent (or a new hire) never has to re-derive a legacy codebase from first principles.">
+<link rel="canonical" href="https://davidirving.dev/strategies/context-decisions-guardrails.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch">
+<meta property="og:description" content="How a layered documentation system — one canonical guide read by three different AI tools, explicit precedence rules, and decision records that capture why, not just what — means an AI agent (or a new hire) never has to re-derive a legacy codebase from first principles.">
+<meta property="og:url" content="https://davidirving.dev/strategies/context-decisions-guardrails.html">
+<meta property="article:published_time" content="2026-08-04">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch">
+<meta name="twitter:description" content="How a layered documentation system — one canonical guide read by three different AI tools, explicit precedence rules, and decision records that capture why, not just what — means an AI agent (or a new hire) never has to re-derive a legacy codebase from first principles.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch",
+  "description": "How a layered documentation system — one canonical guide read by three different AI tools, explicit precedence rules, and decision records that capture why, not just what — means an AI agent (or a new hire) never has to re-derive a legacy codebase from first principles.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-04",
+  "dateModified": "2026-08-04",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/context-decisions-guardrails.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article strong{color:var(--ink)}
+  .article code{background:var(--mono-bg);color:var(--mono-ink);padding:1px 5px;border-radius:4px;font-size:.9em}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch</h1>
+    <p class="lede" data-i18n="hero-lede">One canonical guide, read consistently by three different AI tools, and a strict split between what's being asked for, what's been decided and why, and how a specific piece of work is scoped.</p>
+    <p class="meta-row" data-i18n="meta-date">Published August 2026</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A five-layer documentation hierarchy read top to bottom: context, requirements, decisions, delivery, then baseline conventions">
+        <g font-size="13.5" font-weight="700" fill="var(--ink)">
+          <rect x="120" y="10" width="400" height="42" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+          <text x="320" y="36" text-anchor="middle">Context — why this initiative exists</text>
+
+          <rect x="120" y="66" width="400" height="42" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+          <text x="320" y="92" text-anchor="middle">Requirements — what's being asked (PRD)</text>
+
+          <rect x="120" y="122" width="400" height="42" rx="10" fill="var(--accent)" stroke="var(--accent)"/>
+          <text x="320" y="148" text-anchor="middle" fill="var(--accent-ink)">Decisions — why it must be built this way (ADR)</text>
+
+          <rect x="120" y="178" width="400" height="42" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+          <text x="320" y="204" text-anchor="middle">Delivery — this specific piece of work</text>
+
+          <rect x="120" y="234" width="400" height="42" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+          <text x="320" y="260" text-anchor="middle" font-size="12">Baseline conventions — the default, absent a more specific rule</text>
+        </g>
+
+        <path d="M70 20 V270" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+        <text x="45" y="150" text-anchor="middle" font-size="11" fill="var(--sub)" transform="rotate(-90 45 150)">read in this order</text>
+
+        <defs>
+          <marker id="arrow2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--sub)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram3-caption">More specific always wins over more general — and a real conflict gets flagged, not silently resolved.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p">An AI agent dropped into a large, old codebase with no context will do exactly what a new hire does on day one: read the code and infer intent. That's slow, and worse, it's unreliable — inferred intent is a guess, and a codebase built up over twenty years has plenty of decisions that look arbitrary from the code alone but exist for real, non-obvious reasons. Re-deriving those reasons from scratch, every session, either by a human or an agent, wastes time and eventually reproduces a mistake someone already made and fixed once. The alternative is writing decisions down once, in a form that's actually consulted rather than filed away — and treating that as seriously for an AI collaborator as you would for a new hire's onboarding.</p>
+
+    <h3 data-i18n="s1-h3">1. One canonical guide, read by every AI tool the same way</h3>
+    <p data-i18n="s1-p">Three different AI coding tools touch this codebase — Claude Code, GitHub Copilot, and JetBrains Junie — each with its own configuration format. The obvious failure mode is writing separate instructions for each and watching them quietly drift apart. Instead there's one full guide — project structure, conventions, guardrails, where to look for what — and each tool's own config file (Claude Code's <code>CLAUDE.md</code>, GitHub Copilot's <code>copilot-instructions.md</code>) is a short pointer into it, not a parallel copy. A tool-specific file states the handful of things that tool needs immediately, then says "the full guide lives here, read it first." One source of truth, several thin adapters, so a correction made once actually applies to all three tools at once — and so the choice of which AI tool a developer happens to be using on a given day is genuinely irrelevant to the outcome, not something that quietly changes what the codebase expects of them.</p>
+
+    <h3 data-i18n="s2-h3">2. A stated order to consult sources in — not an implicit one</h3>
+    <p data-i18n="s2-p">The guide doesn't just list what documentation exists; it states the order to read it in when implementing or changing behavior: first the high-level context for why an initiative exists, then the specific requirements and acceptance criteria for what's being asked, then the durable architectural decisions that constrain how, then the delivery-level breakdown of this particular piece of work, then the baseline engineering conventions that apply by default absent a more specific rule. And it states what happens when two of those disagree: more specific wins over more general, and — critically — the agent is instructed to surface the conflict explicitly rather than silently pick a side. An agent that guesses which instruction takes precedence is making an undocumented judgment call on your behalf; one that's told the actual precedence order doesn't have to guess, and one that's told to flag conflicts doesn't get to quietly resolve them in whichever direction was easiest.</p>
+
+    <h3 data-i18n="s3-h3">3. Decisions get written down with their reasoning attached, not just their conclusion</h3>
+    <p data-i18n="s3-p">The architectural-decisions layer isn't a style guide — it's a record of durable, sometimes non-obvious technical constraints along with <em>why</em> they exist, specifically because the codebase has traps that don't announce themselves as bugs. A framework can be built such that a subtly wrong return type, or a mismatched field name, produces no error at all — just quietly wrong behavior nobody notices until much later. Reading the source code won't reliably reveal a trap like that; testing the surface behavior might not either, if the wrong path happens not to get exercised. So it gets written down explicitly, once: this exact shape of mistake, why the framework behaves that way, what it looks like when you hit it. An agent that's told about the trap avoids it on the first attempt. An agent — or a person — left to discover it by trial and error eventually will, but only after shipping the same silent failure everyone before them also shipped.</p>
+
+    <h3 data-i18n="s4-h3">4. Requirements become something an agent can actually build from</h3>
+    <p data-i18n="s4-p">A request that only exists as a conversation, a slide, or someone's memory of a meeting is not something an agent (or a new team member) can reliably work from — it has to be re-extracted and re-interpreted every time someone touches that area, and every re-interpretation is a new chance to get it slightly wrong. So incoming requests get converted into a structured, stable document: what's actually being requested, and what "done" concretely means, kept engineering-readable and kept in sync with the original ask rather than drifting from it. That document, not a person's recollection of a meeting, is what an agent should build against — and it's exactly as useful to a human picking up the same ticket six months later.</p>
+
+    <h3 data-i18n="s5-h3">5. Explicit guardrails against the agent's own initiative</h3>
+    <p data-i18n="s5-p">Separately from what to read, the guide states what an agent should never do on its own judgment: don't invent requirements that aren't documented, don't silently expand scope beyond what was actually asked, respect a documented non-goal, prefer the smallest change that satisfies the requirement over a broader redesign. This matters more with an agent than with most humans, because an agent that's asked to fix one thing will often — helpfully, and without any bad intent — notice three other things nearby it thinks should also change. A human colleague usually asks first. An agent needs to be told, explicitly, that noticing something out of scope is a thing to flag, not a thing to just also do. None of this is tool-specific — the guardrails live in the documentation, not in any one product's settings, so the same rule applies whichever of the three tools happens to be running.</p>
+
+    <h2 data-i18n="concl-h2">What this actually buys</h2>
+    <p data-i18n="concl-p1">None of this makes an agent smarter, and none of it is about clever prompting. What it does is convert institutional knowledge that would otherwise live only in a few people's heads — or get silently relearned the expensive way, repeatedly — into something written down once and consulted by default. The same documents that stop an agent from re-deriving the codebase from first principles every session are, almost without modification, the best onboarding material a new human hire could get too — with one advantage most onboarding docs never have: they can't quietly go stale, because agents depend on them being accurate every single day, not just once during someone's first week. And because the guidance lives in the codebase rather than in any single tool's configuration or a person's memory, any agent working from it — Claude Code today, whichever tool replaces it in a few years — should land in roughly the same place.</p>
+    <p data-i18n="concl-p2"><strong>If you're setting this up yourself:</strong> start with one canonical guide and keep every other AI tool's config file a thin pointer into it, not a copy. Give each document type exactly one job — context explains why, requirements define what, decisions capture why it has to be built that way, delivery docs scope this specific piece of work — and resist merging them, because a document trying to do two jobs at once ends up serving neither well. And write decisions down when they're made, not retroactively; a decision record written months later is really just an aging memory with better formatting.</p>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-strategies': 'Alle Strategies',
+    'hero-kicker': 'Agentic Strategies',
+    'hero-h1': 'Context, Decisions und Guardrails: Warum Agents (und neue Kolleg:innen) deine Codebase nicht von Grund auf neu herleiten sollten',
+    'hero-lede': 'Ein zentraler Guide, den drei verschiedene KI-Tools konsistent lesen, und eine klare Trennung zwischen dem, was gefragt ist, dem, was entschieden wurde und warum, und dem, wie ein konkretes Arbeitspaket zugeschnitten ist.',
+    'meta-date': 'Veröffentlicht im August 2026',
+    'diagram3-caption': 'Spezifischeres gewinnt immer gegen Allgemeineres — und ein echter Konflikt wird gemeldet, nicht stillschweigend aufgelöst.',
+
+    'why-h2': 'Warum das hier existiert',
+    'why-p': `Ein KI-Agent, der ohne Kontext in eine große, alte Codebase gesetzt wird, macht
+      genau das, was auch eine neue Kolleg:in am ersten Tag macht: den Code lesen und die
+      Absicht dahinter erraten. Das ist langsam, und schlimmer noch, unzuverlässig — erratene
+      Absicht ist eine Vermutung, und eine über zwanzig Jahre gewachsene Codebase hat genug
+      Entscheidungen, die allein aus dem Code betrachtet willkürlich wirken, aber aus echten,
+      nicht offensichtlichen Gründen existieren. Diese Gründe jedes Mal neu herzuleiten — ob
+      durch einen Menschen oder einen Agenten — verschwendet Zeit und reproduziert am Ende
+      einen Fehler, den schon einmal jemand gemacht und behoben hat. Die Alternative:
+      Entscheidungen einmal aufschreiben, in einer Form, die tatsächlich konsultiert wird statt
+      nur abgelegt zu werden — und das für einen KI-Mitarbeiter genauso ernst nehmen wie das
+      Onboarding einer neuen Kolleg:in.`,
+
+    's1-h3': '1. Ein zentraler Guide, von jedem KI-Tool gleich gelesen',
+    's1-p': `Drei verschiedene KI-Coding-Tools arbeiten an dieser Codebase — Claude Code,
+      GitHub Copilot und JetBrains Junie — jedes mit seinem eigenen Konfigurationsformat. Der
+      naheliegende Fehler wäre, für jedes eigene Instruktionen zu schreiben und zuzusehen, wie
+      sie langsam auseinanderdriften. Stattdessen gibt es einen vollständigen Guide —
+      Projektstruktur, Konventionen, Leitplanken, wo man was findet — und die eigene
+      Konfigurationsdatei jedes Tools (Claude Codes <code>CLAUDE.md</code>, GitHub Copilots
+      <code>copilot-instructions.md</code>) ist nur ein kurzer Verweis darauf, keine
+      Parallelkopie. Eine tool-spezifische Datei nennt die paar Dinge, die dieses Tool sofort
+      braucht, und verweist dann: "Der vollständige Guide liegt hier, den zuerst lesen." Eine
+      Quelle der Wahrheit, mehrere dünne Adapter — sodass eine einmal gemachte Korrektur
+      tatsächlich für alle drei Tools gleichzeitig gilt, und sodass es für das Ergebnis
+      wirklich unerheblich ist, welches KI-Tool eine Kolleg:in an einem bestimmten Tag zufällig
+      benutzt, statt dass sich still ändert, was die Codebase von ihr erwartet.`,
+
+    's2-h3': '2. Eine festgelegte Reihenfolge, in der Quellen konsultiert werden — keine implizite',
+    's2-p': `Der Guide listet nicht nur auf, welche Dokumentation existiert — er legt fest, in
+      welcher Reihenfolge sie beim Umsetzen oder Ändern von Verhalten gelesen wird: zuerst der
+      übergeordnete Kontext, warum eine Initiative überhaupt existiert, dann die konkreten
+      Anforderungen und Abnahmekriterien, was gefragt ist, dann die dauerhaften
+      architektonischen Entscheidungen, die das Wie einschränken, dann der Delivery-Zuschnitt
+      dieses konkreten Arbeitspakets, dann die Standard-Engineering-Konventionen, die mangels
+      spezifischerer Regel gelten. Und er legt fest, was passiert, wenn zwei davon sich
+      widersprechen: Spezifischeres gewinnt gegen Allgemeineres — und, entscheidend, der Agent
+      wird angewiesen, den Konflikt explizit offenzulegen, statt ihn stillschweigend für eine
+      Seite zu entscheiden. Ein Agent, der rät, welche Anweisung Vorrang hat, trifft eine
+      undokumentierte Entscheidung in deinem Namen; einer, dem die tatsächliche Vorrangordnung
+      gesagt wird, muss nicht raten — und einer, der angewiesen wird, Konflikte zu melden,
+      darf sie nicht einfach in die bequemste Richtung stillschweigend auflösen.`,
+
+    's3-h3': '3. Entscheidungen werden mit ihrer Begründung aufgeschrieben, nicht nur mit ihrem Ergebnis',
+    's3-p': `Die Schicht der architektonischen Entscheidungen ist kein Styleguide — sie ist
+      ein Protokoll dauerhafter, teils nicht offensichtlicher technischer Zwänge samt der
+      Begründung, warum sie existieren, gerade weil die Codebase Fallen enthält, die sich nicht
+      als Bug ankündigen. Ein Framework kann so gebaut sein, dass ein subtil falscher
+      Rückgabetyp oder ein nicht passender Feldname überhaupt keinen Fehler erzeugt — nur
+      stillschweigend falsches Verhalten, das niemandem auffällt, bis es viel später auffällt.
+      Den Quellcode zu lesen deckt eine solche Falle nicht zuverlässig auf; das Testen des
+      sichtbaren Verhaltens vielleicht auch nicht, falls der falsche Pfad zufällig nicht
+      durchlaufen wird. Also wird es einmal explizit aufgeschrieben: genau diese Art von
+      Fehler, warum sich das Framework so verhält, wie es aussieht, wenn man darauf stößt. Ein
+      Agent, dem die Falle genannt wurde, vermeidet sie beim ersten Versuch. Ein Agent — oder
+      ein Mensch — der sie durch Versuch und Irrtum selbst entdecken muss, wird sie
+      irgendwann finden, aber erst, nachdem er denselben stillen Fehler ausgeliefert hat, den
+      schon alle vor ihm ausgeliefert haben.`,
+
+    's4-h3': '4. Anforderungen werden zu etwas, aus dem ein Agent tatsächlich bauen kann',
+    's4-p': `Eine Anfrage, die nur als Gespräch, als Folie oder als jemandes Erinnerung an ein
+      Meeting existiert, ist nichts, worauf sich ein Agent (oder ein neues Teammitglied)
+      verlässlich stützen kann — sie muss jedes Mal neu herausgelesen und neu interpretiert
+      werden, wenn jemand diesen Bereich anfasst, und jede Neuinterpretation ist eine neue
+      Gelegenheit, sie leicht falsch zu verstehen. Also wird eine eingehende Anfrage in ein
+      strukturiertes, stabiles Dokument überführt: was tatsächlich angefragt wird, und was
+      "fertig" konkret bedeutet — engineering-lesbar gehalten und synchron mit der
+      ursprünglichen Anfrage, statt von ihr abzudriften. Dieses Dokument, nicht die Erinnerung
+      einer Person an ein Meeting, ist das, worauf ein Agent aufbauen sollte — und es ist für
+      einen Menschen, der das gleiche Ticket sechs Monate später übernimmt, genauso nützlich.`,
+
+    's5-h3': '5. Explizite Leitplanken gegen die eigene Initiative des Agenten',
+    's5-p': `Getrennt davon, was zu lesen ist, legt der Guide fest, was ein Agent niemals aus
+      eigenem Urteil tun sollte: keine Anforderungen erfinden, die nicht dokumentiert sind,
+      den Scope nicht stillschweigend über das tatsächlich Gefragte hinaus erweitern, ein
+      dokumentiertes Nicht-Ziel respektieren, die kleinste Änderung bevorzugen, die die
+      Anforderung erfüllt, statt eines breiteren Redesigns. Das ist bei einem Agenten
+      wichtiger als bei den meisten Menschen, weil ein Agent, der gebeten wird, eine Sache zu
+      fixen, oft — hilfsbereit und ohne jede schlechte Absicht — drei weitere Dinge in der
+      Nähe bemerkt, die er auch für änderungswürdig hält. Ein menschlicher Kollege fragt
+      meistens vorher. Einem Agenten muss man explizit sagen, dass das Bemerken von etwas
+      außerhalb des Scopes eine Sache ist, die man meldet, nicht eine, die man einfach auch
+      noch macht. Nichts davon ist tool-spezifisch — die Leitplanken leben in der
+      Dokumentation, nicht in den Einstellungen eines einzelnen Produkts, also gilt dieselbe
+      Regel, welches der drei Tools auch gerade läuft.`,
+
+    'concl-h2': 'Was das tatsächlich bringt',
+    'concl-p1': `Nichts davon macht einen Agenten schlauer, und nichts davon hat mit cleveren
+      Prompts zu tun. Was es tut: Es verwandelt institutionelles Wissen, das sonst nur in ein
+      paar Köpfen leben oder wiederholt auf die teure Art neu gelernt würde, in etwas, das
+      einmal aufgeschrieben und standardmäßig konsultiert wird. Dieselben Dokumente, die einen
+      Agenten davon abhalten, die Codebase jede Sitzung von Grund auf neu herzuleiten, sind,
+      fast ohne Änderung, das beste Onboarding-Material, das eine neue Kolleg:in bekommen
+      könnte — mit einem Vorteil, den die meisten Onboarding-Dokumente nie haben: Sie können
+      nicht einfach veralten, weil Agenten jeden einzelnen Tag auf ihre Richtigkeit angewiesen
+      sind, nicht nur einmal in der ersten Woche. Und weil die Anleitung in der Codebase lebt
+      statt in der Konfiguration eines einzelnen Tools oder der Erinnerung einer Person,
+      sollte jeder Agent, der damit arbeitet — Claude Code heute, welches Tool es in ein paar
+      Jahren auch ersetzt — ungefähr am selben Punkt landen.`,
+    'concl-p2': `<strong>Wenn du das selbst aufbauen willst:</strong> Fang mit einem
+      zentralen Guide an und halte die Konfigurationsdatei jedes anderen KI-Tools als dünnen
+      Verweis darauf, nicht als Kopie. Gib jedem Dokumenttyp genau eine Aufgabe — Kontext
+      erklärt das Warum, Anforderungen definieren das Was, Entscheidungen halten fest, warum
+      es genau so gebaut werden muss, Delivery-Dokumente grenzen dieses konkrete Arbeitspaket
+      ein — und widersteh der Versuchung, sie zu vermischen, denn ein Dokument, das zwei
+      Aufgaben gleichzeitig erledigen will, erledigt am Ende keine davon gut. Und schreib
+      Entscheidungen auf, wenn sie getroffen werden, nicht rückwirkend — ein Decision Record,
+      das Monate später geschrieben wird, ist im Grunde nur eine alternde Erinnerung mit
+      besserer Formatierung.`,
+
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'How a layered documentation system — one canonical guide read by three different AI tools, explicit precedence rules, and decision records that capture why, not just what — means an AI agent (or a new hire) never has to re-derive a legacy codebase from first principles.',
+    de: 'Wie ein mehrschichtiges Dokumentationssystem — ein zentraler Guide, den drei verschiedene KI-Tools konsistent lesen, klare Vorrangregeln und Decision Records, die das Warum festhalten — dafür sorgt, dass ein KI-Agent (oder eine neue Kolleg:in) eine Legacy-Codebase nie von Grund auf neu herleiten muss.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
