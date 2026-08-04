@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code — David Irving</title>
+<meta name="description" id="metaDesc" content="A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.">
+<link rel="canonical" href="https://davidirving.dev/strategies/implementer-reviewer-tester.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code">
+<meta property="og:description" content="A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.">
+<meta property="og:url" content="https://davidirving.dev/strategies/implementer-reviewer-tester.html">
+<meta property="article:published_time" content="2026-08-04">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code">
+<meta name="twitter:description" content="A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code",
+  "description": "A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-04",
+  "dateModified": "2026-08-04",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/implementer-reviewer-tester.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
+           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
+           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
+           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code</h1>
+    <p class="lede" data-i18n="hero-lede">A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.</p>
+    <p class="meta-row" data-i18n="meta-date">Published August 2026</p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p">This is a workflow I used recently to ship a real production feature — new alphanumeric client/project number support, including several downstream effects on invoicing and reporting that nobody had scoped up front — end to end with Claude Code doing most of the implementation. None of what follows is exotic. It's the same discipline you'd want from a good human team: scope before you build, separate the person writing the code from the person checking it, and verify claims instead of trusting them. The difference with AI agents is that you can run implementer, reviewer, and tester as genuinely separate, cheap, parallel roles instead of hoping one person wears all three hats carefully.</p>
+
+    <h3 data-i18n="s1-h3">1. Don't start coding until the ticket is actually scoped</h3>
+    <p data-i18n="s1-p1">The feature arrived as a vague ask. Before writing anything, I pushed back in writing until the real blockers surfaced — payment-reference formats that assumed the old numbering scheme, project-number generation logic that assumed it too, a legacy UI layer nobody had mentioned. Every open question became an explicit, numbered decision, and I got an actual sign-off on all of them before implementation started. It took real back-and-forth, but it meant the build phase had almost no "wait, what did we actually mean by X" moments.</p>
+    <p data-i18n="s1-p2">The fastest implementation is the one that never has to backtrack. Spend the first chunk of time turning a vague ask into a checklist someone with authority has actually approved.</p>
+
+    <h3 data-i18n="s2-h3">2. Split the work by risk and dependency, not by file type</h3>
+    <p data-i18n="s2-p">The work split naturally into a small, sequential, high-stakes core (the number-generation logic itself — touches money-adjacent code, every step depends on the last being correct) and a wide, mostly-independent surface (every screen that displays or searches the new field). The core went first, reviewed at every step, run as one continuous thread. Only once it was correct and tested did the wide UI work start — building on a foundation that wouldn't change under it, instead of guessing at behavior that might still move.</p>
+
+    <h3 data-i18n="s3-h3">3. Implementer → reviewer → tester, as separate roles</h3>
+    <p data-i18n="s3-p1">For the wide UI work, several implementer agents each took one screen, working from the same spec with no visibility into each other's work. Then a single reviewer — a different model, with zero context on how any of it was written — read every diff against the spec looking specifically for things a same-context self-review would miss. It caught things I wouldn't have: a search filter clause that silently changed unrelated filtering behavior, a double-escaping bug that only broke one specific input shape, and a whole legacy UI code path that had been updated on the frontend but never actually wired up to fetch the new data — nothing the implementer changed could ever have shown up on screen, because the request that would have carried it was never made.</p>
+    <p data-i18n="s3-p2">A reviewer who wrote the code will confirm their own assumptions. A reviewer with no stake in the implementation, told specifically what to check, finds a different class of bug than the author ever will in their own code.</p>
+    <p data-i18n="s3-p3">The rule of thumb for when this is worth the setup: wide, low-coupling surface area benefits from fanning out implementers in parallel and reviewing once at the end. Narrow, sequential, high-stakes logic doesn't benefit from parallel fan-out — there's nothing to parallelize when every step depends on the last — but still benefits from the same implementer/reviewer separation, just run one step at a time instead of all at once.</p>
+
+    <h3 data-i18n="s4-h3">4. "No behavior change for anyone else" is a testable claim, not a design intention</h3>
+    <p data-i18n="s4-p">The single most important acceptance criterion was that nothing changes for clients not using the new feature — byte for byte, forever. That only stays true if every new code path is gated behind a flag and a per-record condition with no exceptions, and if every touchpoint has an explicit flag-off regression test, not just a flag-on happy-path test. I wrote one for every file touched, and verified each one actually fails if you delete the gate — revert the fix, confirm it goes red, restore it, confirm green. That revert-and-confirm step is cheap, and it's the only way to actually know a test is testing anything.</p>
+
+    <h3 data-i18n="s5-h3">5. Browser-verify before calling anything done</h3>
+    <p data-i18n="s5-p">My implementer agents were upfront that they had no browser tool and couldn't confirm their own UI changes rendered correctly — which is the right thing for an agent to say, not a shortcoming. I closed that gap two ways: Playwright's <code>codegen</code> tool, where a human clicks through the real UI and it generates a runnable test with real selectors live; and screenshots taken mid-script and actually looked at, not just treated as "the test passed." Twice in this piece of work, a passing test turned out to be checking the wrong UI element entirely — only looking at the rendered pixels caught it.</p>
+
+    <h3 data-i18n="s6-h3">6. Some of the best findings came from just asking "does that actually work?"</h3>
+    <p data-i18n="s6-p1">A couple of the most valuable fixes came from a plain question, not from process: "shouldn't we be able to search by this new number too?" surfaced that search had never really worked on two separate screens — a pre-existing gap, unrelated to this feature, that a direct question found immediately. "Check every UI, not just the one you tested" found that one search box was doing pure client-side filtering and never touched the backend logic at all, meaning a technically-correct backend fix had almost no real caller.</p>
+    <p data-i18n="s6-p2">Don't trust that a fix works because a test passes near it. Ask "does this actually get used" and "did we check every place this needs to hold," out loud, regularly.</p>
+
+    <h3 data-i18n="s7-h3">7. The collaboration pattern that actually produced these findings</h3>
+    <p data-i18n="s7-intro">A few things about <em>how</em> the back-and-forth worked, generalized beyond this one feature:</p>
+    <ul>
+      <li data-i18n="s7-li1"><strong>Raise concerns as plain questions, not instructions.</strong> "Wait, could we search by the old number too?" finds more bugs than a longer, more prescriptive spec.</li>
+      <li data-i18n="s7-li2"><strong>Every claim gets checked empirically before it's trusted.</strong> Not "let me think about whether that's true" — "let me write a two-line script against real data and see." More than once this changed the answer from what seemed obviously true to something more specific and correct.</li>
+      <li data-i18n="s7-li3"><strong>Findings get reported with evidence attached, not just a conclusion.</strong> "Fixed the search bug" is much weaker than "here's the query before the fix, here's what it returned, here's the same query after — confirmed by reverting and watching the test go red again."</li>
+      <li data-i18n="s7-li4"><strong>Scope grows by small increments, not full re-plans.</strong> A new finding becomes one more line on an existing sign-off, not a reason to redo the whole plan.</li>
+      <li data-i18n="s7-li5"><strong>Decisions that need a human get asked as a real question with real options, at the moment they're needed</strong> — not bundled into an end-of-day status update where they're easy to skim past.</li>
+      <li data-i18n="s7-li6"><strong>When something is genuinely unverified, say so instead of asserting it.</strong> More than once an agent said outright "I have no browser tool, I couldn't check this renders" instead of claiming success — which is exactly what made it obvious where I still needed to look myself.</li>
+    </ul>
+    <p data-i18n="s7-outro">None of this is about clever prompting. It's treating the agent's output the way you'd treat a junior engineer's pull request — "did you actually check that," "what happens in the case you didn't mention," "show me the evidence" — except in minutes instead of a day, and with several independent checks running in parallel instead of one at a time.</p>
+
+    <h3 data-i18n="s8-h3">8. "It's green" is a claim about one log, not a fact about the code</h3>
+    <p data-i18n="s8-p1">Three things worth generalizing from building the permanent end-to-end test suite for this feature: test setup needs the same discipline as the feature itself — no manual database edits, only paths a real integration would actually use, which itself surfaced two previously-invisible gaps in the underlying API. A passing CI job isn't the same claim as "the test passed on its first try" — most CI setups retry a failed test once before marking the job green, which can quietly hide real flakiness behind a "success" label; the only way to catch it is to read the actual run log for retry markers, not just the pass/fail summary. And a heavy local test run on a shared dev machine is not a stand-in for CI's dedicated environment — after a long day of local testing, running the suite locally with concurrent workers produced failures across totally unrelated, already-working tests, which is a sign the machine is under load, not that the tests are wrong.</p>
+    <p data-i18n="s8-p2">"It's green" is a claim about a specific log, at a specific concurrency level, in a specific environment — not a fact about the code. Read the actual log before repeating the claim to someone else.</p>
+
+    <h3 data-i18n="s9-h3">9. Match the verification tool to the actual claim</h3>
+    <p data-i18n="s9-p">Later, extending the same feature, browser automation itself became the bottleneck rather than the proof — a UI element intermittently wouldn't register a click, and the dev environment was visibly overloaded from a full day of testing. Rather than keep fighting flaky UI automation, I switched to the backend's own test harness to prove the claim that actually mattered — does the data resolve correctly — directly, without a browser in the loop. It's not a substitute for browser verification; nothing proves "a human can click this and see it" except actually doing that. But for a claim about data correctness, a five-line backend test is both faster and a more precise signal than fighting a flaky UI.</p>
+
+    <h3 data-i18n="s10-h3">10. Test hypotheses live, don't just read the code</h3>
+    <p data-i18n="s10-p">One reported bug turned out to have two independent causes stacked on top of each other — fixing only one would have looked correct in review but silently failed to actually work. Rather than reason abstractly from reading an unfamiliar legacy framework, I tested each hypothesis directly: build the real object the framework constructs, run it against real data, check the real result. The first fix tested as still broken, which is what surfaced the second, independent cause. Reading the code explained <em>why</em> afterward — but testing each candidate fix live is what actually found the second bug.</p>
+
+    <h3 data-i18n="s11-h3">11. A second, independent reviewer paid off even on work that already felt done</h3>
+    <p data-i18n="s11-p1">Partway through, I asked a second AI reviewer — a different tool than the one doing the implementation — to review a draft, not-yet-finished pull request. Everything it flagged was real, including a genuine bug that had escaped several rounds of manual review and testing already: a value that happened to be the literal string "0" could have been silently treated as falsy and overwritten. A second, differently-biased reviewer catches a different class of bug than the person who wrote the code, no matter how careful that person was — worth requesting even, especially, on work that already feels finished.</p>
+    <p data-i18n="s11-p2">A dedicated review pass done <em>after</em> a feature already seemed finished and browser-verified caught two more real issues later in the same piece of work: an inefficient event-listener pattern that never failed a functional test because it doesn't change what the feature does, only how well it does it; and a permanent automated test that, unlike every other test in its suite, persisted a real setting against a shared account every time it ran — meaning every future test run would have quietly widened that shared account's settings a little more, forever. Neither would have shown up in a demo or a passing test run. "It works" and "the tests are green" are not the same claim as "this is efficient" or "this doesn't leave side effects behind."</p>
+
+    <h3 data-i18n="s12-h3">12. Root-cause CI-only failures from the actual evidence, not the error message</h3>
+    <p data-i18n="s12-p">New tests passed locally every time, then failed in CI on the same step. The error message alone was consistent with several different causes. Rather than guess and add a longer timeout, I pulled the actual CI test-run artifact — the real screenshot/DOM snapshot captured at the moment of failure — and saw the real rendered state: a display setting that happened to be on during local testing but defaults off, which is what CI's fresh environment reflected. The fix followed directly from seeing the real state, not from the error text. "Fails in CI, passes locally" has more than one plausible cause, and the fix looks completely different depending on which one it actually is.</p>
+
+    <h2 data-i18n="pm-h2">Post-mortem: estimate vs. actual</h2>
+    <p data-i18n="pm-p1">The original estimate for this feature — written before any real scoping — was about a week, and that estimate was explicitly for the <em>cheapest possible version</em>, not the feature that actually shipped. Actual time logged across the whole piece of work: roughly 28 hours, spread over about two and a half weeks (with a real multi-day pause in the middle for stakeholder scoping — see step 1). What shipped in that time: the new numbering scheme with uniqueness and immutability rules, a working per-record pattern engine, every affected UI surface across old and new frontend layers, several report views with new filters and columns, a follow-up usability feature that the original change made necessary, and full backend plus permanent end-to-end test coverage.</p>
+    <p data-i18n="pm-p2">The honest comparison isn't "same scope, less time" — it's "far more scope, in meaningfully less time than the cheap version's own estimate." Edge cases that nobody had even identified as edge cases when the estimate was written only surfaced because the scoping and implementation process kept finding them.</p>
+    <p data-i18n="pm-p3">What actually moved the needle wasn't raw typing speed — it was verification-loop speed. Two things did the real work: permanent, browser-driven tests meant I could watch the agent's work happen instead of just reasoning about whether it probably worked, and that kept paying off every time something needed re-checking after a change. And a second, differently-biased reviewer plus a dedicated self-review pass caught real issues that "it works when I click it" never surfaced — those two things don't replace each other; one proves behavior, the other catches things that never fail a test.</p>
+    <p data-i18n="pm-p4">What this did <em>not</em> replace: scoping, decisions, and catching wrong assumptions still came from a human, constantly, at almost every step above. The agent didn't run unsupervised — it ran as an implementer that could be trusted to verify its own claims cheaply and repeatedly, which is a more specific thing than just "worked faster."</p>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-strategies': 'Alle Strategies',
+    'hero-kicker': 'Agentic Strategies',
+    'hero-h1': 'Implementer, Reviewer, Tester: Ein Workflow, um Features mit Claude Code schnell auszuliefern',
+    'hero-lede': 'Ein praxiserprobter Workflow für KI-gestützte Feature-Entwicklung — Scoping-Disziplin, getrennte Implementer-/Reviewer-/Tester-Rollen, und warum die Geschwindigkeit der Verifikation wichtiger war als die Tippgeschwindigkeit.',
+    'meta-date': 'Veröffentlicht im August 2026',
+
+    'why-h2': 'Warum das hier existiert',
+    'why-p': `Das ist ein Workflow, mit dem ich vor kurzem ein echtes Produktions-Feature
+      ausgeliefert habe — neue alphanumerische Kunden-/Projektnummern, inklusive mehrerer
+      Folgeeffekte auf Rechnungsstellung und Reporting, die vorher niemand auf dem Schirm hatte
+      — von Anfang bis Ende mit Claude Code als Hauptimplementierer. Nichts davon ist exotisch.
+      Es ist dieselbe Disziplin, die man sich von einem guten menschlichen Team wünschen würde:
+      erst scopen, dann bauen; die Person, die den Code schreibt, von der trennen, die ihn
+      prüft; und Behauptungen verifizieren statt ihnen zu vertrauen. Der Unterschied bei
+      KI-Agenten: man kann Implementer, Reviewer und Tester als wirklich getrennte, billige,
+      parallele Rollen laufen lassen, statt zu hoffen, dass eine Person alle drei Hüte
+      sorgfältig trägt.`,
+
+    's1-h3': '1. Nicht coden, bevor das Ticket wirklich gescoped ist',
+    's1-p1': `Das Feature kam als vage Anfrage. Bevor ich irgendetwas geschrieben habe, habe
+      ich schriftlich nachgefragt, bis die echten Blocker sichtbar wurden — Zahlungsreferenz-
+      Formate, die das alte Nummernschema voraussetzten, Projektnummern-Logik, die das
+      ebenfalls voraussetzte, eine Legacy-UI-Ebene, die niemand erwähnt hatte. Jede offene
+      Frage wurde zu einer expliziten, nummerierten Entscheidung, und ich habe mir eine echte
+      Freigabe für alle davon geholt, bevor die Umsetzung begann. Das hat echtes Hin und Her
+      gekostet, aber die Bauphase hatte danach fast keine "warte, was haben wir mit X eigentlich
+      gemeint"-Momente mehr.`,
+    's1-p2': `Die schnellste Umsetzung ist die, die nie zurückrudern muss. Den ersten Teil der
+      Zeit investieren, um aus einer vagen Anfrage eine Checkliste zu machen, die jemand mit
+      Entscheidungsbefugnis tatsächlich freigegeben hat.`,
+
+    's2-h3': '2. Arbeit nach Risiko und Abhängigkeit aufteilen, nicht nach Dateityp',
+    's2-p': `Die Arbeit teilte sich natürlich in einen kleinen, sequenziellen, hochriskanten
+      Kern (die Nummerngenerierungs-Logik selbst — betrifft geldnahen Code, jeder Schritt hängt
+      davon ab, dass der vorherige korrekt ist) und eine breite, weitgehend unabhängige
+      Oberfläche (jeder Screen, der das neue Feld anzeigt oder danach sucht). Der Kern kam
+      zuerst, bei jedem Schritt geprüft, als ein durchgehender Thread. Erst als er korrekt und
+      getestet war, begann die breite UI-Arbeit — aufbauend auf einem Fundament, das sich nicht
+      mehr unter ihr bewegen würde, statt bei Verhalten zu raten, das sich noch ändern könnte.`,
+
+    's3-h3': '3. Implementer → Reviewer → Tester, als getrennte Rollen',
+    's3-p1': `Für die breite UI-Arbeit übernahm jeweils ein Implementer-Agent einen Screen,
+      alle mit derselben Spec, aber ohne Einblick in die Arbeit der anderen. Danach las ein
+      einzelner Reviewer — ein anderes Modell, ohne jeden Kontext darüber, wie irgendetwas
+      davon geschrieben wurde — jeden Diff gegen die Spec und suchte gezielt nach Dingen, die
+      ein Self-Review im selben Kontext übersehen hätte. Er fand Dinge, die ich selbst nicht
+      gefunden hätte: eine Suchfilter-Klausel, die stillschweigend unabhängiges Filterverhalten
+      veränderte, einen Doppel-Escaping-Bug, der nur eine ganz bestimmte Eingabeform betraf, und
+      einen ganzen Legacy-UI-Pfad, dessen Frontend aktualisiert worden war, der aber nie
+      tatsächlich verdrahtet wurde, um die neuen Daten überhaupt abzurufen — nichts, was der
+      Implementer geändert hatte, hätte je auf dem Screen erscheinen können, weil die Anfrage,
+      die es transportiert hätte, nie gestellt wurde.`,
+    's3-p2': `Ein Reviewer, der den Code selbst geschrieben hat, bestätigt seine eigenen
+      Annahmen. Ein Reviewer ohne eigenen Anteil an der Umsetzung, dem gezielt gesagt wird,
+      worauf er achten soll, findet eine andere Klasse von Bugs, als der Autor je in seinem
+      eigenen Code finden würde.`,
+    's3-p3': `Die Faustregel, wann sich der Aufwand lohnt: breite Oberfläche mit geringer
+      Kopplung profitiert davon, Implementer parallel auszufächern und am Ende einmal zu
+      reviewen. Enge, sequenzielle, hochriskante Logik profitiert nicht von parallelem
+      Ausfächern — es gibt nichts zu parallelisieren, wenn jeder Schritt vom vorherigen abhängt
+      — profitiert aber trotzdem von derselben Implementer-/Reviewer-Trennung, nur Schritt für
+      Schritt statt alles auf einmal.`,
+
+    's4-h3': '4. "Kein Verhaltensunterschied für alle anderen" ist eine testbare Behauptung, keine Design-Absicht',
+    's4-p': `Das wichtigste Abnahmekriterium war, dass sich für Kunden ohne das neue Feature
+      nichts ändert — byte-genau, für immer. Das bleibt nur wahr, wenn jeder neue Codepfad
+      hinter einem Flag und einer datensatzbezogenen Bedingung liegt, ohne Ausnahmen, und wenn
+      jeder Touchpoint einen expliziten Flag-off-Regressionstest hat, nicht nur einen
+      Flag-on-Happy-Path-Test. Ich habe für jede berührte Datei einen geschrieben und jeweils
+      verifiziert, dass er tatsächlich fehlschlägt, wenn man das Gate entfernt — Fix
+      zurücknehmen, Rot bestätigen, wiederherstellen, Grün bestätigen. Dieser
+      Revert-und-bestätigen-Schritt ist billig, und es ist die einzige Art, wirklich zu wissen,
+      dass ein Test überhaupt etwas testet.`,
+
+    's5-h3': '5. Im Browser verifizieren, bevor irgendetwas als fertig gilt',
+    's5-p': `Meine Implementer-Agenten haben offen gesagt, dass sie kein Browser-Tool hatten
+      und nicht bestätigen konnten, dass ihre eigenen UI-Änderungen korrekt rendern — was die
+      richtige Aussage für einen Agenten ist, kein Manko. Ich habe diese Lücke auf zwei Arten
+      geschlossen: Playwrights <code>codegen</code>-Tool, bei dem ein Mensch live durch die
+      echte UI klickt und daraus ein lauffähiger Test mit echten Selektoren entsteht; und
+      Screenshots, die mitten im Skript aufgenommen und tatsächlich angesehen wurden, nicht nur
+      als "Test bestanden" abgehakt. Zweimal in diesem Stück Arbeit stellte sich heraus, dass
+      ein bestandener Test das falsche UI-Element prüfte — nur der Blick auf die gerenderten
+      Pixel hat das gefangen.`,
+
+    's6-h3': '6. Einige der besten Funde kamen von der einfachen Frage "funktioniert das eigentlich?"',
+    's6-p1': `Ein paar der wertvollsten Fixes kamen von einer einfachen Frage, nicht von
+      Prozess: "Sollten wir nicht auch nach dieser neuen Nummer suchen können?" brachte zutage,
+      dass die Suche auf zwei separaten Screens nie wirklich funktioniert hatte — eine
+      vorbestehende, mit diesem Feature unzusammenhängende Lücke, die eine direkte Frage sofort
+      fand. "Prüf jede UI, nicht nur die, die du getestet hast" fand, dass eine Suchbox rein
+      clientseitig filterte und die Backend-Logik nie berührte — ein technisch korrekter
+      Backend-Fix hatte praktisch keinen echten Aufrufer.`,
+    's6-p2': `Nicht darauf vertrauen, dass ein Fix funktioniert, nur weil ein Test in der Nähe
+      grün ist. Regelmäßig und laut fragen: "wird das eigentlich benutzt" und "haben wir jede
+      Stelle geprüft, an der das gelten muss".`,
+
+    's7-h3': '7. Das Zusammenarbeitsmuster, das diese Funde tatsächlich hervorgebracht hat',
+    's7-intro': 'Ein paar Dinge dazu, <em>wie</em> das Hin und Her funktionierte, verallgemeinert über dieses eine Feature hinaus:',
+    's7-li1': '<strong>Bedenken als einfache Fragen äußern, nicht als Anweisungen.</strong> "Warte, könnten wir nicht auch nach der alten Nummer suchen?" findet mehr Bugs als eine längere, präskriptivere Spec.',
+    's7-li2': '<strong>Jede Behauptung wird empirisch geprüft, bevor ihr vertraut wird.</strong> Nicht "lass mich überlegen, ob das stimmt" — sondern "lass mich ein Zweizeiler-Skript gegen echte Daten schreiben und nachsehen." Mehr als einmal änderte das die Antwort von scheinbar offensichtlich wahr zu etwas Genauerem und Korrekterem.',
+    's7-li3': '<strong>Funde werden mit Beleg berichtet, nicht nur mit Schlussfolgerung.</strong> "Suchbug gefixt" ist viel schwächer als "hier die Query vor dem Fix, hier was sie zurückgab, hier dieselbe Query danach — bestätigt, indem der Fix zurückgenommen und der Test wieder rot beobachtet wurde."',
+    's7-li4': '<strong>Der Scope wächst in kleinen Schritten, nicht durch komplette Neuplanung.</strong> Ein neuer Fund wird eine weitere Zeile auf einer bestehenden Freigabe, kein Grund, den ganzen Plan neu zu machen.',
+    's7-li5': '<strong>Entscheidungen, die einen Menschen brauchen, werden als echte Frage mit echten Optionen gestellt, genau dann, wenn sie gebraucht werden</strong> — nicht in ein Tagesabschluss-Update gepackt, wo sie leicht überlesen werden.',
+    's7-li6': '<strong>Wenn etwas wirklich unverifiziert ist, das auch so sagen, statt es zu behaupten.</strong> Mehr als einmal sagte ein Agent offen "ich habe kein Browser-Tool, ich konnte nicht prüfen, ob das rendert", statt Erfolg zu behaupten — genau das machte deutlich, wo ich selbst noch nachsehen musste.',
+    's7-outro': `Bei nichts davon geht es um clevere Prompts. Es geht darum, die Ausgabe des
+      Agenten so zu behandeln wie einen Pull Request eines Junior-Entwicklers — "hast du das
+      wirklich geprüft", "was passiert in dem Fall, den du nicht erwähnt hast", "zeig mir den
+      Beleg" — nur in Minuten statt einem Tag, und mit mehreren unabhängigen Prüfungen parallel
+      statt einer nach der anderen.`,
+
+    's8-h3': '8. "Grün" ist eine Aussage über ein Log, keine Tatsache über den Code',
+    's8-p1': `Drei Dinge, die sich beim Aufbau der dauerhaften End-to-End-Testsuite für dieses
+      Feature verallgemeinern lassen: Das Test-Setup braucht dieselbe Disziplin wie das Feature
+      selbst — keine manuellen Datenbank-Edits, nur Pfade, die eine echte Integration auch
+      nutzen würde, was selbst zwei vorher unsichtbare Lücken in der zugrunde liegenden API
+      zutage brachte. Ein grüner CI-Job ist nicht dieselbe Aussage wie "der Test hat beim ersten
+      Versuch bestanden" — die meisten CI-Setups wiederholen einen fehlgeschlagenen Test einmal,
+      bevor der Job als grün markiert wird, was echte Flakiness hinter einem "Erfolg"-Label
+      verstecken kann; die einzige Möglichkeit, das zu fangen, ist das tatsächliche Lauf-Log auf
+      Retry-Marker zu lesen, nicht nur die Bestanden/Fehlgeschlagen-Zusammenfassung. Und ein
+      schwerer lokaler Testlauf auf einer geteilten Dev-Maschine ist kein Ersatz für CIs
+      dedizierte Umgebung — nach einem langen Tag lokalen Testens produzierte der Lauf der Suite
+      mit mehreren parallelen Workern Fehler bei völlig unabhängigen, längst funktionierenden
+      Tests, was ein Zeichen dafür ist, dass die Maschine überlastet ist, nicht dass die Tests
+      falsch sind.`,
+    's8-p2': `"Grün" ist eine Aussage über ein bestimmtes Log, bei einem bestimmten
+      Parallelitätsgrad, in einer bestimmten Umgebung — keine Tatsache über den Code. Das
+      tatsächliche Log lesen, bevor man die Behauptung an jemand anderen weitergibt.`,
+
+    's9-h3': '9. Das Verifikationswerkzeug zur tatsächlichen Behauptung passend wählen',
+    's9-p': `Später, bei der Erweiterung desselben Features, wurde die Browser-Automatisierung
+      selbst zum Flaschenhals statt zum Beweis — ein UI-Element registrierte gelegentlich
+      keinen Klick, und die Dev-Umgebung war nach einem vollen Tag Testen sichtbar überlastet.
+      Statt weiter gegen flakiges UI-Testing zu kämpfen, wechselte ich zum eigenen Test-Harness
+      des Backends, um die tatsächlich relevante Behauptung zu beweisen — lösen sich die Daten
+      korrekt auf — direkt, ohne Browser dazwischen. Das ist kein Ersatz für
+      Browser-Verifikation; nichts beweist "ein Mensch kann das klicken und sehen", außer es
+      tatsächlich zu tun. Aber für eine Behauptung über Datenkorrektheit ist ein
+      Fünf-Zeilen-Backend-Test sowohl schneller als auch ein präziseres Signal, als gegen eine
+      flakige UI zu kämpfen.`,
+
+    's10-h3': '10. Hypothesen live testen, nicht nur den Code lesen',
+    's10-p': `Ein gemeldeter Bug hatte zwei unabhängige Ursachen, die aufeinander gestapelt
+      waren — nur eine davon zu fixen hätte im Review korrekt ausgesehen, aber leise nicht
+      funktioniert. Statt abstrakt aus dem Lesen eines unbekannten Legacy-Frameworks zu
+      schließen, habe ich jede Hypothese direkt getestet: das echte Objekt bauen, das das
+      Framework konstruiert, gegen echte Daten laufen lassen, das echte Ergebnis prüfen. Der
+      erste Fix testete sich als weiterhin kaputt, was genau die zweite, unabhängige Ursache
+      zutage brachte. Das Lesen des Codes erklärte danach das <em>Warum</em> — aber das
+      Live-Testen jeder Kandidaten-Lösung ist es, was den zweiten Bug tatsächlich fand.`,
+
+    's11-h3': '11. Ein zweiter, unabhängiger Reviewer hat sich ausgezahlt, sogar bei Arbeit, die sich schon fertig anfühlte',
+    's11-p1': `Auf halbem Weg bat ich einen zweiten KI-Reviewer — ein anderes Tool als das,
+      das implementiert hatte — einen noch nicht fertigen Draft-Pull-Request zu prüfen. Alles,
+      was er markierte, war real, inklusive eines echten Bugs, der mehreren Runden manueller
+      Review und Tests bereits entgangen war: ein Wert, der zufällig der Literal-String "0" war,
+      hätte stillschweigend als falsy behandelt und überschrieben werden können. Ein zweiter,
+      anders voreingenommener Reviewer findet eine andere Bug-Klasse als die Person, die den
+      Code geschrieben hat, egal wie sorgfältig diese war — es lohnt sich, das einzufordern,
+      gerade bei Arbeit, die sich schon fertig anfühlt.`,
+    's11-p2': `Ein eigener Review-Durchgang, <em>nachdem</em> ein Feature schon fertig und
+      browserverifiziert schien, fand später im selben Stück Arbeit zwei weitere echte
+      Probleme: ein ineffizientes Event-Listener-Muster, das nie einen funktionalen Test
+      durchfallen ließ, weil es nicht ändert, <em>was</em> das Feature tut, nur <em>wie
+      gut</em>; und ein dauerhafter automatisierter Test, der — anders als jeder andere Test in
+      seiner Suite — bei jedem Lauf eine echte Einstellung auf einem geteilten Account
+      persistierte, was bedeutet hätte, dass jeder zukünftige Testlauf die Einstellungen dieses
+      geteilten Accounts ein kleines Stück weiter aufgeweitet hätte, für immer. Keines von
+      beiden wäre in einer Demo oder einem bestandenen Testlauf aufgefallen. "Es funktioniert"
+      und "die Tests sind grün" sind nicht dieselbe Behauptung wie "das ist effizient" oder
+      "das lässt keine Nebenwirkungen zurück".`,
+
+    's12-h3': '12. CI-exklusive Fehler aus dem tatsächlichen Beleg root-causen, nicht aus der Fehlermeldung',
+    's12-p': `Neue Tests bestanden lokal jedes Mal, schlugen dann in CI beim selben Schritt
+      fehl. Die Fehlermeldung allein passte zu mehreren plausiblen Ursachen. Statt zu raten und
+      ein längeres Timeout hinzuzufügen, habe ich das tatsächliche CI-Testlauf-Artefakt gezogen
+      — den echten Screenshot/DOM-Snapshot im Moment des Fehlschlags — und den echten
+      gerenderten Zustand gesehen: eine Anzeige-Einstellung, die beim lokalen Testen zufällig
+      aktiv war, aber standardmäßig aus ist, was CIs frische Umgebung entsprechend widerspiegelte.
+      Der Fix folgte direkt aus dem Sehen des echten Zustands, nicht aus dem Fehlertext.
+      "Schlägt in CI fehl, funktioniert lokal" hat mehr als eine plausible Ursache, und der Fix
+      sieht komplett anders aus, je nachdem, welche es tatsächlich ist.`,
+
+    'pm-h2': 'Post-Mortem: Schätzung vs. tatsächlich',
+    'pm-p1': `Die ursprüngliche Schätzung für dieses Feature — geschrieben vor jedem echten
+      Scoping — lag bei etwa einer Woche, und diese Schätzung war explizit für die
+      <em>billigste mögliche Version</em>, nicht das Feature, das am Ende ausgeliefert wurde.
+      Tatsächlich geloggte Zeit über das gesamte Stück Arbeit: etwa 28 Stunden, verteilt über
+      rund zweieinhalb Wochen (mit einer echten mehrtägigen Pause in der Mitte für
+      Stakeholder-Scoping — siehe Schritt 1). Was in dieser Zeit ausgeliefert wurde: das neue
+      Nummernschema mit Eindeutigkeits- und Unveränderlichkeitsregeln, eine funktionierende
+      Pattern-Engine pro Datensatz, jede betroffene UI-Oberfläche über alte und neue
+      Frontend-Ebenen hinweg, mehrere Report-Views mit neuen Filtern und Spalten, ein
+      Folge-Usability-Feature, das die ursprüngliche Änderung notwendig machte, sowie
+      vollständige Backend- und dauerhafte End-to-End-Testabdeckung.`,
+    'pm-p2': `Der ehrliche Vergleich ist nicht "gleicher Umfang, weniger Zeit" — sondern
+      "deutlich mehr Umfang, in deutlich weniger Zeit, als die Schätzung der billigen Version
+      selbst gebraucht hätte". Randfälle, die zum Zeitpunkt der Schätzung noch nicht mal als
+      Randfälle erkannt worden waren, tauchten nur auf, weil der Scoping- und Umsetzungsprozess
+      sie ständig weiter fand.`,
+    'pm-p3': `Was den Unterschied wirklich gemacht hat, war nicht rohe Tippgeschwindigkeit — es
+      war die Geschwindigkeit der Verifikationsschleife. Zwei Dinge haben die eigentliche Arbeit
+      geleistet: dauerhafte, browsergestützte Tests bedeuteten, dass ich der Arbeit des Agenten
+      zusehen konnte, statt nur zu argumentieren, ob sie wahrscheinlich funktioniert — und das
+      zahlte sich bei jeder erneuten Prüfung nach einer Änderung wieder aus. Und ein zweiter,
+      anders voreingenommener Reviewer plus ein eigener Self-Review-Durchgang fanden echte
+      Probleme, die "funktioniert, wenn ich draufklicke" nie zutage gebracht hätte — die beiden
+      ersetzen sich nicht gegenseitig; eines beweist Verhalten, das andere fängt Dinge, die nie
+      einen Test durchfallen lassen.`,
+    'pm-p4': `Was das <em>nicht</em> ersetzt hat: Scoping, Entscheidungen und das Erkennen
+      falscher Annahmen kamen bei fast jedem Schritt oben weiterhin, ständig, von einem
+      Menschen. Der Agent lief nicht unbeaufsichtigt — er lief als Implementer, dem man
+      zutrauen konnte, seine eigenen Behauptungen billig und wiederholt zu verifizieren, was
+      eine spezifischere Sache ist als einfach "schneller gearbeitet".`,
+
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.',
+    de: 'Ein praxiserprobter Workflow für KI-gestützte Feature-Entwicklung — Scoping-Disziplin, getrennte Implementer-/Reviewer-/Tester-Rollen, und warum die Geschwindigkeit der Verifikation wichtiger war als die Tippgeschwindigkeit.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
