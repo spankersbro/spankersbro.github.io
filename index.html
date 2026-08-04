@@ -115,6 +115,15 @@
 
   /* hero */
   .hero{padding:64px 0 40px}
+  .hero-inner{display:flex;gap:32px;align-items:flex-start}
+  .hero-photo{width:148px;height:148px;border-radius:16px;object-fit:cover;flex-shrink:0;box-shadow:var(--ring);border:1px solid var(--line)}
+  .hero-text{flex:1;min-width:0}
+  @media (max-width:560px){
+    .hero-inner{flex-direction:column;align-items:center;text-align:center}
+    .hero-photo{width:120px;height:120px}
+    .hero .facts{justify-content:center}
+    .hero .cta-row{justify-content:center}
+  }
   .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
   .hero h1{font-size:clamp(32px,5vw,44px);line-height:1.12;margin:0 0 16px;letter-spacing:-.02em;font-weight:700}
   .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 20px;max-width:600px}
@@ -173,6 +182,11 @@
   .steps li strong{color:var(--ink)}
   .card-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
   .card-link:hover{opacity:.8}
+  .subhead{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin:32px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+  .subhead:first-of-type{padding-top:0;border-top:none;margin-top:8px}
+  .diagram{margin:0 0 28px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
 
   /* year-in-review themes */
   .theme{margin-bottom:26px}
@@ -213,8 +227,8 @@
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
       <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
-      <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
       <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
+      <a class="nav-link" data-i18n="nav-research" href="#research">Research</a>
       <a class="nav-link" data-i18n="nav-archive" href="archive.html">Archive</a>
       <div class="btn-group">
         <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
@@ -227,22 +241,27 @@
 <div class="wrap">
 
   <section class="hero">
-    <p class="kicker" data-i18n="hero-kicker">Vienna, Austria</p>
-    <h1 data-i18n="hero-h1">Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
-    <p class="lede" data-i18n="hero-lede">
-      I've spent the last two decades building TEAMBOX, the ERP platform for service
-      providers that's become the <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA market leader in DACH</a> — starting as one of its
-      earliest developers, now running enterprise integrations, CI/CD, and the team
-      behind it. My current focus is agentic engineering: building AI-driven development
-      workflows into a live, twenty-year-old codebase without breaking it.
-    </p>
-    <p class="facts">
-      <span data-i18n="fact-1">20+ years, one product</span><span data-i18n="fact-2">PHP &amp; DevOps</span><span data-i18n="fact-3">300+ enterprise clients</span><span data-i18n="fact-4">Agentic engineering focus</span>
-    </p>
-    <div class="cta-row">
-      <a class="btn-cta" href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener" data-i18n="hero-cta">Connect on LinkedIn →</a>
-      <div class="links">
-        <a href="https://github.com/spankersbro" target="_blank" rel="noopener">GitHub</a>
+    <div class="hero-inner">
+      <img class="hero-photo" src="assets/profile.jpg" alt="David Irving" width="148" height="148">
+      <div class="hero-text">
+        <p class="kicker" data-i18n="hero-kicker">Vienna, Austria</p>
+        <h1 data-i18n="hero-h1">Head of Enterprise, everii Group.<br>Twenty years in one codebase.</h1>
+        <p class="lede" data-i18n="hero-lede">
+          I've spent the last two decades building TEAMBOX, the ERP platform for service
+          providers that's become the <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA market leader in DACH</a> — starting as one of its
+          earliest developers, now running enterprise integrations, CI/CD, and the team
+          behind it. My current focus is agentic engineering: building AI-driven development
+          workflows into a live, twenty-year-old codebase without breaking it.
+        </p>
+        <p class="facts">
+          <span data-i18n="fact-1">20+ years, one product</span><span data-i18n="fact-2">PHP &amp; DevOps</span><span data-i18n="fact-3">300+ enterprise clients</span><span data-i18n="fact-4">Agentic engineering focus</span>
+        </p>
+        <div class="cta-row">
+          <a class="btn-cta" href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener" data-i18n="hero-cta">Connect on LinkedIn →</a>
+          <div class="links">
+            <a href="https://github.com/spankersbro" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -331,11 +350,12 @@
 
   <section class="block" id="agentic">
     <div class="block-head">
-      <p class="kicker" data-i18n="agentic-kicker">Agentic Engineering · Standing Builds</p>
-      <h2 data-i18n="agentic-h2">Built for the team, not for a single cycle</h2>
-      <p data-i18n="agentic-p">A permanent home for AI-agent orchestration work — pieces self-contained enough that they shouldn't have to wait for the next three-week highlights cycle, and that keep growing here instead of aging out.</p>
+      <p class="kicker" data-i18n="agentic-kicker">Agentic Engineering</p>
+      <h2 data-i18n="agentic-h2">How I actually build and work with AI agents</h2>
+      <p data-i18n="agentic-p">Two kinds of proof: standing builds that keep running for the team, and longer writeups on the methodology behind them — for anyone doing this kind of work themselves, not just a list of what got built.</p>
     </div>
 
+    <p class="subhead" data-i18n="agentic-sub-builds">Builds</p>
     <div class="card featured" id="agentic-support-agent">
       <a class="card-anchor" href="#agentic-support-agent" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
@@ -350,13 +370,25 @@
       <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
     </div>
-  </section>
 
-  <section class="block" id="strategies">
-    <div class="block-head">
-      <p class="kicker" data-i18n="strategies-kicker">Agentic Strategies · Methodology</p>
-      <h2 data-i18n="strategies-h2">How the work actually gets built, not just what shipped</h2>
-      <p data-i18n="strategies-p">Longer-form writeups on the actual workflow behind agentic development — scoping, review discipline, verification — for anyone doing this kind of work themselves, not just a list of what got built.</p>
+    <p class="subhead" data-i18n="agentic-sub-writeups">Writeups</p>
+    <div id="strategies">
+    <div class="card" id="strategy-context-decisions-guardrails">
+      <a class="card-anchor" href="#strategy-context-decisions-guardrails" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <h3 data-i18n="strategy3-h3">Context, Decisions, and Guardrails: Why Agents (and New Hires) Shouldn't Re-Derive Your Codebase From Scratch</h3>
+      <p data-i18n="strategy3-p1">Every fresh AI agent session on a legacy codebase faces the same choice: re-analyze everything from the code alone, or read what's already been decided. One canonical guide, read consistently by three different AI tools, and a strict split between what's being asked for, what's been decided and why, and how a specific piece of work is scoped.</p>
+      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy3-tag-docs">Documentation Architecture</span><span class="tag" data-i18n="strategy3-tag-onboarding">Agent Onboarding</span></div>
+      <a class="card-link" href="strategies/context-decisions-guardrails.html" data-i18n="strategy3-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="strategy-instructions-style-memory">
+      <a class="card-anchor" href="#strategy-instructions-style-memory" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <h3 data-i18n="strategy2-h3">Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent</h3>
+      <p data-i18n="strategy2-p1">Running several AI-assisted projects at once creates a specific failure mode: each one drifts its own way, and every session re-explains context the last one already worked out. Persistent per-project instructions, one shared style guide, and a memory system that carries lessons across sessions — the scaffolding that stops it.</p>
+      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy2-tag-consistency">Consistency</span><span class="tag" data-i18n="strategy2-tag-memory">Memory Systems</span></div>
+      <a class="card-link" href="strategies/instructions-style-memory.html" data-i18n="strategy2-link">Read the full writeup →</a>
     </div>
 
     <div class="card" id="strategy-implementer-reviewer-tester">
@@ -366,6 +398,7 @@
       <p data-i18n="strategy1-p1">Recently shipped a full production feature — new client/project number handling with edge cases nobody had scoped up front — in meaningfully less time than the "cheapest possible version" would have taken, using Claude Code as implementer, reviewer, and tester in separate, deliberately isolated roles.</p>
       <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy1-tag-review">Review Discipline</span><span class="tag" data-i18n="strategy1-tag-testing">Verification</span></div>
       <a class="card-link" href="strategies/implementer-reviewer-tester.html" data-i18n="strategy1-link">Read the full writeup →</a>
+    </div>
     </div>
   </section>
 
@@ -378,7 +411,7 @@
 
     <div class="theme">
       <h3><span class="dot"></span><span data-i18n="theme1-h3">Agentic engineering, for real</span></h3>
-      <p data-i18n="theme1-p">The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured.</p>
+      <p data-i18n="theme1-p">The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured. The documentation architecture that lets any AI tool, not just one favorite, work safely in that codebase is written up in <a href="strategies/context-decisions-guardrails.html">Agentic Strategies →</a>.</p>
     </div>
 
     <div class="theme">
@@ -406,7 +439,7 @@
     <div class="block-head">
       <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
       <h2 data-i18n="research-h2">Outside TEAMBOX: independent AI research builds</h2>
-      <p data-i18n="research-p">A way to stress-test what Gemini can actually do on real, messy problems instead of toy demos — built independently of TEAMBOX, in Google AI Studio.</p>
+      <p data-i18n="research-p">A way to stress-test what Gemini can actually do on real, messy problems instead of toy demos — built independently of TEAMBOX, in Google AI Studio. Keeping both of these consistent with each other, and with the rest of this site, runs on the practice covered in <a href="strategies/instructions-style-memory.html">Agentic Strategies →</a>.</p>
     </div>
 
     <div class="card" id="research-osint">
@@ -527,6 +560,7 @@
   I18N.de = {
     'nav-agentic': 'Agentic Engineering',
     'nav-year': 'Jahresrückblick',
+    'nav-research': 'Recherche',
     'nav-archive': 'Archiv',
     'hero-kicker': 'Wien, Österreich',
     'hero-h1': 'Head of Enterprise, everii Group.<br>Zwanzig Jahre in einer Codebase.',
@@ -649,9 +683,11 @@
       Installationen und Admin-UI, damit sie künftig tatsächlich editierbar sind.`,
     'card10-tag-techdebt': 'Technische Schulden',
     'card10-tag-config': 'Konfiguration',
-    'agentic-kicker': 'Agentic Engineering · Feste Rubrik',
-    'agentic-h2': 'Für das Team gebaut, nicht für einen einzelnen Zyklus',
-    'agentic-p': 'Ein dauerhaftes Zuhause für Agentic-Engineering-Arbeit — Bausteine, die eigenständig genug sind, um nicht auf den nächsten Drei-Wochen-Zyklus warten zu müssen, und die hier weiterwachsen, statt herauszufallen.',
+    'agentic-kicker': 'Agentic Engineering',
+    'agentic-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
+    'agentic-p': 'Zwei Arten von Beleg: dauerhafte Builds, die für das Team weiterlaufen, und ausführlichere Texte über die Methodik dahinter — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
+    'agentic-sub-builds': 'Builds',
+    'agentic-sub-writeups': 'Writeups',
     'agentic1-h3': 'Ein Orchestrierungs-Agent, der ein Problem erst selbst zu lösen versucht, bevor er es an eine Person eskaliert',
     'agentic1-p1': `Einen KI-Agenten samt zwei zweckgebauter Subagenten gebaut, der Kolleg:innen bei
       alltäglichen Problemen mit Firmen-Tools hilft — zuerst wird eine interne Wissensdatenbank
@@ -698,10 +734,28 @@
     'strategy1-tag-review': 'Review-Disziplin',
     'strategy1-tag-testing': 'Verifikation',
     'strategy1-link': 'Den vollständigen Text lesen →',
+    'strategy2-h3': 'Instructions, Style und Memory: Wie ich mehrere KI-gestützte Projekte konsistent halte',
+    'strategy2-p1': `Mehrere KI-gestützte Projekte gleichzeitig zu betreiben erzeugt ein
+      bestimmtes Fehlermuster: Jedes driftet auf seine eigene Art, und jede Sitzung erklärt
+      den Kontext neu, den die letzte schon geklärt hatte. Dauerhafte projektbezogene
+      Instruktionen, ein gemeinsamer Style-Guide und ein Memory-System, das Lektionen über
+      Sitzungen hinweg trägt — das Gerüst, das genau das verhindert.`,
+    'strategy2-tag-consistency': 'Konsistenz',
+    'strategy2-tag-memory': 'Memory-Systeme',
+    'strategy2-link': 'Den vollständigen Text lesen →',
+    'strategy3-h3': 'Context, Decisions und Guardrails: Warum Agents (und neue Kolleg:innen) deine Codebase nicht von Grund auf neu herleiten sollten',
+    'strategy3-p1': `Jede frische KI-Agent-Sitzung in einer Legacy-Codebase steht vor derselben
+      Wahl: alles allein aus dem Code neu analysieren, oder lesen, was bereits entschieden
+      wurde. Ein zentraler Guide, den drei verschiedene KI-Tools konsistent lesen, und eine
+      klare Trennung zwischen dem, was gefragt ist, dem, was entschieden wurde und warum, und
+      dem, wie ein konkretes Arbeitspaket zugeschnitten ist.`,
+    'strategy3-tag-docs': 'Dokumentationsarchitektur',
+    'strategy3-tag-onboarding': 'Agent-Onboarding',
+    'strategy3-link': 'Den vollständigen Text lesen →',
     'nav-strategies': 'Agentic Strategies',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
     'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
-    'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio.',
+    'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio. Beide konsistent zueinander und zum Rest dieser Website zu halten läuft nach der Praxis, die unter <a href="strategies/instructions-style-memory.html">Agentic Strategies →</a> beschrieben ist.',
     'eyebrow-research': 'Persönliche KI-Recherche',
     'research-h3': 'OSINT Real-Time Tracker — mehrsprachige Konfliktüberwachung, solo mit Gemini gebaut',
     'research-p1': `Ein kartenbasiertes Dashboard, das globale Konfliktereignisse nahezu in
@@ -778,7 +832,9 @@
       strukturierte Bewertung einer Agentic-Engineering-Plattform eines Drittanbieters gegen
       unsere tatsächlichen CI- und Sicherheitsanforderungen durchgeführt statt einer
       Sandbox-Demo. Das Commit-Volumen hat sich von Frühling bis Sommer etwa verdreifacht,
-      während die Workflows gereift sind.`,
+      während die Workflows gereift sind. Die Dokumentationsarchitektur, die es jedem
+      KI-Tool erlaubt, nicht nur einem favorisierten, sicher in dieser Codebase zu arbeiten,
+      steht ausführlich unter <a href="strategies/context-decisions-guardrails.html">Agentic Strategies →</a>.`,
     'theme2-h3': 'Performance-Arbeit, ehrlich erzählt',
     'theme2-p': `Ein Redis-basiertes Redesign des Session-Backends untersucht, das die
       Session-Payload verkleinern sollte, dokumentiert in einer eigenen
