@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta name="description" id="metaDesc" content="A field-tested workflow for AI-assisted feature development — scoping discipline, separating implementer/reviewer/tester roles, and why verification speed mattered more than typing speed.">
 <link rel="canonical" href="https://davidirving.dev/strategies/implementer-reviewer-tester.html">
 <meta property="og:type" content="article">
@@ -69,9 +72,15 @@
     font-family:inherit;padding:0;flex-shrink:0}
   .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
   .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
   @media (max-width:560px){
     nav .links{gap:8px}
     nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
   }
 
   /* hero */
@@ -113,6 +122,7 @@
       <div class="btn-group">
         <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
         <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
       </div>
     </div>
   </div>
@@ -246,6 +256,22 @@
     var next = current === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
   });
 
   /* ---------- language toggle ---------- */
@@ -486,6 +512,7 @@
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
 
   var langBtn = document.getElementById('langBtn');
   var metaDesc = document.getElementById('metaDesc');
@@ -502,6 +529,8 @@
     themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
     langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
     langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
     langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
     localStorage.setItem('lang', lang);
   }
