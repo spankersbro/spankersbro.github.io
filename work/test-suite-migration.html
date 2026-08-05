@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<link rel="canonical" href="https://davidirving.dev/work/test-suite-migration.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module">
+<meta property="og:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta property="og:url" content="https://davidirving.dev/work/test-suite-migration.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module">
+<meta name="twitter:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module",
+  "description": "Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/test-suite-migration.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module</h1>
+    <p class="lede" data-i18n="hero-lede">Rewriting the suite to a modern test format was the mechanical part. The real payoff was what running every module's tests together, instead of in isolation, kept surfacing.</p>
+    <p class="meta-row" data-i18n="meta-date">June – July 2026 · Two phases · ~230 commits</p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="why-h2">The setup</h2>
+    <p data-i18n="why-p1">TEAMBOX's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes (<code>TbxTestcase</code> and <code>TbxLiveTestcase</code>) that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
+    <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split cleanly into two phases, and the second one mattered more than the first.</p>
+
+    <h3 data-i18n="p1-h3">Phase one: one test format, not two</h3>
+    <p data-i18n="p1-p1">Every module's paired Live and non-Live test classes were merged into single Pest-style files, batch by batch, retiring both custom base classes entirely. This was mechanical work at real scale — the line count actually went <em>down</em> once duplicate Live variants were folded together, and it accounts for the large majority of the diff across both phases.</p>
+    <p data-i18n="p1-p2">But the mechanical merge is exactly what exposed what running tests in isolation had been hiding. Nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in separate, isolated processes: a <code>BaseData</code> field-cache poisoning issue that crossed module boundaries, a mock/real class collision in the holiday-calendar code, another one in the notification-message class, and a third affecting an application-level class that had been silently affecting dozens of test files without ever failing a single one. None of these were things you'd find reading the code — they only existed as an interaction between tests that had never been allowed to run next to each other before.</p>
+    <p data-i18n="p1-p3">A rewrite this size can't live in one person's head across weeks of work, so every fix and decision went into a running delivery doc for continuity between sessions. And "done" meant something specific: each migrated module was re-run against the full suite before being marked complete, not just declared finished because its own tests passed in isolation — which, given what the merge kept finding, would have meant very little.</p>
+
+    <h3 data-i18n="p2-h3">Phase two: hardening it into something you can actually trust</h3>
+    <p data-i18n="p2-p1">The rewrite alone didn't make the suite trustworthy. Parts of it were still partially skipped and non-blocking in CI — which is a polite way of saying it was quietly hiding its own bugs, the same way the old dual-runner split had been. Un-skipping eighteen previously-disabled framework tests surfaced real ones: a database reconnect that silently dropped the session timezone on every request, a transaction-savepoint depth leak specific to skipped tests, and tests that had only ever passed because of the order they happened to run in — all invisible until something forced them to run standalone instead of riding along in a sequence that happened to work.</p>
+    <p data-i18n="p2-p2">The fix for the order-dependency problem was a transaction-wrapping PHPUnit extension that rolls every test back inside its own transaction, replacing thousands of lines of hand-written <code>TRUNCATE</code>/<code>DELETE</code> cleanup code scattered across the whole suite. That manual cleanup had been quietly wrong in places — which is precisely the kind of gap that produces a test suite where the order tests run in secretly matters.</p>
+    <p data-i18n="p2-p3">With that in place, the suite moved from a non-blocking, partially-skipped check to a required CI gate. Not a suggestion anymore — it has to stay green, the same way any other check that can fail a build does.</p>
+
+    <h2 data-i18n="reflect-h2">What actually mattered</h2>
+    <p data-i18n="reflect-p1">The rewrite itself — Pest 3, one format, retired base classes — was necessary, but it wasn't the point. The bugs it surfaced were the real payoff, and they only showed up because of one specific, unglamorous decision: stop trusting that isolated-and-passing meant working, and actually run everything together.</p>
+    <p data-i18n="reflect-p2">"The tests pass" is a claim about a specific suite configuration, not a fact about the code underneath it. Phase two — the un-skipping, the transactional isolation, the CI gate — is what made that claim mean roughly what it's supposed to mean again, instead of describing a suite that had quietly stopped checking large parts of itself.</p>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag">Test Infrastructure</span>
+      <span class="tag">Pest</span>
+      <span class="tag" data-i18n="tag-refactor">Large-Scale Refactor</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Eine Legacy-PHP-Testsuite zu Pest migriert — zwei Phasen, ein Bug in fast jedem Modul',
+    'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte.',
+    'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~230 Commits',
+
+    'why-h2': 'Die Ausgangslage',
+    'why-p1': `TEAMBOX' PHP-Testsuite war über rund zwei Dutzend Module verteilt — Finance,
+      Framework, Sync, Staff, Projektmanagement, File Storage und mehr — und jedes davon
+      hatte ein selbstgebautes Dual-Runner-Setup: eine "Live"-Testklasse und eine separate
+      Non-Live-Testklasse pro Feature, jede von einer von zwei eigenen Basisklassen
+      (<code>TbxTestcase</code> und <code>TbxLiveTestcase</code>) abgeleitet, die nur existierten,
+      um diese Trennung zu umgehen. Es lief, und es bestand meistens — aber es waren zwei
+      parallele Testformate für denselben Job, und niemand hatte je die Live- und Non-Live-Suite
+      eines Moduls im selben Prozess laufen lassen, um zu sehen, was passiert.`,
+    'why-p2': `Der Plan war, alles auf Pest 3 zu migrieren: ein Testformat, ein Bootstrap, keine
+      künstliche Live/Unit-Trennung mehr. Was tatsächlich passierte, teilte sich klar in zwei
+      Phasen — und die zweite war die wichtigere.`,
+
+    'p1-h3': 'Phase eins: ein Testformat, nicht zwei',
+    'p1-p1': `Jedes Modul erhielt schrittweise eine zusammengeführte Pest-Datei aus seinen
+      bisher getrennten Live- und Non-Live-Testklassen, wodurch beide eigenen Basisklassen
+      komplett entfielen. Das war mechanische Arbeit in echtem Umfang — die Zeilenzahl ging
+      sogar <em>runter</em>, sobald doppelte Live-Varianten zusammengefaltet wurden, und das
+      macht den Großteil des Diffs über beide Phasen aus.</p>`,
+    'p1-p2': `Aber genau dieses mechanische Zusammenführen hat zutage gebracht, was isoliertes
+      Testen verborgen hatte. Fast jedes Modul gab mindestens einen vorher unsichtbaren Bug
+      preis, sobald seine Tests nicht mehr in getrennten, isolierten Prozessen liefen: ein
+      Cache-Poisoning-Problem bei einer zentralen Datenklasse, das Modulgrenzen überschritt,
+      eine Mock/Real-Klassenkollision im Feiertagskalender-Code, eine weitere in der
+      Benachrichtigungsklasse, und eine dritte bei einer Anwendungsklasse, die still Dutzende
+      Testdateien betraf, ohne je einen einzigen Test fehlschlagen zu lassen. Keines davon hätte
+      man beim Lesen des Codes gefunden — sie existierten nur als Wechselwirkung zwischen Tests,
+      die vorher nie nebeneinander laufen durften.`,
+    'p1-p3': `Ein Umbau dieser Größe passt nicht in den Kopf einer einzelnen Person über Wochen
+      Arbeit, also wanderte jeder Fix und jede Entscheidung in ein laufendes Delivery-Dokument
+      für Kontinuität zwischen Sitzungen. Und "fertig" bedeutete etwas Konkretes: Jedes migrierte
+      Modul wurde gegen die gesamte Suite erneut ausgeführt, bevor es als abgeschlossen markiert
+      wurde — nicht einfach für fertig erklärt, weil seine eigenen Tests isoliert bestanden, was
+      angesichts dessen, was das Zusammenführen ständig fand, wenig bedeutet hätte.`,
+
+    'p2-h3': 'Phase zwei: hart genug gemacht, um ihr wirklich zu vertrauen',
+    'p2-p1': `Der Umbau allein machte die Suite noch nicht vertrauenswürdig. Teile davon waren
+      weiterhin teilweise übersprungen und in der CI nicht blockierend — eine höfliche Art zu
+      sagen, dass sie still ihre eigenen Bugs versteckte, genau wie die alte Dual-Runner-Trennung.
+      Achtzehn zuvor deaktivierte Framework-Tests wieder zu aktivieren brachte echte Bugs zutage:
+      einen DB-Reconnect, der bei jedem Request still die Session-Zeitzone verwarf, ein
+      Transaction-Savepoint-Tiefenleck speziell bei übersprungenen Tests, und Tests, die nur
+      bestanden hatten, weil sie zufällig in einer bestimmten Reihenfolge liefen — alles unsichtbar,
+      bis etwas sie zwang, eigenständig statt in einer zufällig funktionierenden Sequenz zu laufen.`,
+    'p2-p2': `Der Fix für das Reihenfolge-Problem war eine Transaction-Wrapping-PHPUnit-Erweiterung,
+      die jeden Test in seine eigene, zurückgerollte Transaktion einbettet — sie ersetzt Tausende
+      Zeilen handgeschriebenen <code>TRUNCATE</code>/<code>DELETE</code>-Aufräumcode über die
+      gesamte Suite. Dieser manuelle Aufräumcode war an manchen Stellen still falsch gewesen —
+      genau die Art von Lücke, die eine Suite erzeugt, in der die Ausführungsreihenfolge heimlich
+      eine Rolle spielt.`,
+    'p2-p3': `Damit wechselte die Suite von einem nicht-blockierenden, teilweise übersprungenen
+      Check zu einem verpflichtenden CI-Gate. Kein Vorschlag mehr — sie muss jetzt grün bleiben,
+      genau wie jeder andere Check, der einen Build zum Scheitern bringen kann.`,
+
+    'reflect-h2': 'Was tatsächlich zählte',
+    'reflect-p1': `Der Umbau selbst — Pest 3, ein Format, abgeschaffte Basisklassen — war nötig,
+      aber nicht der Punkt. Die Bugs, die er zutage brachte, waren der eigentliche Gewinn, und sie
+      zeigten sich nur wegen einer bestimmten, unglamourösen Entscheidung: nicht mehr darauf
+      vertrauen, dass isoliert-und-bestanden gleich funktionierend bedeutet, und tatsächlich alles
+      zusammen laufen lassen.`,
+    'reflect-p2': `"Die Tests bestehen" ist eine Aussage über eine bestimmte Suite-Konfiguration,
+      keine Tatsache über den darunterliegenden Code. Phase zwei — das Wiederaktivieren, die
+      transaktionale Isolation, das CI-Gate — ist das, was diese Aussage wieder ungefähr das
+      bedeuten ließ, was sie bedeuten soll, statt eine Suite zu beschreiben, die still aufgehört
+      hatte, große Teile von sich selbst zu prüfen.`,
+
+    'tag-refactor': 'Großumbau',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.',
+    de: 'Eine Legacy-PHP-Testsuite über zwei Dutzend Module in zwei Phasen zu Pest migriert — und warum das gemeinsame statt isolierte Ausführen von Tests ständig echte, vorher unsichtbare Bugs zutage brachte.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
