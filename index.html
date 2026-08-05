@@ -65,6 +65,17 @@
     'card5': 'archive.html#c2-card5',
     'card6': 'archive.html#c2-card6',
     'card7': 'archive.html#c2-card7',
+    // Retired 2026-08-05 in a site-tightening pass (fewer homepage sections, tighter
+    // Highlights). All three cards were already mirrored in archive.html's cycle-20260710
+    // record under the c3- prefix, so nothing was lost — only trimmed from the homepage.
+    'card8': 'archive.html#c3-card8',
+    'card9': 'archive.html#c3-card9',
+    'card10': 'archive.html#c3-card10',
+    // The whole "Agentic Engineering" standing section was removed (only ever had one
+    // entry — too thin to justify its own section). Its one build moved to a new
+    // "Agentic Engineering Archive" section in archive.html; re-create the standing
+    // section once there are 2-3 real entries again.
+    'agentic-support-agent': 'archive.html#ae1',
   };
   (function () {
     var id = location.hash.slice(1);
@@ -73,21 +84,21 @@
 </script>
 <style>
   :root{
-    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
-    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
-    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
-           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
-           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
   }
   :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
-           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
-           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
-  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
-           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
-           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
 
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -234,8 +245,6 @@
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
       <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
-      <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
-      <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
       <a class="nav-link" data-i18n="nav-research" href="#research">Research</a>
       <a class="nav-link" data-i18n="nav-archive" href="archive.html">Archive</a>
       <div class="btn-group">
@@ -279,7 +288,7 @@
     <div class="block-head">
       <p class="kicker" data-i18n="hl-kicker">Work Highlights · July 10 – July 31, 2026</p>
       <h2 data-i18n="hl-h2">The last three weeks</h2>
-      <p data-i18n="hl-p">Updated roughly every three weeks, straight from the actual work — not a highlight reel.</p>
+      <p data-i18n="hl-p">Updated monthly, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
@@ -334,27 +343,6 @@
       <p data-i18n="feat7-p2">None of these bugs were the point of the migration — they were what the migration had to survive finding, on its way to becoming the one real path for schema changes.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">CI/CD</span><span class="tag" data-i18n="feat7-tag-database">Database</span><span class="tag" data-i18n="feat7-tag-release-eng">Release Engineering</span></div>
     </div>
-
-    <div class="card" id="card8">
-      <a class="card-anchor" href="#card8" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card8-h3">Kept CI green through a run of unrelated infrastructure breakages</h3>
-      <p data-i18n="card8-p">A cluster of independent CI failures, each traced and fixed the day it appeared: a build step referencing a branch just deleted in an unrelated merge, a test-cleanup step failing on a database column with no default value, a code-scanner dropping support for the Java version it depended on, and warning noise dense enough to bury real test failures. None of these block a feature on their own — but left unfixed, any one of them blocks every open PR.</p>
-      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card8-tag-reliability">Reliability</span></div>
-    </div>
-
-    <div class="card" id="card9">
-      <a class="card-anchor" href="#card9" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card9-h3">Fixed two customer-facing integration bugs the same day they were reported</h3>
-      <p data-i18n="card9-p">Enabling a new AI-integration module setting crashed the personal-settings screen blank for every affected client — a loader gap, fixed with a small patch and a regression test. A second report — an integration endpoint returning a server error for another client — turned out to be a missing config section in a legacy template, not an API logic bug: a one-line fix once actually found.</p>
-      <div class="tags"><span class="tag">MCP</span><span class="tag" data-i18n="card9-tag-bugfix">Bugfix</span><span class="tag" data-i18n="card9-tag-customer">Customer Facing</span></div>
-    </div>
-
-    <div class="card" id="card10">
-      <a class="card-anchor" href="#card10" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card10-h3">Moved timezone, country, and language out of static config and into the database</h3>
-      <p data-i18n="card10-p">Continued moving installation settings out of hardcoded environment config: timezone, country, and language are now per-installation database values instead of static-file constants, with a migration script for existing installs and admin UI so they're actually editable going forward.</p>
-      <div class="tags"><span class="tag" data-i18n="card10-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="card10-tag-config">Configuration</span></div>
-    </div>
   </section>
 
   <section class="block" id="strategies">
@@ -392,62 +380,6 @@
     </div>
 
     <a class="card-link" href="strategies/" data-i18n="strategies-viewall">View all Agentic Strategies →</a>
-  </section>
-
-  <section class="block" id="agentic">
-    <div class="block-head">
-      <p class="kicker" data-i18n="agentic-kicker">Agentic Engineering</p>
-      <h2 data-i18n="agentic-h2">Standing tools I've built for the team</h2>
-      <p data-i18n="agentic-p">AI agents built and shipped into a live, twenty-year-old codebase — proof this works in production, not just in a demo.</p>
-    </div>
-
-    <div class="card featured" id="agentic-support-agent">
-      <a class="card-anchor" href="#agentic-support-agent" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="agentic1-h3">An orchestration agent that tries to solve your problem before escalating it to a person</h3>
-      <p data-i18n="agentic1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely on the company's internal agent-orchestration platform; the underlying tools and integrations are the platform's, the orchestration design and instruction text are what I built.</p>
-      <ol class="steps">
-        <li><span data-i18n="agentic1-step1"><strong>Self-help first, always disclosed.</strong> A knowledge-retrieval subagent checks an internal ticket system for a known fix, falling back to a general web search if nothing matches — and the main agent always states where an answer came from, even when someone explicitly asked to be routed straight to a person.</span></li>
-        <li><span data-i18n="agentic1-step2"><strong>Root-caused real integration bugs, not just prompt tweaks.</strong> Several of the underlying issue-tracker's write actions were silently failing or returning wrong results — enum and assignee fields needed structured values instead of plain text, one optional parameter had to be omitted rather than passed empty, and a "return only these fields" option was breaking basic searches. Fixed by testing directly against the API surface until the actual contract was confirmed, not by guessing.</span></li>
-        <li><span data-i18n="agentic1-step3"><strong>The right subagent, only when actually needed.</strong> Escalation only fires if the employee is still stuck after seeing what self-help already found — and it hands off to a colleague by name with a direct message and a tracked ticket, not a channel post that gets lost.</span></li>
-        <li><span data-i18n="agentic1-step4"><strong>Security reviewed before rollout.</strong> Added a pre-publish check for least-privilege access, scoped conversation handling, and sanitized knowledge-base content — treating a support agent with write access to internal systems as something that needs a review, not just a demo.</span></li>
-      </ol>
-      <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
-    </div>
-  </section>
-
-  <section class="block" id="year">
-    <div class="block-head">
-      <p class="kicker" data-i18n="year-kicker">Year in Review · July 2025 – July 2026</p>
-      <h2 data-i18n="year-h2">The last twelve months</h2>
-      <p data-i18n="year-p">A thematic look back, not a changelog — roughly 150 shipped commits across ~110 tickets.</p>
-    </div>
-
-    <div class="theme">
-      <h3><span class="dot"></span><span data-i18n="theme1-h3">Agentic engineering, for real</span></h3>
-      <p data-i18n="theme1-p">The biggest shift this year: bringing AI-driven development into a twenty-year-old codebase without treating it as a toy. Built and hardened internal Claude Code tooling — a sprint-KPI dashboard, a deterministic log-triage command, the first real end-to-end test suite — and ran a structured evaluation of a third-party agentic-engineering platform against our actual CI and security needs rather than a sandbox demo. Commit volume roughly tripled from spring to summer as the workflows matured. The documentation architecture that lets any AI tool, not just one favorite, work safely in that codebase is written up in <a href="strategies/context-decisions-guardrails.html">Agentic Strategies →</a>.</p>
-    </div>
-
-    <div class="theme">
-      <h3><span class="dot"></span><span data-i18n="theme2-h3">Performance work, told honestly</span></h3>
-      <p data-i18n="theme2-p">Investigated a Redis-backed session-backend redesign aimed at cutting session payload size, documented in its own architecture decision record. Testing surfaced a Control-state edge case that made the approach unsafe to ship as designed, so it was shelved rather than forced through — a well-documented research trail, not a shipped win.</p>
-    </div>
-
-    <div class="theme">
-      <h3><span class="dot"></span><span data-i18n="theme3-h3">Code quality as an ongoing habit</span></h3>
-      <p data-i18n="theme3-p">Ran a systematic exception-handling audit across roughly 60 files spanning auth, transport, sync, and file storage, and wrote it up as an architecture decision record on how permission failures should signal denial instead of getting silently swallowed. Part of the audit shipped and was reverted the same day during a rebase; the design stayed as documentation rather than forcing a merge that wasn't ready.</p>
-    </div>
-
-    <div class="theme">
-      <h3><span class="dot"></span><span data-i18n="theme4-h3">Infrastructure that doesn't get a demo day</span></h3>
-      <p data-i18n="theme4-p">Supported the CTO and development team through a multi-week Docker migration against an actively-changing release branch. Alongside it: CI hardening (dependency review, security scanning, tightened permissions) that came out of the platform evaluation but benefits every pipeline regardless of what we decide about that vendor.</p>
-    </div>
-
-    <div class="theme">
-      <h3><span class="dot"></span><span data-i18n="theme5-h3">Keeping the lights on for enterprise clients</span></h3>
-      <p data-i18n="theme5-p">Same-day fixes for production issues hitting enterprise clients directly — a multi-client OCR outage traced to a config gap and a one-character typo, a Microsoft 365 integration display bug — plus the ordinary, constant work of DATEV/Abacus/BMD accounting integrations, SSO/LDAP, and e-invoicing that a 300+ customer ERP platform runs on every day.</p>
-    </div>
   </section>
 
   <section class="block" id="research">
@@ -495,7 +427,7 @@
 
 <footer>
   <div class="wrap">
-    <span data-i18n="footer-copy">&copy; 2026 David Irving. Updated roughly every three weeks.</span>
+    <span data-i18n="footer-copy">&copy; 2026 David Irving. Updated monthly.</span>
     <div class="footer-links">
       <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
       <a href="impressum.html" data-i18n="footer-impressum">Impressum</a>
@@ -589,8 +521,6 @@
   });
 
   I18N.de = {
-    'nav-agentic': 'Agentic Engineering',
-    'nav-year': 'Jahresrückblick',
     'nav-research': 'Recherche',
     'nav-archive': 'Archiv',
     'hero-kicker': 'Wien, Österreich',
@@ -607,7 +537,7 @@
     'hero-cta': 'Auf LinkedIn kontaktieren →',
     'hl-kicker': 'Arbeits-Highlights · 10. – 31. Juli 2026',
     'hl-h2': 'Die letzten drei Wochen',
-    'hl-p': 'Wird etwa alle drei Wochen aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
+    'hl-p': 'Wird monatlich aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
     'stat-lines': 'Zeilen bearbeitet',
@@ -689,71 +619,9 @@
       Migration überleben musste, auf dem Weg zum einen echten Pfad für Schemaänderungen.`,
     'feat7-tag-database': 'Datenbank',
     'feat7-tag-release-eng': 'Release-Engineering',
-    'card8-h3': 'CI durch eine Reihe unabhängiger Infrastruktur-Ausfälle grün gehalten',
-    'card8-p': `Eine Häufung unabhängiger CI-Fehler, jeder am Tag seines Auftretens
-      aufgespürt und behoben: ein Build-Schritt, der auf einen gerade in einem anderen Merge
-      gelöschten Branch verwies, ein Test-Cleanup-Schritt, der an einer Datenbankspalte ohne
-      Default-Wert scheiterte, ein Code-Scanner, der die Unterstützung für die Java-Version
-      verlor, von der er abhing, und Warnrauschen, dicht genug, um echte Testfehler zu
-      verdecken. Keiner davon blockiert für sich allein ein Feature — aber unbehoben blockiert
-      jeder einzelne jede offene PR.`,
-    'card8-tag-reliability': 'Zuverlässigkeit',
-    'card9-h3': 'Zwei kundenseitige Integrations-Bugs am Tag der Meldung behoben',
-    'card9-p': `Das Aktivieren einer neuen KI-Integrations-Moduleinstellung ließ den
-      persönlichen Einstellungsbildschirm für jeden betroffenen Kunden leer abstürzen — eine
-      Ladelücke, behoben mit einem kleinen Patch und einem Regressionstest. Eine zweite Meldung
-      — ein Integrations-Endpunkt, der für einen anderen Kunden einen Serverfehler zurückgab —
-      entpuppte sich als fehlender Konfigurationsabschnitt in einer Legacy-Vorlage, kein
-      API-Logikfehler: ein Einzeiler, sobald tatsächlich gefunden.`,
-    'card9-tag-bugfix': 'Bugfix',
-    'card9-tag-customer': 'Kundenwirksam',
-    'card10-h3': 'Zeitzone, Land und Sprache aus statischer Konfiguration in die Datenbank verschoben',
-    'card10-p': `Weiter Installationseinstellungen aus fest codierter Umgebungskonfiguration
-      herausgelöst: Zeitzone, Land und Sprache sind jetzt pro Installation Datenbankwerte statt
-      statischer Konfigurationskonstanten, mit einem Migrationsskript für bestehende
-      Installationen und Admin-UI, damit sie künftig tatsächlich editierbar sind.`,
-    'card10-tag-techdebt': 'Technische Schulden',
-    'card10-tag-config': 'Konfiguration',
-    'agentic-kicker': 'Agentic Engineering',
-    'agentic-h2': 'Dauerhafte Tools, die ich fürs Team gebaut habe',
-    'agentic-p': 'KI-Agenten, gebaut und ausgeliefert in eine lebende, zwanzig Jahre alte Codebase — der Beleg, dass das in Produktion funktioniert, nicht nur in einer Demo.',
-    'agentic1-h3': 'Ein Orchestrierungs-Agent, der ein Problem erst selbst zu lösen versucht, bevor er es an eine Person eskaliert',
-    'agentic1-p1': `Einen KI-Agenten samt zwei zweckgebauter Subagenten gebaut, der Kolleg:innen bei
-      alltäglichen Problemen mit Firmen-Tools hilft — zuerst wird eine interne Wissensdatenbank
-      und das Web nach einer bestehenden Antwort durchsucht, dann wird bei Bedarf namentlich an
-      die tatsächlich zuständige Person eskaliert. Vollständig auf der internen
-      Agent-Orchestrierungsplattform des Unternehmens orchestriert; die zugrunde liegenden Tools
-      und Integrationen stammen von der Plattform, das Orchestrierungsdesign und der
-      Instruktionstext stammen von mir.`,
-    'agentic1-step1': `<strong>Erst Selbsthilfe, immer offengelegt.</strong> Ein
-      Wissensabruf-Subagent prüft ein internes Ticketsystem auf eine bekannte Lösung und weicht
-      bei keinem Treffer auf eine allgemeine Websuche aus — und der Hauptagent nennt immer die
-      Quelle einer Antwort, selbst wenn jemand ausdrücklich direkt an eine Person weitergeleitet
-      werden wollte.`,
-    'agentic1-step2': `<strong>Echte Integrationsbugs behoben, nicht nur am Prompt gefeilt.</strong>
-      Mehrere Schreibaktionen des zugrunde liegenden Ticketsystems schlugen still fehl oder
-      lieferten falsche Ergebnisse — Enum- und Zuständigkeits-Felder brauchten strukturierte
-      Werte statt reinen Text, ein optionaler Parameter musste weggelassen statt leer übergeben
-      werden, und eine „nur diese Felder zurückgeben"-Option brachte einfache Suchen zum
-      Scheitern. Behoben durch direktes Testen gegen die API-Oberfläche, bis der tatsächliche
-      Vertrag bestätigt war — nicht durch Raten.`,
-    'agentic1-step3': `<strong>Der richtige Subagent, nur wenn wirklich nötig.</strong> Eskalation
-      greift erst, wenn die Person nach der angebotenen Selbsthilfe weiterhin feststeckt — und
-      übergibt dann namentlich an eine:n Kolleg:in per Direktnachricht mit verknüpftem Ticket,
-      nicht als Kanal-Post, der untergeht.`,
-    'agentic1-step4': `<strong>Vor dem Rollout sicherheitsgeprüft.</strong> Eine
-      Vorab-Prüfung für Least-Privilege-Zugriff, eingegrenzte Gesprächsverarbeitung und
-      bereinigte Wissensdatenbank-Inhalte ergänzt — ein Support-Agent mit Schreibzugriff auf
-      interne Systeme wird als etwas behandelt, das eine Review braucht, nicht nur eine Demo.`,
-    'agentic1-p2': `Der interessante Fehlerfall war nicht das KI-Reasoning — es war ein
-      verschachtelter Subagent, der mitten in einer Aufgabe eine menschliche Freigabe brauchte,
-      obwohl in diesem Aufruf gar kein Mensch anwesend war. Das hat mehr darüber entschieden,
-      welche Aktionen beim Haupt-, menschzugewandten Agenten liegen und welche bei einem
-      Subagenten, als jede Prompt-Engineering-Entscheidung.`,
-    'agentic1-tag-automation': 'Prozessautomatisierung',
-    'strategies-kicker': 'Agentic Strategies · Methodik',
-    'strategies-h2': 'Wie die Arbeit tatsächlich entsteht, nicht nur was am Ende steht',
-    'strategies-p': 'Ausführlichere Texte über den eigentlichen Workflow hinter Agentic Development — Scoping, Review-Disziplin, Verifikation — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
+    'strategies-kicker': 'Agentic Strategies',
+    'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
+    'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
     'eyebrow-strategy': 'Agentic Strategies',
     'strategy1-h3': 'Implementer, Reviewer, Tester: Ein Workflow, um Features mit Claude Code schnell auszuliefern',
     'strategy1-p1': `Vor kurzem ein vollständiges Produktions-Feature ausgeliefert — neue
@@ -782,9 +650,6 @@
     'strategy3-tag-onboarding': 'Agent-Onboarding',
     'strategy3-link': 'Den vollständigen Text lesen →',
     'nav-strategies': 'Agentic Strategies',
-    'strategies-kicker': 'Agentic Strategies',
-    'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
-    'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
     'strategies-viewall': 'Alle Agentic Strategies ansehen →',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
     'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
@@ -854,48 +719,7 @@
       abgeschlossenen Befund.`,
     'crimes-tag-firestore': 'Firestore',
     'crimes-link': 'Live-App ansehen →',
-    'year-kicker': 'Jahresrückblick · Juli 2025 – Juli 2026',
-    'year-h2': 'Die letzten zwölf Monate',
-    'year-p': 'Ein thematischer Rückblick, kein Änderungsprotokoll — rund 150 ausgelieferte Commits über etwa 110 Tickets.',
-    'theme1-h3': 'Agentic Engineering, ernst genommen',
-    'theme1-p': `Die größte Verschiebung dieses Jahr: KI-gestützte Entwicklung in eine zwanzig
-      Jahre alte Codebase einzubauen, ohne sie als Spielzeug zu behandeln. Internes
-      Claude-Code-Tooling aufgebaut und gehärtet — ein Sprint-KPI-Dashboard, ein
-      deterministisches Log-Triage-Command, die erste echte End-to-End-Testsuite — und eine
-      strukturierte Bewertung einer Agentic-Engineering-Plattform eines Drittanbieters gegen
-      unsere tatsächlichen CI- und Sicherheitsanforderungen durchgeführt statt einer
-      Sandbox-Demo. Das Commit-Volumen hat sich von Frühling bis Sommer etwa verdreifacht,
-      während die Workflows gereift sind. Die Dokumentationsarchitektur, die es jedem
-      KI-Tool erlaubt, nicht nur einem favorisierten, sicher in dieser Codebase zu arbeiten,
-      steht ausführlich unter <a href="strategies/context-decisions-guardrails.html">Agentic Strategies →</a>.`,
-    'theme2-h3': 'Performance-Arbeit, ehrlich erzählt',
-    'theme2-p': `Ein Redis-basiertes Redesign des Session-Backends untersucht, das die
-      Session-Payload verkleinern sollte, dokumentiert in einer eigenen
-      Architekturentscheidung. Beim Testen zeigte sich ein Control-State-Edge-Case, der den
-      Ansatz in der geplanten Form unsicher zum Ausliefern machte — daher wurde er verworfen,
-      statt erzwungen zu werden: eine gut dokumentierte Forschungsspur, kein ausgelieferter
-      Gewinn.`,
-    'theme3-h3': 'Codequalität als ständige Gewohnheit',
-    'theme3-p': `Ein systematisches Exception-Handling-Audit über rund 60 Dateien
-      durchgeführt — Auth, Transport, Sync und File Storage — und als Architekturentscheidung
-      dokumentiert, wie Berechtigungsfehler eine Ablehnung signalisieren sollen, statt
-      stillschweigend verschluckt zu werden. Ein Teil des Audits wurde ausgeliefert und am
-      selben Tag bei einem Rebase zurückgerollt; das Design blieb als Dokumentation erhalten,
-      statt einen Merge zu erzwingen, der noch nicht bereit war.`,
-    'theme4-h3': 'Infrastruktur, die keinen Demo-Day bekommt',
-    'theme4-p': `Unterstützte den CTO und das Entwicklungsteam bei einer mehrwöchigen
-      Docker-Migration gegen einen sich laufend ändernden Release-Branch. Daneben: CI-Härtung
-      (Dependency-Review, Security-Scanning, verschärfte Berechtigungen), die aus der
-      Plattformbewertung hervorging, aber jeder Pipeline zugutekommt — unabhängig davon, wie
-      wir uns bei diesem Anbieter entscheiden.`,
-    'theme5-h3': 'Den Betrieb für Enterprise-Kunden am Laufen halten',
-    'theme5-p': `Fixes am selben Tag für Produktionsprobleme, die Enterprise-Kunden direkt
-      betrafen — ein Ausfall bei mehreren Kunden über eine OCR-Integration, zurückzuführen auf
-      eine Konfigurationslücke und einen einzelnen falschen Buchstaben, ein Anzeigefehler in
-      der Microsoft-365-Integration — dazu die gewöhnliche, ständige Arbeit an
-      DATEV/Abacus/BMD-Buchhaltungsintegrationen, SSO/LDAP und E-Invoicing, auf der eine
-      ERP-Plattform mit über 300 Kunden jeden Tag läuft.`,
-    'footer-copy': '&copy; 2026 David Irving. Wird etwa alle drei Wochen aktualisiert.',
+    'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz',
     'cookie-text': 'Diese Website verwendet Cookies für Werbung (Google AdSense). Akzeptieren Sie, um die Website zu unterstützen, oder lehnen Sie ab, um ohne Werbung zu surfen.',

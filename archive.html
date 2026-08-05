@@ -11,21 +11,21 @@
 <meta name="robots" content="noindex">
 <style>
   :root{
-    --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
-    --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
-    --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04);
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
-           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
-           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
   }
   :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
-           --accent:#8aa8ff; --accent-ink:#12131a; --chip:#232634; --chip-ink:#c7cbd6;
-           --mono-bg:#0e0f16; --mono-ink:#c7cbd6; --ring:0 1px 2px rgba(0,0,0,.3); }
-  :root[data-theme="light"]{ --bg:#fafafa; --panel:#ffffff; --ink:#181a1f; --sub:#5b5f68; --line:#e6e6e9;
-           --accent:#3454a6; --accent-ink:#ffffff; --chip:#eef0f4; --chip-ink:#3f434b;
-           --mono-bg:#f2f2f4; --mono-ink:#33363d; --ring:0 1px 2px rgba(20,20,30,.04); }
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
 
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -150,6 +150,29 @@
       every cycle logged here permanently the moment it's replaced on the homepage, so
       nothing that shipped ever just disappears.
     </p>
+  </section>
+
+  <section class="block" id="agentic-archive">
+    <div class="block-head">
+      <p class="kicker" data-i18n="ae-kicker">Agentic Engineering Archive</p>
+      <h2 data-i18n="ae-h2">Standing-section entries retired from the homepage</h2>
+      <p data-i18n="ae-p">The homepage's "Agentic Engineering" section only stays up while it has 2-3 strong entries. When it drops below that, entries move here rather than disappearing.</p>
+    </div>
+
+    <div class="card featured" id="ae1">
+      <a class="card-anchor" href="#ae1" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="ae1-h3">An orchestration agent that tries to solve your problem before escalating it to a person</h3>
+      <p data-i18n="ae1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely on the company's internal agent-orchestration platform; the underlying tools and integrations are the platform's, the orchestration design and instruction text are what I built.</p>
+      <ol class="steps">
+        <li><span data-i18n="ae1-step1"><strong>Self-help first, always disclosed.</strong> A knowledge-retrieval subagent checks an internal ticket system for a known fix, falling back to a general web search if nothing matches — and the main agent always states where an answer came from, even when someone explicitly asked to be routed straight to a person.</span></li>
+        <li><span data-i18n="ae1-step2"><strong>Root-caused real integration bugs, not just prompt tweaks.</strong> Several of the underlying issue-tracker's write actions were silently failing or returning wrong results — enum and assignee fields needed structured values instead of plain text, one optional parameter had to be omitted rather than passed empty, and a "return only these fields" option was breaking basic searches. Fixed by testing directly against the API surface until the actual contract was confirmed, not by guessing.</span></li>
+        <li><span data-i18n="ae1-step3"><strong>The right subagent, only when actually needed.</strong> Escalation only fires if the employee is still stuck after seeing what self-help already found — and it hands off to a colleague by name with a direct message and a tracked ticket, not a channel post that gets lost.</span></li>
+        <li><span data-i18n="ae1-step4"><strong>Security reviewed before rollout.</strong> Added a pre-publish check for least-privilege access, scoped conversation handling, and sanitized knowledge-base content — treating a support agent with write access to internal systems as something that needs a review, not just a demo.</span></li>
+      </ol>
+      <p data-i18n="ae1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae1-tag-automation">Process Automation</span></div>
+    </div>
   </section>
 
   <section class="block" id="cycle-20260710">
@@ -486,6 +509,43 @@
 
   I18N.de = {
     'nav-home': '← Startseite',
+    'ae-kicker': 'Agentic Engineering Archiv',
+    'ae-h2': 'Von der Startseite abgelöste Einträge dieser Standing-Section',
+    'ae-p': 'Die "Agentic Engineering"-Section auf der Startseite bleibt nur bestehen, solange sie 2-3 starke Einträge hat. Fällt sie darunter, wandern Einträge hierher, statt einfach zu verschwinden.',
+    'ae1-h3': 'Ein Orchestrierungs-Agent, der ein Problem erst selbst zu lösen versucht, bevor er es an eine Person eskaliert',
+    'ae1-p1': `Einen KI-Agenten samt zwei zweckgebauter Subagenten gebaut, der Kolleg:innen bei
+      alltäglichen Problemen mit Firmen-Tools hilft — zuerst wird eine interne Wissensdatenbank
+      und das Web nach einer bestehenden Antwort durchsucht, dann wird bei Bedarf namentlich an
+      die tatsächlich zuständige Person eskaliert. Vollständig auf der internen
+      Agent-Orchestrierungsplattform des Unternehmens orchestriert; die zugrunde liegenden Tools
+      und Integrationen stammen von der Plattform, das Orchestrierungsdesign und der
+      Instruktionstext stammen von mir.`,
+    'ae1-step1': `<strong>Erst Selbsthilfe, immer offengelegt.</strong> Ein
+      Wissensabruf-Subagent prüft ein internes Ticketsystem auf eine bekannte Lösung und weicht
+      bei keinem Treffer auf eine allgemeine Websuche aus — und der Hauptagent nennt immer die
+      Quelle einer Antwort, selbst wenn jemand ausdrücklich direkt an eine Person weitergeleitet
+      werden wollte.`,
+    'ae1-step2': `<strong>Echte Integrationsbugs behoben, nicht nur am Prompt gefeilt.</strong>
+      Mehrere Schreibaktionen des zugrunde liegenden Ticketsystems schlugen still fehl oder
+      lieferten falsche Ergebnisse — Enum- und Zuständigkeits-Felder brauchten strukturierte
+      Werte statt reinen Text, ein optionaler Parameter musste weggelassen statt leer übergeben
+      werden, und eine „nur diese Felder zurückgeben"-Option brachte einfache Suchen zum
+      Scheitern. Behoben durch direktes Testen gegen die API-Oberfläche, bis der tatsächliche
+      Vertrag bestätigt war — nicht durch Raten.`,
+    'ae1-step3': `<strong>Der richtige Subagent, nur wenn wirklich nötig.</strong> Eskalation
+      greift erst, wenn die Person nach der angebotenen Selbsthilfe weiterhin feststeckt — und
+      übergibt dann namentlich an eine:n Kolleg:in per Direktnachricht mit verknüpftem Ticket,
+      nicht als Kanal-Post, der untergeht.`,
+    'ae1-step4': `<strong>Vor dem Rollout sicherheitsgeprüft.</strong> Eine
+      Vorab-Prüfung für Least-Privilege-Zugriff, eingegrenzte Gesprächsverarbeitung und
+      bereinigte Wissensdatenbank-Inhalte ergänzt — ein Support-Agent mit Schreibzugriff auf
+      interne Systeme wird als etwas behandelt, das eine Review braucht, nicht nur eine Demo.`,
+    'ae1-p2': `Der interessante Fehlerfall war nicht das KI-Reasoning — es war ein
+      verschachtelter Subagent, der mitten in einer Aufgabe eine menschliche Freigabe brauchte,
+      obwohl in diesem Aufruf gar kein Mensch anwesend war. Das hat mehr darüber entschieden,
+      welche Aktionen beim Haupt-, menschzugewandten Agenten liegen und welche bei einem
+      Subagenten, als jede Prompt-Engineering-Entscheidung.`,
+    'ae1-tag-automation': 'Prozessautomatisierung',
     'hero-kicker': 'Vollständige Historie',
     'hero-h1': 'Jeder Arbeits-Highlights-Zyklus, seit die Seite gestartet ist.',
     'hero-lede': `Die Startseite zeigt nur die letzten drei Wochen. Diese Seite ist die
