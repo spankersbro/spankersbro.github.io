@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" id="metaDesc" content="David Irving — Head of Enterprise at everii Group. Twenty years building TEAMBOX; now focused on agentic engineering.">
 <link rel="canonical" href="https://davidirving.dev/">
 <meta property="og:type" content="profile">
@@ -108,9 +111,15 @@
     font-family:inherit;padding:0;flex-shrink:0}
   .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
   .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
   @media (max-width:520px){
     nav .links{gap:8px}
     nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
   }
 
   /* hero */
@@ -182,8 +191,6 @@
   .steps li strong{color:var(--ink)}
   .card-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
   .card-link:hover{opacity:.8}
-  .subhead{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin:32px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
-  .subhead:first-of-type{padding-top:0;border-top:none;margin-top:8px}
   .diagram{margin:0 0 28px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
   .diagram svg{display:block;width:100%;height:auto}
   .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
@@ -226,6 +233,7 @@
     <a href="#" class="brand">David Irving</a>
     <div class="links">
       <a class="nav-link" href="#highlights">Highlights</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
       <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
       <a class="nav-link" data-i18n="nav-year" href="#year">Year in Review</a>
       <a class="nav-link" data-i18n="nav-research" href="#research">Research</a>
@@ -233,6 +241,7 @@
       <div class="btn-group">
         <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
         <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
       </div>
     </div>
   </div>
@@ -348,31 +357,13 @@
     </div>
   </section>
 
-  <section class="block" id="agentic">
+  <section class="block" id="strategies">
     <div class="block-head">
-      <p class="kicker" data-i18n="agentic-kicker">Agentic Engineering</p>
-      <h2 data-i18n="agentic-h2">How I actually build and work with AI agents</h2>
-      <p data-i18n="agentic-p">Two kinds of proof: standing builds that keep running for the team, and longer writeups on the methodology behind them — for anyone doing this kind of work themselves, not just a list of what got built.</p>
+      <p class="kicker" data-i18n="strategies-kicker">Agentic Strategies</p>
+      <h2 data-i18n="strategies-h2">How I actually build and work with AI agents</h2>
+      <p data-i18n="strategies-p">Long-form writeups on the methodology — scoping, review discipline, verification, documentation architecture — for anyone doing this kind of work themselves, not just a list of what got built.</p>
     </div>
 
-    <p class="subhead" data-i18n="agentic-sub-builds">Builds</p>
-    <div class="card featured" id="agentic-support-agent">
-      <a class="card-anchor" href="#agentic-support-agent" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="agentic1-h3">An orchestration agent that tries to solve your problem before escalating it to a person</h3>
-      <p data-i18n="agentic1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely on the company's internal agent-orchestration platform; the underlying tools and integrations are the platform's, the orchestration design and instruction text are what I built.</p>
-      <ol class="steps">
-        <li><span data-i18n="agentic1-step1"><strong>Self-help first, always disclosed.</strong> A knowledge-retrieval subagent checks an internal ticket system for a known fix, falling back to a general web search if nothing matches — and the main agent always states where an answer came from, even when someone explicitly asked to be routed straight to a person.</span></li>
-        <li><span data-i18n="agentic1-step2"><strong>Root-caused real integration bugs, not just prompt tweaks.</strong> Several of the underlying issue-tracker's write actions were silently failing or returning wrong results — enum and assignee fields needed structured values instead of plain text, one optional parameter had to be omitted rather than passed empty, and a "return only these fields" option was breaking basic searches. Fixed by testing directly against the API surface until the actual contract was confirmed, not by guessing.</span></li>
-        <li><span data-i18n="agentic1-step3"><strong>The right subagent, only when actually needed.</strong> Escalation only fires if the employee is still stuck after seeing what self-help already found — and it hands off to a colleague by name with a direct message and a tracked ticket, not a channel post that gets lost.</span></li>
-        <li><span data-i18n="agentic1-step4"><strong>Security reviewed before rollout.</strong> Added a pre-publish check for least-privilege access, scoped conversation handling, and sanitized knowledge-base content — treating a support agent with write access to internal systems as something that needs a review, not just a demo.</span></li>
-      </ol>
-      <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
-    </div>
-
-    <p class="subhead" data-i18n="agentic-sub-writeups">Writeups</p>
-    <div id="strategies">
     <div class="card" id="strategy-context-decisions-guardrails">
       <a class="card-anchor" href="#strategy-context-decisions-guardrails" aria-label="Copy link to this entry" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
@@ -399,6 +390,30 @@
       <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy1-tag-review">Review Discipline</span><span class="tag" data-i18n="strategy1-tag-testing">Verification</span></div>
       <a class="card-link" href="strategies/implementer-reviewer-tester.html" data-i18n="strategy1-link">Read the full writeup →</a>
     </div>
+
+    <a class="card-link" href="strategies/" data-i18n="strategies-viewall">View all Agentic Strategies →</a>
+  </section>
+
+  <section class="block" id="agentic">
+    <div class="block-head">
+      <p class="kicker" data-i18n="agentic-kicker">Agentic Engineering</p>
+      <h2 data-i18n="agentic-h2">Standing tools I've built for the team</h2>
+      <p data-i18n="agentic-p">AI agents built and shipped into a live, twenty-year-old codebase — proof this works in production, not just in a demo.</p>
+    </div>
+
+    <div class="card featured" id="agentic-support-agent">
+      <a class="card-anchor" href="#agentic-support-agent" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="agentic1-h3">An orchestration agent that tries to solve your problem before escalating it to a person</h3>
+      <p data-i18n="agentic1-p1">Built an AI agent, plus two purpose-built subagents, that helps colleagues with day-to-day company-tool problems — first searching an internal knowledge base and the web for an existing answer, then escalating by name to the actual person responsible if that doesn't resolve it. Orchestrated entirely on the company's internal agent-orchestration platform; the underlying tools and integrations are the platform's, the orchestration design and instruction text are what I built.</p>
+      <ol class="steps">
+        <li><span data-i18n="agentic1-step1"><strong>Self-help first, always disclosed.</strong> A knowledge-retrieval subagent checks an internal ticket system for a known fix, falling back to a general web search if nothing matches — and the main agent always states where an answer came from, even when someone explicitly asked to be routed straight to a person.</span></li>
+        <li><span data-i18n="agentic1-step2"><strong>Root-caused real integration bugs, not just prompt tweaks.</strong> Several of the underlying issue-tracker's write actions were silently failing or returning wrong results — enum and assignee fields needed structured values instead of plain text, one optional parameter had to be omitted rather than passed empty, and a "return only these fields" option was breaking basic searches. Fixed by testing directly against the API surface until the actual contract was confirmed, not by guessing.</span></li>
+        <li><span data-i18n="agentic1-step3"><strong>The right subagent, only when actually needed.</strong> Escalation only fires if the employee is still stuck after seeing what self-help already found — and it hands off to a colleague by name with a direct message and a tracked ticket, not a channel post that gets lost.</span></li>
+        <li><span data-i18n="agentic1-step4"><strong>Security reviewed before rollout.</strong> Added a pre-publish check for least-privilege access, scoped conversation handling, and sanitized knowledge-base content — treating a support agent with write access to internal systems as something that needs a review, not just a demo.</span></li>
+      </ol>
+      <p data-i18n="agentic1-p2">The interesting failure mode wasn't the AI reasoning — it was a nested subagent needing to ask a human for permission mid-task with no human actually present in that call. That shaped which actions live on the main, human-facing agent versus a subagent, more than any prompt-engineering choice did.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="agentic1-tag-automation">Process Automation</span></div>
     </div>
   </section>
 
@@ -513,6 +528,22 @@
     var next = current === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
   });
 
   /* ---------- cookie consent + AdSense (loaded only after consent) ---------- */
@@ -684,10 +715,8 @@
     'card10-tag-techdebt': 'Technische Schulden',
     'card10-tag-config': 'Konfiguration',
     'agentic-kicker': 'Agentic Engineering',
-    'agentic-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
-    'agentic-p': 'Zwei Arten von Beleg: dauerhafte Builds, die für das Team weiterlaufen, und ausführlichere Texte über die Methodik dahinter — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
-    'agentic-sub-builds': 'Builds',
-    'agentic-sub-writeups': 'Writeups',
+    'agentic-h2': 'Dauerhafte Tools, die ich fürs Team gebaut habe',
+    'agentic-p': 'KI-Agenten, gebaut und ausgeliefert in eine lebende, zwanzig Jahre alte Codebase — der Beleg, dass das in Produktion funktioniert, nicht nur in einer Demo.',
     'agentic1-h3': 'Ein Orchestrierungs-Agent, der ein Problem erst selbst zu lösen versucht, bevor er es an eine Person eskaliert',
     'agentic1-p1': `Einen KI-Agenten samt zwei zweckgebauter Subagenten gebaut, der Kolleg:innen bei
       alltäglichen Problemen mit Firmen-Tools hilft — zuerst wird eine interne Wissensdatenbank
@@ -753,6 +782,10 @@
     'strategy3-tag-onboarding': 'Agent-Onboarding',
     'strategy3-link': 'Den vollständigen Text lesen →',
     'nav-strategies': 'Agentic Strategies',
+    'strategies-kicker': 'Agentic Strategies',
+    'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
+    'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
+    'strategies-viewall': 'Alle Agentic Strategies ansehen →',
     'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
     'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
     'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio. Beide konsistent zueinander und zum Rest dieser Website zu halten läuft nach der Praxis, die unter <a href="strategies/instructions-style-memory.html">Agentic Strategies →</a> beschrieben ist.',
@@ -876,6 +909,7 @@
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
   var COPY_LABEL = { en: 'Copy link', de: 'Link kopieren' };
   var COPIED_LABEL = { en: 'Copied!', de: 'Kopiert!' };
 
@@ -895,6 +929,8 @@
     langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
     langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
     langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
     document.querySelectorAll('.card-anchor').forEach(function(a){
       if(a.classList.contains('copied')) return;
       a.setAttribute('aria-label', COPY_LABEL[lang] || COPY_LABEL.en);
