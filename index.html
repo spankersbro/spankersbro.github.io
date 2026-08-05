@@ -403,11 +403,12 @@
         <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
         <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
         <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
-        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CERT-UA for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
+        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CISA and Mandiant for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
       </ol>
       <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
       <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
       <a class="card-link" href="https://osint.davidirving.dev/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
+      <a class="card-link" href="research/osint-real-time-tracker.html" data-i18n="research-writeup-link">Read the full writeup →</a>
     </div>
 
     <div class="card" id="research-crimes">
@@ -419,12 +420,15 @@
         <li><span data-i18n="crimes-step1"><strong>Sourced by design, not by afterthought.</strong> Every case record carries one or more citations classified by document type — DOJ filing, SEC order, court judgment, EPA record, ICIJ archive — instead of a single unlabeled link.</span></li>
         <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and a "worker-wage-equivalent" figure — how many years of an average worker's pay the penalty represents — and a companion inequality dashboard turns the dataset into charts by sector and crime type.</span></li>
         <li><span data-i18n="crimes-step3"><strong>Two Gemini-powered lenses on the same data.</strong> An AI Fact-Finder modal answers ad-hoc questions against the dataset, and an AI Patterns modal surfaces cross-case trends — which sectors recur, which enforcement types are most common — the same "structured reasoning over messy real data" test as the OSINT build.</span></li>
-        <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets someone propose a new entry for review, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
+        <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets anyone add a new entry directly — published immediately with an "AI-generated, unreviewed" disclosure badge, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
       </ol>
       <p data-i18n="crimes-p2">Early-stage research build — React, TypeScript and Firebase/Firestore, seeded with an initial dataset rather than a continuously fact-checked ledger. Treat individual case entries as a starting point for your own verification, not a settled record.</p>
       <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="crimes-tag-firestore">Firestore</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
       <a class="card-link" href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" data-i18n="crimes-link">View live app →</a>
+      <a class="card-link" href="research/crimes-of-the-1-percent.html" data-i18n="crimes-writeup-link">Read the full writeup →</a>
     </div>
+
+    <a class="card-link" href="research/" data-i18n="research-viewall">View all Personal AI Research →</a>
   </section>
 
 </div>
@@ -693,13 +697,14 @@
       Ein Hintergrund-Scheduler führt dieselbe suchgestützte Pipeline einmal pro Stunde
       unbeaufsichtigt aus und zielt auf eine feste Liste maßgeblicher Quellen — ISW für
       Frontberichte aus der Ukraine, UKMTO für Seefahrtswarnungen im Roten Meer, IAEA für die
-      nukleare Sicherheitsüberwachung in Saporischschja, CERT-UA für Cyber-Vorfälle — statt
+      nukleare Sicherheitsüberwachung in Saporischschja, CISA und Mandiant für Cyber-Vorfälle — statt
       eines offenen Crawls, wobei jede Ernte samt vollständigem Audit-Trail in Firestore
       gespeichert wird.`,
     'research-tag-nlp': 'NLP / Geolokalisierung',
     'research-tag-automation': 'Automatisierte Ernte',
     'research-tag-poc': 'Proof of Concept',
     'research-link': 'Live-App ansehen →',
+    'research-writeup-link': 'Den vollständigen Text lesen →',
     'crimes-h3': 'Crimes of the 1% — eine strukturierte, belegte Datenbank zu Finanzkriminalität und Rechtsstreitigkeiten der Superreichen',
     'crimes-p1': `Eine Datenbank, die Wirtschafts- und Führungskräftekriminalität — Betrug, Marktmanipulation,
       Steuerhinterziehung, State Capture — dem tatsächlichen Ausgang gegenüberstellt: strafrechtliche
@@ -719,14 +724,17 @@
       häufigsten sind — derselbe Test auf „strukturiertes Reasoning über unübersichtliche
       Realdaten" wie beim OSINT-Projekt.`,
     'crimes-step4': `<strong>Ein Einreichungsweg, keine geschlossene Datenbank.</strong> Ein
-      Formular zur Fall-Einreichung erlaubt es, einen neuen Eintrag zur Prüfung vorzuschlagen —
-      der Datensatz ist also nicht auf das beschränkt, was ich selbst recherchiere.`,
+      Formular zur Fall-Einreichung erlaubt es, direkt einen neuen Eintrag hinzuzufügen — sofort
+      veröffentlicht mit einem "KI-generiert, ungeprüft"-Hinweis, damit der Datensatz nicht auf
+      das beschränkt ist, was ich selbst recherchiere.`,
     'crimes-p2': `Frühes Forschungsprojekt — React, TypeScript und Firebase/Firestore, mit einem
       initialen Datensatz befüllt statt einem laufend faktengeprüften Register. Einzelne
       Falleinträge als Ausgangspunkt für die eigene Verifikation verstehen, nicht als
       abgeschlossenen Befund.`,
     'crimes-tag-firestore': 'Firestore',
     'crimes-link': 'Live-App ansehen →',
+    'crimes-writeup-link': 'Den vollständigen Text lesen →',
+    'research-viewall': 'Alle Personal AI Research ansehen →',
     'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz',

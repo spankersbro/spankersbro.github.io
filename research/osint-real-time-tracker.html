@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="How the OSINT Real-Time Tracker's multilingual extraction, geolocation, sentiment, and credibility scoring actually work — plus a real Firestore security bug and a cross-instance race condition, found and fixed.">
+<link rel="canonical" href="https://davidirving.dev/research/osint-real-time-tracker.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini">
+<meta property="og:description" content="How the OSINT Real-Time Tracker's multilingual extraction, geolocation, sentiment, and credibility scoring actually work — plus a real Firestore security bug and a cross-instance race condition, found and fixed.">
+<meta property="og:url" content="https://davidirving.dev/research/osint-real-time-tracker.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Personal AI Research">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini">
+<meta name="twitter:description" content="How the OSINT Real-Time Tracker's multilingual extraction, geolocation, sentiment, and credibility scoring actually work — plus a real Firestore security bug and a cross-instance race condition, found and fixed.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini",
+  "description": "How the OSINT Real-Time Tracker's multilingual extraction, geolocation, sentiment, and credibility scoring actually work — plus a real Firestore security bug and a cross-instance race condition, found and fixed.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/research/osint-real-time-tracker.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-research" href="index.html">All Research</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Personal AI Research</p>
+    <h1 data-i18n="hero-h1">OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini</h1>
+    <p class="lede" data-i18n="hero-lede">A maps-based dashboard that turns open-source conflict reports into structured, geolocated, credibility-scored events. The interesting part wasn't getting Gemini to return clean JSON — it was everything built around it to make that output something you could actually trust.</p>
+    <p class="meta-row" data-i18n="meta-date">July 2026 · Live at <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a></p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="what-h2">What it does</h2>
+    <p data-i18n="what-p1">The tracker ingests open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events on a live map. Built solo in Google AI Studio, React and Express on the frontend and backend, Gemini for the actual analysis, Firestore for persistence, deployed to Cloud Run.</p>
+
+    <h3 data-i18n="p1-h3">One Gemini call, five structured outputs</h3>
+    <p data-i18n="p1-p1">The core route takes raw source text and makes a single Gemini call with a structured <code>responseSchema</code> — no separate translation step, no pipeline of smaller calls. The prompt is explicit about this: translate to English if needed, identify the source language, then extract title, summary, category, severity, geolocation, sentiment, and a five-parameter credibility grade, all in one response.</p>
+    <p data-i18n="p1-p2">Geolocation resolution is the same call, not a separate one: the prompt instructs Gemini to normalize transliterations — Kyiv versus Kiev, Zaporizhzhia versus Zaporozhye — while preserving the original-script place name, and requires a written explanation of how any spelling ambiguity was resolved. That explanation is rendered verbatim in the app's location panel, not summarized or hidden — a real pass-through of the model's own reasoning, which is what "not a black box" actually has to mean if it's going to mean anything.</p>
+    <p data-i18n="p1-p3">Sentiment is the most elaborate part of the schema: a continuous score, a 1–10 tension rating, a dominant emotion plus secondary tones, a six-way nuance classification, and a four-axis valence breakdown across hostility, fear, defiance, and calm. The prompt explicitly asks for "a detailed, dispassionate computational linguistics narrative" explaining which grammatical markers, idioms, or regional slang in the <em>original</em> language carry that emotion — which is exactly the native-language-nuance claim, and it's a real, required field in the schema, not marketing copy describing something the model happens to do sometimes.</p>
+    <p data-i18n="p1-p4">Credibility is a fixed rubric, not a vibe: source reputation, cross-referencing, evidence level, contextual plausibility, and freshness, each worth up to twenty points with its own required justification string. The total isn't something Gemini asserts directly — the server sums the five sub-scores itself, so the headline number is always traceable back to five specific, visible judgments underneath it.</p>
+
+    <h3 data-i18n="p2-h3">An hourly harvester, and the distributed-systems bug it needed</h3>
+    <p data-i18n="p2-p1">A background scheduler runs the same pipeline unattended, aimed at named authoritative sources across six sectors — Ukraine frontline reporting, Red Sea maritime alerts, Sudan and the Sahel, East Asia, the Caucasus, and cyber incidents — using Gemini's search grounding rather than an open-ended crawl, with every harvest and its full audit trail written to Firestore.</p>
+    <p data-i18n="p2-p2">Running on Cloud Run means the app can have more than one instance alive at once, each running its own independent copy of that scheduler. Without a lock, every instance's "has an hour passed since the last harvest?" check can pass at the same moment, since the state only gets saved <em>after</em> a harvest finishes — which means multiple instances can all decide to run a full, quota-burning harvest simultaneously. The fix is a Firestore transaction that atomically checks and claims the harvest slot before the slow Gemini call even starts, so only one instance ever wins the race. It's a small piece of code, and it's the kind of bug that's invisible in local development and only exists because of how the actual deployment target behaves.</p>
+
+    <h3 data-i18n="p3-h3">A real security bug, found before it became an incident</h3>
+    <p data-i18n="p3-p1">The app's AI-Studio-generated starting point had Firestore rules wide open — <code>allow read, write: if true</code> — with the React frontend writing directly to Firestore for core functionality. That meant anyone with the Firebase client config, which is necessarily public in any browser-based app, could read or write data directly, bypassing the backend and its logic entirely. One endpoint made this worse in a specific way: the reset function didn't touch Firestore from the server at all — the <em>client</em> was doing the actual purge-and-reseed, with no authentication check anywhere in that path.</p>
+    <p data-i18n="p3-p2">The fix moved the backend onto the Firebase Admin SDK — real service credentials that don't depend on client-side rules at all — locked the Firestore rules to block direct client writes on every sensitive collection, and gated the reset and system-log endpoints behind real Firebase ID-token verification. It was found by recognizing the same class of bug in a sibling project and checking for it here deliberately, rather than from an incident or an external report — the more useful way to find this kind of thing, if you can manage it.</p>
+
+    <h3 data-i18n="p4-h3">What's actually gated, and what's an honest fallback</h3>
+    <p data-i18n="p4-p1">Two things are currently reserved for my own signed-in account rather than open to any visitor: submitting a fresh block of text for live analysis, and manually triggering a harvest. That's a cost-control decision — Gemini calls aren't free — not a limitation in the pipeline itself, which handles arbitrary multilingual input the same way regardless of who's driving it. Everyone else gets full read access to the credibility, sentiment, and geolocation breakdowns, and to a set of curated sample events that exercise the same pipeline.</p>
+    <p data-i18n="p4-p2">If Gemini itself is unavailable, the app falls back to a basic keyword-matching heuristic rather than failing outright — and it says so, visibly, in the resulting event's own justification text. An offline fallback dressed up as the real feature would be a worse failure mode than an honest one that admits it's degraded.</p>
+
+    <h2 data-i18n="reflect-h2">What actually mattered</h2>
+    <p data-i18n="reflect-p1">Getting a model to return clean structured JSON isn't the hard part anymore — modern models do that reliably, most of the time. What actually took the work was everything built around that call: retry logic with exponential backoff and a model-fallback cascade for when Gemini itself is flaky or rate-limited, a distributed lock so an autoscaled deployment doesn't quietly burn its own quota racing itself, and treating "the AI-Studio default has wide-open database rules" as a real problem to go fix, rather than something to leave alone because it's a side project and nobody's watching.</p>
+    <p data-i18n="reflect-p2">None of that shows up in a screenshot of the map view. It's the difference between a demo that happens to work and a system that keeps working once it's actually running unattended.</p>
+
+    <div class="tags">
+      <span class="tag">Personal AI Research</span>
+      <span class="tag">Gemini API</span>
+      <span class="tag" data-i18n="tag-nlp">NLP / Geolocation</span>
+      <span class="tag" data-i18n="tag-security">Application Security</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-research': 'Alle Research',
+    'hero-kicker': 'Personal AI Research',
+    'hero-h1': 'OSINT Real-Time Tracker: Mehrsprachiges Konfliktmonitoring, solo mit Gemini gebaut',
+    'hero-lede': 'Ein kartenbasiertes Dashboard, das offene Konfliktberichte in strukturierte, georeferenzierte, glaubwürdigkeitsbewertete Ereignisse verwandelt. Der interessante Teil war nicht, Gemini zu saubere JSON-Ausgaben zu bewegen — es war alles, was drumherum gebaut wurde, um dieser Ausgabe tatsächlich vertrauen zu können.',
+    'meta-date': 'Juli 2026 · Live auf <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a>',
+
+    'what-h2': 'Was es tut',
+    'what-p1': `Der Tracker nimmt offene Quellenberichte auf — Social-Media-Posts,
+      Agenturmeldungen, Funktranskripte — in welcher Sprache sie auch geschrieben wurden,
+      und verwandelt sie in strukturierte, georeferenzierte, glaubwürdigkeitsbewertete
+      Ereignisse auf einer Live-Karte. Solo gebaut in Google AI Studio, React und Express
+      im Frontend und Backend, Gemini für die eigentliche Analyse, Firestore für die
+      Persistenz, deployed auf Cloud Run.`,
+
+    'p1-h3': 'Ein Gemini-Call, fünf strukturierte Ausgaben',
+    'p1-p1': `Die zentrale Route nimmt Rohtext und macht einen einzelnen Gemini-Call mit
+      einem strukturierten <code>responseSchema</code> — kein separater Übersetzungsschritt,
+      keine Pipeline aus kleineren Calls. Der Prompt ist explizit: bei Bedarf ins
+      Englische übersetzen, die Quellsprache identifizieren, dann Titel, Zusammenfassung,
+      Kategorie, Schweregrad, Georeferenz, Sentiment und eine fünfparametrige
+      Glaubwürdigkeitsbewertung extrahieren — alles in einer Antwort.`,
+    'p1-p2': `Die Georeferenz-Auflösung ist derselbe Call, kein separater: Der Prompt weist
+      Gemini an, Transliterationen zu normalisieren — Kyiv statt Kiew, Sarporischschja statt
+      Zaporoschje — während der Ortsname in der Originalschrift erhalten bleibt, und
+      verlangt eine schriftliche Erklärung, wie eine etwaige Schreibweisen-Mehrdeutigkeit
+      aufgelöst wurde. Diese Erklärung wird wortwörtlich im Location-Panel der App gezeigt,
+      nicht zusammengefasst oder versteckt — ein echter Durchgriff auf das eigene Reasoning
+      des Modells, was "keine Black Box" tatsächlich bedeuten muss, wenn es überhaupt etwas
+      bedeuten soll.`,
+    'p1-p3': `Sentiment ist der aufwändigste Teil des Schemas: ein kontinuierlicher Score,
+      eine Anspannungsbewertung von 1-10, eine dominante Emotion plus Nebentöne, eine
+      sechsstufige Nuance-Klassifizierung und ein Vier-Achsen-Valenzprofil über
+      Feindlichkeit, Angst, Widerstand und Ruhe. Der Prompt verlangt explizit "eine
+      detaillierte, unaufgeregte computerlinguistische Erzählung", die erklärt, welche
+      grammatischen Marker, Idiome oder regionalen Slang-Ausdrücke in der
+      <em>Originalsprache</em> diese Emotion tragen — genau die Behauptung zur
+      muttersprachlichen Nuance, und es ist ein echtes, verpflichtendes Feld im Schema,
+      keine Marketing-Aussage über etwas, das das Modell gelegentlich zufällig tut.`,
+    'p1-p4': `Glaubwürdigkeit ist ein festes Raster, kein Gefühl: Quellenreputation,
+      Gegenprüfung, Beleglage, Kontextplausibilität und Aktualität, jedes bis zu zwanzig
+      Punkte wert mit einer eigenen verpflichtenden Begründung. Die Gesamtsumme behauptet
+      Gemini nicht direkt — der Server summiert die fünf Teilwerte selbst, sodass die
+      Gesamtzahl immer auf fünf konkrete, sichtbare Einzelurteile zurückführbar ist.`,
+
+    'p2-h3': 'Ein stündlicher Harvester, und der Verteilte-Systeme-Bug, den er brauchte',
+    'p2-p1': `Ein Hintergrund-Scheduler führt dieselbe Pipeline unbeaufsichtigt aus, gezielt
+      auf benannte maßgebliche Quellen über sechs Sektoren — Frontberichte aus der Ukraine,
+      Seefahrtswarnungen im Roten Meer, Sudan und die Sahelzone, Ostasien, den Kaukasus und
+      Cyber-Vorfälle — mittels Geminis Suchgrundierung statt eines offenen Crawls, wobei
+      jede Ernte samt vollständigem Audit-Trail in Firestore geschrieben wird.`,
+    'p2-p2': `Auf Cloud Run zu laufen bedeutet, dass die App mehr als eine Instanz
+      gleichzeitig aktiv haben kann, jede mit ihrer eigenen unabhängigen Kopie dieses
+      Schedulers. Ohne Lock können die "ist seit der letzten Ernte eine Stunde vergangen?"
+      -Prüfungen aller Instanzen im selben Moment durchgehen, weil der Status erst
+      <em>nach</em> Abschluss einer Ernte gespeichert wird — was bedeutet, dass mehrere
+      Instanzen gleichzeitig entscheiden können, eine volle, kontingent-verbrennende Ernte
+      zu starten. Der Fix ist eine Firestore-Transaktion, die den Ernte-Slot atomar prüft
+      und beansprucht, bevor der langsame Gemini-Call überhaupt beginnt, sodass immer nur
+      eine Instanz das Rennen gewinnt. Es ist ein kleines Stück Code, und es ist die Art
+      von Bug, die in der lokalen Entwicklung unsichtbar ist und nur existiert, weil das
+      tatsächliche Deployment-Ziel sich so verhält, wie es sich verhält.`,
+
+    'p3-h3': 'Ein echter Sicherheitsbug, gefunden bevor er zum Vorfall wurde',
+    'p3-p1': `Der von AI Studio generierte Ausgangspunkt der App hatte weit offene
+      Firestore-Regeln — <code>allow read, write: if true</code> — mit dem React-Frontend,
+      das für Kernfunktionen direkt nach Firestore schrieb. Das bedeutete, dass jeder mit
+      der Firebase-Client-Konfiguration, die in jeder browserbasierten App notwendigerweise
+      öffentlich ist, direkt Daten lesen oder schreiben konnte, komplett am Backend und
+      seiner Logik vorbei. Ein Endpunkt machte das auf eine bestimmte Art schlimmer: Die
+      Reset-Funktion berührte serverseitig überhaupt kein Firestore — der <em>Client</em>
+      führte das eigentliche Löschen-und-Neubefüllen durch, ohne jede Authentifizierung
+      irgendwo in diesem Pfad.`,
+    'p3-p2': `Der Fix verlagerte das Backend auf das Firebase Admin SDK — echte
+      Service-Credentials, die überhaupt nicht von clientseitigen Regeln abhängen —,
+      sperrte die Firestore-Regeln gegen direkte Client-Schreibzugriffe auf jede sensible
+      Collection und sicherte die Reset- und System-Log-Endpunkte hinter echter
+      Firebase-ID-Token-Verifikation ab. Gefunden wurde es, indem dieselbe Bug-Klasse in
+      einem Schwesterprojekt wiedererkannt und hier gezielt danach gesucht wurde — statt
+      durch einen Vorfall oder eine externe Meldung, was der nützlichere Weg ist, so etwas
+      zu finden, wenn man es schafft.`,
+
+    'p4-h3': 'Was tatsächlich gesperrt ist, und was ein ehrlicher Fallback ist',
+    'p4-p1': `Zwei Dinge sind derzeit meinem eigenen angemeldeten Account vorbehalten,
+      statt für jeden Besucher offen zu sein: einen neuen Textblock zur Live-Analyse
+      einzureichen, und eine Ernte manuell auszulösen. Das ist eine Kostenkontroll-
+      Entscheidung — Gemini-Calls sind nicht kostenlos — keine Einschränkung der Pipeline
+      selbst, die beliebige mehrsprachige Eingaben unabhängig davon gleich behandelt, wer
+      sie steuert. Alle anderen erhalten vollen Lesezugriff auf die Glaubwürdigkeits-,
+      Sentiment- und Georeferenz-Aufschlüsselungen und auf eine Reihe kuratierter
+      Beispielereignisse, die dieselbe Pipeline durchlaufen.`,
+    'p4-p2': `Wenn Gemini selbst nicht verfügbar ist, fällt die App auf eine einfache
+      Keyword-Abgleich-Heuristik zurück, statt komplett auszufallen — und sie sagt das auch
+      sichtbar, in der Begründung des jeweiligen Ereignisses selbst. Ein Offline-Fallback,
+      der als echtes Feature ausgegeben wird, wäre ein schlimmerer Fehlerfall als einer,
+      der ehrlich zugibt, dass er degradiert ist.`,
+
+    'reflect-h2': 'Was tatsächlich zählte',
+    'reflect-p1': `Ein Modell dazu zu bringen, saubere strukturierte JSON-Ausgaben zu
+      liefern, ist nicht mehr der schwierige Teil — moderne Modelle tun das die meiste Zeit
+      zuverlässig. Was tatsächlich Arbeit gekostet hat, war alles, was um diesen Call
+      herum gebaut wurde: Retry-Logik mit exponentiellem Backoff und einer
+      Modell-Fallback-Kaskade für den Fall, dass Gemini selbst instabil ist oder
+      rate-limitiert, ein verteilter Lock, damit ein autoskaliertes Deployment nicht still
+      sein eigenes Kontingent gegen sich selbst verbrennt, und die Haltung, dass "der
+      AI-Studio-Standard hat weit offene Datenbankregeln" ein echtes Problem ist, das man
+      beheben muss, statt etwas, das man liegen lässt, weil es ein Nebenprojekt ist und
+      niemand zuschaut.`,
+    'reflect-p2': `Nichts davon zeigt sich in einem Screenshot der Kartenansicht. Es ist
+      der Unterschied zwischen einer Demo, die zufällig funktioniert, und einem System, das
+      tatsächlich weiterläuft, sobald es wirklich unbeaufsichtigt in Betrieb ist.`,
+
+    'tag-nlp': 'NLP / Geolocation',
+    'tag-security': 'Anwendungssicherheit',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'How the OSINT Real-Time Tracker\'s multilingual extraction, geolocation, sentiment, and credibility scoring actually work — plus a real Firestore security bug and a cross-instance race condition, found and fixed.',
+    de: 'Wie die mehrsprachige Extraktion, Georeferenzierung, Sentiment- und Glaubwürdigkeitsbewertung des OSINT Real-Time Trackers tatsächlich funktionieren — plus ein echter Firestore-Sicherheitsbug und eine Cross-Instance-Race-Condition, gefunden und gefixt.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
