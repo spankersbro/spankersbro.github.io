@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="How Crimes of the 1%'s citation classification, worker-wage-equivalent framing, and two Gemini analysis modals actually work — plus a Firestore security fix shared with a sibling project, and honest AI-content labeling.">
+<link rel="canonical" href="https://davidirving.dev/research/crimes-of-the-1-percent.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy">
+<meta property="og:description" content="How Crimes of the 1%'s citation classification, worker-wage-equivalent framing, and two Gemini analysis modals actually work — plus a Firestore security fix shared with a sibling project, and honest AI-content labeling.">
+<meta property="og:url" content="https://davidirving.dev/research/crimes-of-the-1-percent.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Personal AI Research">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy">
+<meta name="twitter:description" content="How Crimes of the 1%'s citation classification, worker-wage-equivalent framing, and two Gemini analysis modals actually work — plus a Firestore security fix shared with a sibling project, and honest AI-content labeling.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy",
+  "description": "How Crimes of the 1%'s citation classification, worker-wage-equivalent framing, and two Gemini analysis modals actually work — plus a Firestore security fix shared with a sibling project, and honest AI-content labeling.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/research/crimes-of-the-1-percent.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-research" href="index.html">All Research</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Personal AI Research</p>
+    <h1 data-i18n="hero-h1">Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy</h1>
+    <p class="lede" data-i18n="hero-lede">A database that holds corporate and executive-level financial crime against its actual enforcement outcome — and what it takes to make "sourced" mean something more specific than a link at the bottom of the page.</p>
+    <p class="meta-row" data-i18n="meta-date">July 2026 · Live at <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a></p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="what-h2">What it does</h2>
+    <p data-i18n="what-p1">The database catalogs corporate and executive-level financial crime — fraud, market manipulation, tax evasion, state capture — against the actual enforcement outcome on record: criminal conviction, settlement, deferred prosecution, or litigation still in progress. Built the same way as the OSINT tracker: solo, in Google AI Studio, React and TypeScript on the frontend, Firebase/Firestore for persistence, Gemini for the analysis features.</p>
+
+    <h3 data-i18n="p1-h3">Sourced by design, checked against the record</h3>
+    <p data-i18n="p1-p1">Every case carries one or more citations, each classified by a fixed document-type category — DOJ filing, SEC order, court judgment, CFPB enforcement, EPA record, ICIJ archive, investigative report, official statement — instead of a single unlabeled link. Spot-checking a handful of the seeded cases against the public record holds up: real settlement figures, real citations, the right order of magnitude for each penalty.</p>
+    <p data-i18n="p1-p2">Each entry also converts its financial penalty into a worker-wage-equivalent figure — roughly how many years of an average salary the number represents — so a penalty in the billions turns into something with a felt sense of scale, alongside a companion dashboard that breaks the dataset down by sector and enforcement outcome, computed live from the actual case data rather than pre-baked.</p>
+    <p data-i18n="p1-p3">The dashboard makes a specific point of visually separating genuinely computed figures from illustrative ones: two tiles pulled straight from the dataset get a solid border and a "From Dataset" label, and two comparison figures included purely to give a sense of scale — average household savings, average lifetime earnings — get a dashed border and an explicit "Illustrative" label instead. It's a small UI detail, but it's the actual mechanism behind "honest by design," not just a claim about it.</p>
+
+    <h3 data-i18n="p2-h3">Two Gemini lenses, one real schema trick</h3>
+    <p data-i18n="p2-p1">An AI Fact-Finder modal takes a free-text question, sends the current case list into the prompt, and asks Gemini to answer "based on the provided dataset and verified public records" — returning both a written answer and a list of matching case IDs, which the interface cross-references to show clickable source cards rather than leaving the reader to trust unlinked prose.</p>
+    <p data-i18n="p2-p2">An AI Patterns modal looks across the dataset for recurring sectors, common enforcement types, and systemic regulatory gaps, structured into an executive summary, several named patterns each with a supporting statistic, and a bulleted list of observed gaps. Both modals use Gemini's structured-output schema feature rather than asking for JSON in plain language and hoping the formatting holds — a real reliability choice, not just careful prompt wording.</p>
+
+    <h3 data-i18n="p3-h3">A submission path that's honest about what it is</h3>
+    <p data-i18n="p3-p1">A case-submission form lets anyone paste a source document's text plus a URL, and Gemini extracts a structured record from it using the same schema-constrained approach as the two analysis modals. It publishes immediately — there's no moderation queue, and the interface doesn't imply one — tagged with a clearly visible "AI-generated, unreviewed" disclosure badge.</p>
+    <p data-i18n="p3-p2">That badge's wording was chosen deliberately, not as a generic disclaimer: it specifically avoids implying that any human review took place, because the relevant EU AI Act provision's editorial-review exemption only applies where genuine, substantive human review actually happens — which this automated pipeline doesn't do. Saying less than that would have been the easier, and less accurate, choice.</p>
+
+    <h3 data-i18n="p4-h3">A Firestore security fix, found the same way twice</h3>
+    <p data-i18n="p4-p1">This project shared the exact same class of vulnerability as its sibling OSINT tracker: Firestore rules that allowed open read and write access, with the frontend authenticating against Firestore directly using a necessarily-public client configuration instead of going through the backend for anything. Once that pattern had been found and fixed in the OSINT project, it got checked here deliberately, rather than assumed to be fine because nothing had gone wrong yet — and it was the same bug. Fixed the same way: migrated to the Firebase Admin SDK, closed the rules outright, and moved every real read and write behind the Express API instead of trusting the client.</p>
+    <p data-i18n="p4-p2">Real, proactive legal compliance work sits alongside that fix, for the same underlying reason: an Impressum citing the specific Austrian Mediengesetz §25 disclosure that applies to a "große Website," and a privacy policy — both added because the project names real public figures and that carries real obligations, not because anyone asked or a regulator came calling.</p>
+
+    <h2 data-i18n="reflect-h2">What actually mattered</h2>
+    <p data-i18n="reflect-p1">Getting Gemini to return a clean, schema-constrained structure is close to table stakes now. What actually took real effort was everything around that: keeping "computed from the dataset" visually distinct from "illustrative for scale" instead of letting the two blur together, labeling AI-generated content for what it honestly is instead of what would be more convenient to imply, and treating a security pattern found once as something to go check for deliberately elsewhere — not a one-off fire that got put out and forgotten.</p>
+    <p data-i18n="reflect-p2">None of that shows up as a feature you can screenshot. It's the difference between a database that looks trustworthy and one that's actually built to survive someone checking.</p>
+
+    <div class="tags">
+      <span class="tag">Personal AI Research</span>
+      <span class="tag">Gemini API</span>
+      <span class="tag" data-i18n="tag-firestore">Firestore</span>
+      <span class="tag" data-i18n="tag-security">Application Security</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-research': 'Alle Research',
+    'hero-kicker': 'Personal AI Research',
+    'hero-h1': 'Crimes of the 1%: Eine sourcierte Datenbank von Finanzverbrechen unter den Superreichen',
+    'hero-lede': 'Eine Datenbank, die Finanzverbrechen von Unternehmen und Führungskräften gegen den tatsächlichen Ausgang der Rechtsverfolgung hält — und was es braucht, damit "sourciert" mehr bedeutet als ein Link am Seitenende.',
+    'meta-date': 'Juli 2026 · Live auf <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a>',
+
+    'what-h2': 'Was es tut',
+    'what-p1': `Die Datenbank katalogisiert Finanzverbrechen von Unternehmen und
+      Führungskräften — Betrug, Marktmanipulation, Steuerhinterziehung, Staatskaptur — gegen
+      den tatsächlichen Ausgang der Rechtsverfolgung: strafrechtliche Verurteilung, Vergleich,
+      aufgeschobene Strafverfolgung oder laufendes Verfahren. Genauso gebaut wie der
+      OSINT-Tracker: solo, in Google AI Studio, React und TypeScript im Frontend,
+      Firebase/Firestore für die Persistenz, Gemini für die Analysefunktionen.`,
+
+    'p1-h3': 'Sourciert by Design, gegen den Faktenstand geprüft',
+    'p1-p1': `Jeder Fall trägt eine oder mehrere Quellenangaben, jede nach einer festen
+      Dokumenttyp-Kategorie klassifiziert — DOJ-Filing, SEC-Order, Gerichtsurteil,
+      CFPB-Enforcement, EPA-Record, ICIJ-Archiv, investigativer Bericht, offizielle
+      Stellungnahme — statt eines einzelnen, nicht gekennzeichneten Links. Eine
+      Stichprobenprüfung einiger der Startfälle gegen den öffentlichen Faktenstand hält: echte
+      Vergleichssummen, echte Zitate, die richtige Größenordnung für jede Strafe.`,
+    'p1-p2': `Jeder Eintrag rechnet seine Geldstrafe außerdem in eine
+      Arbeiter-Lohnäquivalent-Zahl um — grob, wie viele Jahre eines durchschnittlichen
+      Gehalts die Zahl darstellt —, sodass eine Strafe im Milliardenbereich ein spürbares
+      Gefühl für die Größenordnung bekommt, zusammen mit einem begleitenden Dashboard, das
+      den Datensatz nach Sektor und Vollstreckungsergebnis aufschlüsselt, live aus den
+      tatsächlichen Falldaten berechnet statt vorgefertigt.`,
+    'p1-p3': `Das Dashboard macht einen expliziten Punkt daraus, echte berechnete Zahlen
+      visuell von illustrativen zu trennen: zwei Kacheln direkt aus dem Datensatz bekommen
+      einen durchgezogenen Rahmen und ein "Aus dem Datensatz"-Label, und zwei
+      Vergleichszahlen, die nur zur Einordnung der Größenordnung dienen — durchschnittliche
+      Haushaltsersparnisse, durchschnittliches Lebenseinkommen — bekommen stattdessen einen
+      gestrichelten Rahmen und ein explizites "Illustrativ"-Label. Ein kleines UI-Detail, aber
+      es ist der tatsächliche Mechanismus hinter "ehrlich by Design", nicht nur eine
+      Behauptung darüber.`,
+
+    'p2-h3': 'Zwei Gemini-Linsen, ein echter Schema-Trick',
+    'p2-p1': `Ein AI-Fact-Finder-Modal nimmt eine Freitextfrage, schickt die aktuelle
+      Fallliste mit in den Prompt und bittet Gemini, "basierend auf dem bereitgestellten
+      Datensatz und verifizierten öffentlichen Aufzeichnungen" zu antworten — und liefert
+      sowohl eine geschriebene Antwort als auch eine Liste passender Fall-IDs, die die
+      Oberfläche querverweist, um anklickbare Quellenkarten zu zeigen, statt die Leserin
+      unverlinkter Prosa vertrauen zu lassen.`,
+    'p2-p2': `Ein AI-Patterns-Modal sucht im gesamten Datensatz nach wiederkehrenden
+      Sektoren, häufigen Vollstreckungsarten und systemischen Regulierungslücken, strukturiert
+      in eine Executive Summary, mehrere benannte Muster mit je einer stützenden Statistik,
+      und eine Aufzählung beobachteter Lücken. Beide Modale nutzen Geminis
+      Structured-Output-Schema-Feature, statt in einfacher Sprache um JSON zu bitten und auf
+      korrekte Formatierung zu hoffen — eine echte Zuverlässigkeitsentscheidung, nicht nur
+      sorgfältige Prompt-Formulierung.`,
+
+    'p3-h3': 'Ein Einreichungsweg, der ehrlich ist, was er ist',
+    'p3-p1': `Ein Formular zur Fall-Einreichung erlaubt es, den Text eines Quelldokuments
+      plus einer URL einzufügen, und Gemini extrahiert daraus einen strukturierten Datensatz
+      mit demselben schema-eingeschränkten Ansatz wie die beiden Analyse-Modale. Er wird
+      sofort veröffentlicht — es gibt keine Moderationswarteschlange, und die Oberfläche tut
+      nicht so, als gäbe es eine — gekennzeichnet mit einem deutlich sichtbaren
+      "KI-generiert, ungeprüft"-Hinweis.`,
+    'p3-p2': `Die Formulierung dieses Hinweises wurde bewusst gewählt, nicht als
+      generischer Disclaimer: Sie vermeidet gezielt den Eindruck, es habe eine menschliche
+      Prüfung stattgefunden, weil die einschlägige Ausnahme im EU AI Act für redaktionelle
+      Prüfung nur greift, wo tatsächlich eine echte, substanzielle menschliche Prüfung
+      stattfindet — was diese automatisierte Pipeline nicht tut. Weniger zu sagen wäre die
+      einfachere, aber weniger genaue Wahl gewesen.`,
+
+    'p4-h3': 'Ein Firestore-Sicherheitsfix, zweimal auf dieselbe Art gefunden',
+    'p4-p1': `Dieses Projekt teilte genau dieselbe Bug-Klasse mit seinem Schwesterprojekt,
+      dem OSINT-Tracker: Firestore-Regeln, die offenen Lese- und Schreibzugriff erlaubten,
+      wobei das Frontend sich direkt gegenüber Firestore mit einer notwendigerweise
+      öffentlichen Client-Konfiguration authentifizierte, statt für alles über das Backend zu
+      gehen. Nachdem dieses Muster im OSINT-Projekt gefunden und gefixt worden war, wurde
+      hier gezielt danach gesucht, statt anzunehmen, es sei schon in Ordnung, weil noch
+      nichts passiert war — und es war derselbe Bug. Auf dieselbe Art gefixt: Migration auf
+      das Firebase Admin SDK, die Regeln komplett geschlossen, und jeder echte Lese- und
+      Schreibzugriff hinter die Express-API verlegt, statt dem Client zu vertrauen.`,
+    'p4-p2': `Echte, proaktive rechtliche Compliance-Arbeit steht aus demselben Grund neben
+      diesem Fix: ein Impressum, das den spezifischen §25-Mediengesetz-Hinweis für eine
+      "große Website" zitiert, und eine Datenschutzerklärung — beide ergänzt, weil das
+      Projekt real existierende öffentliche Personen nennt und das echte Pflichten mit sich
+      bringt, nicht weil jemand danach gefragt oder eine Behörde angerufen hätte.`,
+
+    'reflect-h2': 'Was tatsächlich zählte',
+    'reflect-p1': `Gemini dazu zu bringen, eine saubere, schema-eingeschränkte Struktur zu
+      liefern, ist inzwischen fast Standard. Was tatsächlich echte Arbeit gekostet hat, war
+      alles drumherum: "aus dem Datensatz berechnet" visuell klar von "illustrativ zur
+      Einordnung" zu trennen, statt beides verschwimmen zu lassen, KI-generierte Inhalte
+      ehrlich als das zu kennzeichnen, was sie sind, statt als das, was bequemer zu
+      suggerieren wäre, und ein einmal gefundenes Sicherheitsmuster als etwas zu behandeln,
+      dem man gezielt anderswo nachgeht — nicht als einmaligen Brand, der gelöscht und
+      vergessen wird.`,
+    'reflect-p2': `Nichts davon zeigt sich als Feature, das man screenshotten kann. Es ist
+      der Unterschied zwischen einer Datenbank, die vertrauenswürdig aussieht, und einer, die
+      tatsächlich darauf ausgelegt ist, dass jemand nachprüft.`,
+
+    'tag-firestore': 'Firestore',
+    'tag-security': 'Anwendungssicherheit',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'How Crimes of the 1%\'s citation classification, worker-wage-equivalent framing, and two Gemini analysis modals actually work — plus a Firestore security fix shared with a sibling project, and honest AI-content labeling.',
+    de: 'Wie die Zitat-Klassifizierung, das Arbeiter-Lohnäquivalent und die beiden Gemini-Analyse-Modale von Crimes of the 1% tatsächlich funktionieren — plus ein mit einem Schwesterprojekt geteilter Firestore-Sicherheitsfix und ehrliche KI-Inhalts-Kennzeichnung.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
