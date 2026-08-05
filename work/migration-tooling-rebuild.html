@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<link rel="canonical" href="https://davidirving.dev/work/migration-tooling-rebuild.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About">
+<meta property="og:description" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<meta property="og:url" content="https://davidirving.dev/work/migration-tooling-rebuild.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About">
+<meta name="twitter:description" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About",
+  "description": "Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/migration-tooling-rebuild.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About</h1>
+    <p class="lede" data-i18n="hero-lede">Deleting a homegrown migration system is the easy part to describe. Enforcing its replacement as the only path for schema changes is what actually found the bugs that would have broken a real deployment.</p>
+    <p class="meta-row" data-i18n="meta-date">June – July 2026 · Two phases · ~112 commits</p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="why-h2">The setup</h2>
+    <p data-i18n="why-p1">TEAMBOX ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never been forced through the specific failure modes that only show up once you stop hand-rolling every schema change and put a real migration tool in charge of it.</p>
+
+    <h3 data-i18n="p1-h3">Phase one: a replacement, not a patch</h3>
+    <p data-i18n="p1-p1">Built and shipped, solo, a full replacement of the old system with Doctrine Migrations: the entire <code>DatabaseSchema</code>/<code>TableSchema</code> setup, its YAML fixtures, and the legacy upgrade scripts that went with it are gone outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. A <code>FixtureManager</code> paired with Doctrine Migrations now owns schema and test-database setup end to end.</p>
+    <p data-i18n="p1-p2">Along the way: the CLI framework's long-flag parsing had never actually worked anywhere in the codebase. It silently fell back to defaults instead of erroring out — an untrimmed-whitespace bug that had gone unnoticed for years behind a short-flag fallback path, exactly the kind of thing any long-lived codebase accumulates. Fixed it and pinned the correct behavior down with a regression test, so it can't silently regress again.</p>
+    <p data-i18n="p1-p3">Also added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system had simply never defended against, because it had never needed to. And chased an intermittent CI-only authentication failure through several dead ends — retry logic first, then in-process table drops — before landing on the actual fix: reusing a single shared database connection instead of opening a new one per test. Fifteen historical legacy-upgrade directories were deleted, but only once their behavior was confirmed already covered by the replacement — and staging-scenario migrations were deliberately written and reverted before merge, as a test method, not leftover cruft left behind by accident.</p>
+
+    <h3 data-i18n="p2-h3">Phase two: making it the only path</h3>
+    <p data-i18n="p2-p1">Deleting the bespoke system is what made this pipeline fundamentally different from what came before. But enforcing Doctrine Migrations as the single path for schema changes — no more parallel legacy upgrade routes left running alongside it "just in case" — is what actually found the bugs that would have broken a real deployment.</p>
+    <p data-i18n="p2-p2">A CLI flag parser where no long-form flag had ever worked, caught again from a different angle once enforcement made the gap unavoidable. A separate upgrade flag that crashed on every single real execution — not an edge case, the normal path. And a CI database-authentication failure traced to a password-decoding mismatch between the old credential convention and a newer one, the kind of gap that only appears once both conventions exist side by side and something finally has to pick.</p>
+    <p data-i18n="p2-p3">The most serious find: old-system installs couldn't mark the new migration baseline as applied, because the metadata-storage table the new system expected didn't exist yet on those installs. That's a real deployment blocker, and it's the kind that only shows up the first time someone actually runs the migration for real — no test environment that starts from a clean slate would ever hit it. The migration strategy itself now lives as an architecture decision record that gates schema-change review going forward, instead of staying tribal knowledge that only one person actually understood.</p>
+
+    <h2 data-i18n="reflect-h2">What actually mattered</h2>
+    <p data-i18n="reflect-p1">Deleting a bespoke system wholesale and rebuilding it on a real, maintained tool is what made this migration pipeline fundamentally different from what it replaced. But the flag-parsing fix, the table-existence check, and the connection-reuse fix are what made it safe to actually point at production.</p>
+    <p data-i18n="reflect-p2">None of those three were things the original migration work would ever have caught on its own, because none of them were "does the migration run." They were "does the tooling around it hold up under conditions nobody had actually tested" — and the only way to find that out was to take away the fallback path and force everything through the new one.</p>
+
+    <div class="tags">
+      <span class="tag" data-i18n="tag-migrations">Doctrine Migrations</span>
+      <span class="tag" data-i18n="tag-release-eng">Release Engineering</span>
+      <span class="tag">CI/CD</span>
+      <span class="tag">Database</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Ein selbstgebautes Schema-Migrationssystem durch Doctrine ersetzt — und einen CLI-Bug gefunden, von dem niemand wusste',
+    'hero-lede': 'Ein selbstgebautes Migrationssystem zu löschen ist der leicht zu erzählende Teil. Seinen Ersatz als einzigen Pfad für Schemaänderungen durchzusetzen ist das, was die Bugs tatsächlich gefunden hat, die ein echtes Deployment gebrochen hätten.',
+    'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~112 Commits',
+
+    'why-h2': 'Die Ausgangslage',
+    'why-p1': `TEAMBOX führte Schemaänderungen und Upgrades über ein selbstgebautes,
+      YAML-gesteuertes System: Hunderte YAML-Schemadateien, eine Reihe von Legacy-Upgrade-Skripten
+      und ein paar eigene Schema-Klassen, die alles zusammenhielten. Es funktionierte, in dem Sinn,
+      dass es seit Jahren lief. Es war aber auch nie durch die spezifischen Fehlerfälle
+      gezwungen worden, die erst auftauchen, wenn man aufhört, jede Schemaänderung von Hand zu
+      basteln, und ein echtes Migrationstool das Kommando übernehmen lässt.`,
+
+    'p1-h3': 'Phase eins: ein Ersatz, kein Pflaster',
+    'p1-p1': `Solo gebaut und ausgeliefert: ein vollständiger Ersatz des alten Systems durch
+      Doctrine Migrations. Das komplette <code>DatabaseSchema</code>/<code>TableSchema</code>-Setup,
+      seine YAML-Fixtures und die dazugehörigen Legacy-Upgrade-Skripte sind komplett weg — eine
+      Netto-Reduktion von Tausenden Zeilen über Hunderte Dateien, als ein durchgehendes Stück
+      Arbeit. Ein <code>FixtureManager</code> zusammen mit Doctrine Migrations übernimmt jetzt
+      Schema- und Test-Datenbank-Setup end to end.`,
+    'p1-p2': `Auf dem Weg dahin: Das Long-Flag-Parsing des CLI-Frameworks hatte nie irgendwo in
+      der Codebase tatsächlich funktioniert. Es fiel still auf Standardwerte zurück, statt einen
+      Fehler zu werfen — ein Bug durch nicht getrimmten Whitespace, der jahrelang unbemerkt blieb,
+      versteckt hinter einem Short-Flag-Fallback-Pfad, genau die Art von Sache, die sich in jeder
+      langlebigen Codebase ansammelt. Behoben und das korrekte Verhalten mit einem Regressionstest
+      festgenagelt, damit es nicht wieder still zurückfällt.`,
+    'p1-p3': `Außerdem MySQL-Reconnect-on-Disconnect-Handling und einen Advisory-Lock rund um den
+      Baseline-Migrations-Guard ergänzt — Fehlerfälle, gegen die sich das alte System nie
+      abgesichert hatte, weil es das nie musste. Und einen sporadischen, nur in CI auftretenden
+      Auth-Fehler durch mehrere Sackgassen verfolgt — erst Retry-Logik, dann In-Process-Table-Drops
+      — bevor der eigentliche Fix gefunden wurde: eine einzelne geteilte Datenbankverbindung
+      wiederverwenden statt pro Test eine neue zu öffnen. Fünfzehn historische
+      Legacy-Upgrade-Verzeichnisse wurden gelöscht, aber erst, nachdem bestätigt war, dass ihr
+      Verhalten vom Ersatz bereits abgedeckt war — und Staging-Szenario-Migrationen wurden bewusst
+      geschrieben und vor dem Merge zurückgenommen, als Testmethode, nicht als versehentlich
+      übrig gebliebener Code.`,
+
+    'p2-h3': 'Phase zwei: zum einzigen Pfad gemacht',
+    'p2-p1': `Das selbstgebaute System zu löschen ist das, was diese Pipeline grundlegend anders
+      gemacht hat als das, was davor war. Aber Doctrine Migrations als einzigen Pfad für
+      Schemaänderungen durchzusetzen — keine parallelen Legacy-Upgrade-Routen mehr, die "nur für
+      den Fall" nebenher weiterliefen — ist das, was die Bugs tatsächlich gefunden hat, die ein
+      echtes Deployment gebrochen hätten.`,
+    'p2-p2': `Ein CLI-Flag-Parser, bei dem nie ein Long-Form-Flag funktioniert hatte, erneut aus
+      einem anderen Winkel gefunden, sobald die Durchsetzung die Lücke unausweichlich machte. Ein
+      separates Upgrade-Flag, das bei jeder einzelnen echten Ausführung abstürzte — kein Randfall,
+      der normale Pfad. Und ein CI-Datenbank-Auth-Fehler, zurückverfolgt auf eine
+      Passwort-Dekodierungs-Inkongruenz zwischen der alten Credential-Konvention und einer neueren
+      — die Art von Lücke, die erst auftaucht, wenn beide Konventionen gleichzeitig existieren und
+      sich endlich jemand entscheiden muss.`,
+    'p2-p3': `Der schwerwiegendste Fund: Installationen des alten Systems konnten die neue
+      Migrations-Baseline nicht als angewendet markieren, weil die Metadaten-Tabelle, die das neue
+      System erwartete, auf diesen Installationen noch nicht existierte. Das ist ein echter
+      Deployment-Blocker, und zwar von der Art, die erst auftaucht, wenn jemand die Migration
+      tatsächlich echt ausführt — keine Testumgebung, die von einem sauberen Stand startet, würde
+      je darauf stoßen. Die Migrationsstrategie selbst lebt jetzt als Architekturentscheidung, die
+      künftig Schemaänderungs-Reviews gate, statt Herrschaftswissen zu bleiben, das nur eine Person
+      wirklich verstand.`,
+
+    'reflect-h2': 'Was tatsächlich zählte',
+    'reflect-p1': `Ein selbstgebautes System komplett zu löschen und auf einem echten, gepflegten
+      Tool neu aufzubauen ist das, was diese Migrations-Pipeline grundlegend anders gemacht hat als
+      das, was sie ersetzte. Aber der Flag-Parsing-Fix, die Tabellen-Existenzprüfung und der
+      Connection-Reuse-Fix sind das, was es sicher gemacht hat, wirklich gegen Produktion zu
+      laufen.`,
+    'reflect-p2': `Keiner dieser drei wäre je von der ursprünglichen Migrationsarbeit allein
+      gefunden worden, weil keiner davon "läuft die Migration" war. Es war "hält das Tooling
+      drumherum unter Bedingungen, die vorher niemand getestet hat" — und der einzige Weg, das
+      herauszufinden, war, den Fallback-Pfad wegzunehmen und alles durch den neuen zu zwingen.`,
+
+    'tag-migrations': 'Doctrine Migrations',
+    'tag-release-eng': 'Release Engineering',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.',
+    de: 'Ein selbstgebautes, YAML-gesteuertes Schema-Migrationssystem durch Doctrine Migrations ersetzt und dann als einzigen Pfad für Schemaänderungen durchgesetzt — und die deployment-brechenden Bugs, die diese Durchsetzung tatsächlich gefunden hat.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

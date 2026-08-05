@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="A structured vendor evaluation of a third-party AI agent development platform against real CI and security requirements — four concrete gaps found, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive.">
+<link rel="canonical" href="https://davidirving.dev/work/vendor-platform-evaluation.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo">
+<meta property="og:description" content="A structured vendor evaluation of a third-party AI agent development platform against real CI and security requirements — four concrete gaps found, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive.">
+<meta property="og:url" content="https://davidirving.dev/work/vendor-platform-evaluation.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo">
+<meta name="twitter:description" content="A structured vendor evaluation of a third-party AI agent development platform against real CI and security requirements — four concrete gaps found, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo",
+  "description": "A structured vendor evaluation of a third-party AI agent development platform against real CI and security requirements — four concrete gaps found, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/vendor-platform-evaluation.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo</h1>
+    <p class="lede" data-i18n="hero-lede">Four concrete gaps found and written up specifically, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive once the first draft read as just critical.</p>
+    <p class="meta-row" data-i18n="meta-date">June – July 2026 · Two phases</p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="why-h2">The setup</h2>
+    <p data-i18n="why-p1">Evaluating a third-party agentic-engineering platform for the team meant trialing it against TEAMBOX's actual CI and security requirements, not a sandboxed walkthrough. That's the difference between "does this look good in a fifteen-minute demo" and "does this survive contact with a real, twenty-year-old codebase's actual constraints" — and it's the second question that determines whether a platform decision holds up six months later.</p>
+
+    <h3 data-i18n="p1-h3">Phase one: what a real evaluation actually finds</h3>
+    <p data-i18n="p1-p1">Four concrete gaps came out of actually running the platform against real work, each specific enough to act on rather than a vague thumbs-down: an undocumented Node.js runner requirement that appeared nowhere in the platform's own documentation; a stop-gate that false-positived five separate times in one session on a commit that was pure formatting, with no logic change at all; no adapter for the team's internal ticketing system, meaning a core piece of the actual workflow had no path into the tool whatsoever; and global settings pollution on onboarding — the installer writing into a shared configuration location it had no business touching. None of these show up in a short demo. They show up when you actually point the thing at your own repository, your own CI, your own ticketing system, and watch what it does.</p>
+    <p data-i18n="p1-p2">Independent of whichever way the vendor decision eventually landed, the evaluation left real, permanent hardening behind in CI: a dependency-review workflow, a dedicated security-scanning workflow, commitlint, and an IAM fix that dropped default write permissions a CI workflow didn't actually need. None of that depends on the platform being approved. It's just better CI than existed before the evaluation started, and it stays regardless.</p>
+
+    <h3 data-i18n="p2-h3">Phase two: staying honest when the easy thing is to just say no</h3>
+    <p data-i18n="p2-p1">The first pass at writing up the findings read as mostly critical. Accurate, but not especially useful to whoever actually had to weigh the decision — a list of complaints doesn't tell you much about how serious each one is or whether anyone else has hit the same thing. Rewrote it to be constructive: mapped every criticism directly against points raised in an external reference review of the same platform, instead of presenting each finding as a one-off complaint. That either confirms a shared, independently-verifiable problem, or shows the gap is specific to this environment — and both of those are more useful to a decision-maker than an unattributed list of gripes.</p>
+    <p data-i18n="p2-p2">Also went back and actually confirmed that a prior security finding — an IAM permissions issue flagged earlier in the evaluation — was genuinely resolved, rather than marking it closed because the vendor said it had been fixed. Closing a finding on someone else's word and closing it because you checked are not the same claim, even when they end up agreeing.</p>
+
+    <h2 data-i18n="reflect-h2">What actually mattered</h2>
+    <p data-i18n="reflect-p1">The value of a fair vendor evaluation isn't the verdict — it's that everything found along the way stands on its own regardless of which way the decision goes. The four gaps are real and specific enough that either the vendor addresses them or the team knows exactly what it would be trading off by adopting the platform as-is. The CI hardening ships either way, whatever gets decided.</p>
+    <p data-i18n="reflect-p2">And confirming a fix instead of trusting a claim is the same discipline you'd want applied to your own team's work — applied evenly to someone else's product, not relaxed just because they're the ones selling it.</p>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-vendor-eval">Vendor Evaluation</span>
+      <span class="tag" data-i18n="tag-cicd-security">CI/CD Security</span>
+      <span class="tag" data-i18n="tag-technical-judgment">Technical Judgment</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Eine KI-Entwicklungsplattform eines Drittanbieters gegen echte CI- und Sicherheitsanforderungen geprüft — keine Demo',
+    'hero-lede': 'Vier konkrete Lücken gefunden und gezielt dokumentiert, echtes CI-Hardening unabhängig vom Ergebnis behalten, und Feedback umgeschrieben, um konstruktiv statt nur kritisch zu sein, nachdem der erste Entwurf so klang.',
+    'meta-date': 'Juni – Juli 2026 · Zwei Phasen',
+
+    'why-h2': 'Die Ausgangslage',
+    'why-p1': `Eine KI-Entwicklungsplattform eines Drittanbieters für das Team zu evaluieren
+      bedeutete, sie gegen TEAMBOX' tatsächliche CI- und Sicherheitsanforderungen zu testen, nicht
+      gegen eine abgeschottete Führung. Das ist der Unterschied zwischen "sieht in einer
+      Fünfzehn-Minuten-Demo gut aus" und "hält dem Kontakt mit den echten Zwängen einer
+      zwanzig Jahre alten Codebase stand" — und die zweite Frage ist es, die entscheidet, ob eine
+      Plattform-Entscheidung sechs Monate später noch trägt.`,
+
+    'p1-h3': 'Phase eins: Was eine echte Evaluation tatsächlich findet',
+    'p1-p1': `Vier konkrete Lücken kamen dabei heraus, die Plattform tatsächlich gegen echte
+      Arbeit laufen zu lassen — jede spezifisch genug, um darauf zu reagieren, statt ein vages
+      Daumen-runter: eine nicht dokumentierte Node.js-Runner-Anforderung, die in der
+      Plattform-eigenen Dokumentation nirgends auftauchte; ein Stop-Gate, das in einer einzigen
+      Sitzung fünf separate Male bei einem rein formatierenden Commit ohne jede Logikänderung
+      falsch positiv anschlug; kein Adapter für das interne Ticketsystem des Teams, was bedeutete,
+      dass ein zentraler Teil des tatsächlichen Workflows überhaupt keinen Weg in das Tool hatte;
+      und globale Settings-Verschmutzung beim Onboarding — der Installer schrieb in einen
+      gemeinsam genutzten Konfigurationsort, den er nichts anging. Nichts davon zeigt sich in
+      einer kurzen Demo. Es zeigt sich erst, wenn man das Ding tatsächlich auf das eigene
+      Repository, die eigene CI, das eigene Ticketsystem ansetzt und beobachtet, was es tut.`,
+    'p1-p2': `Unabhängig davon, wie die Vendor-Entscheidung am Ende ausfiel, hinterließ die
+      Evaluation echtes, dauerhaftes Hardening in der CI: einen Dependency-Review-Workflow, einen
+      dedizierten Security-Scanning-Workflow, Commitlint, und einen IAM-Fix, der einem
+      CI-Workflow Standard-Schreibrechte entzog, die er nie brauchte. Nichts davon hängt davon ab,
+      ob die Plattform freigegeben wird. Es ist einfach bessere CI, als es vor der Evaluation gab,
+      und die bleibt, egal wie die Entscheidung ausfällt.`,
+
+    'p2-h3': 'Phase zwei: ehrlich bleiben, wenn das Einfache wäre, einfach Nein zu sagen',
+    'p2-p1': `Der erste Entwurf der Funde las sich größtenteils kritisch. Korrekt, aber nicht
+      besonders nützlich für die Person, die die Entscheidung tatsächlich abwägen musste — eine
+      Liste von Beschwerden sagt wenig darüber, wie ernst jede einzelne ist oder ob schon jemand
+      anders auf dasselbe gestoßen ist. Umgeschrieben, um konstruktiv zu sein: jede Kritik direkt
+      gegen Punkte aus einer externen Referenz-Review derselben Plattform gespiegelt, statt jeden
+      Fund als isolierte Beschwerde zu präsentieren. Das bestätigt entweder ein geteiltes,
+      unabhängig verifizierbares Problem, oder zeigt, dass die Lücke spezifisch für diese Umgebung
+      ist — beides nützlicher für eine Entscheidungsperson als eine nicht zugeordnete
+      Beschwerdeliste.`,
+    'p2-p2': `Außerdem noch einmal zurückgegangen und tatsächlich bestätigt, dass ein früherer
+      Sicherheitsfund — ein IAM-Berechtigungsproblem, das früher in der Evaluation markiert wurde
+      — wirklich gelöst war, statt ihn zu schließen, weil der Vendor sagte, er sei gefixt. Einen
+      Fund auf das Wort eines anderen hin zu schließen und ihn zu schließen, weil man selbst
+      nachgeprüft hat, sind nicht dieselbe Behauptung, selbst wenn sie am Ende übereinstimmen.`,
+
+    'reflect-h2': 'Was tatsächlich zählte',
+    'reflect-p1': `Der Wert einer fairen Vendor-Evaluation ist nicht das Ergebnis — es ist, dass
+      alles, was auf dem Weg gefunden wurde, für sich selbst steht, egal wie die Entscheidung
+      ausfällt. Die vier Lücken sind real und konkret genug, dass entweder der Vendor sie behebt,
+      oder das Team genau weiß, was es eintauschen würde, die Plattform so wie sie ist zu
+      übernehmen. Das CI-Hardening bleibt in jedem Fall, egal was entschieden wird.`,
+    'reflect-p2': `Und einen Fix zu bestätigen statt einer Behauptung zu vertrauen ist dieselbe
+      Disziplin, die man sich für die Arbeit des eigenen Teams wünschen würde — gleichmäßig
+      angewendet auch auf das Produkt eines anderen, nicht gelockert, nur weil er derjenige ist,
+      der es verkauft.`,
+
+    'tag-vendor-eval': 'Vendor-Evaluation',
+    'tag-cicd-security': 'CI/CD-Sicherheit',
+    'tag-technical-judgment': 'Technisches Urteilsvermögen',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'A structured vendor evaluation of a third-party AI agent development platform against real CI and security requirements — four concrete gaps found, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive.',
+    de: 'Eine strukturierte Vendor-Evaluation einer KI-Agenten-Entwicklungsplattform eines Drittanbieters gegen echte CI- und Sicherheitsanforderungen — vier konkrete Lücken gefunden, echtes CI-Hardening unabhängig vom Ergebnis behalten, und Feedback umgeschrieben, um konstruktiv zu sein.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

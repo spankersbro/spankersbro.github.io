@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reworking Client Numbering to Support Alphanumeric IDs, End to End — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<link rel="canonical" href="https://davidirving.dev/work/client-numbering-rework.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Reworking Client Numbering to Support Alphanumeric IDs, End to End">
+<meta property="og:description" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<meta property="og:url" content="https://davidirving.dev/work/client-numbering-rework.html">
+<meta property="article:published_time" content="2026-08-05">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Reworking Client Numbering to Support Alphanumeric IDs, End to End">
+<meta name="twitter:description" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Reworking Client Numbering to Support Alphanumeric IDs, End to End",
+  "description": "Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-08-05",
+  "dateModified": "2026-08-05",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/client-numbering-rework.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Reworking Client Numbering to Support Alphanumeric IDs, End to End</h1>
+    <p class="lede" data-i18n="hero-lede">An enterprise client running SAP alongside TEAMBOX needed matching client codes in both systems — a change that touches nearly everything client numbering ever touches, including an architecture correction made mid-build.</p>
+    <p class="meta-row" data-i18n="meta-date">July 2026 · In progress · ~69 commits</p>
+  </section>
+
+  <article class="article">
+
+    <h2 data-i18n="why-h2">The setup</h2>
+    <p data-i18n="why-p1">An enterprise client running SAP alongside TEAMBOX needed to use the same alphanumeric client codes in both systems. That sounds small until you realize TEAMBOX's client numbering had always quietly assumed a purely numeric ID — an assumption baked in years ago that had simply never been tested against a real alphanumeric requirement, because nobody had needed one, until now.</p>
+
+    <h3 data-i18n="p1-h3">An architecture correction made mid-build, not before it</h3>
+    <p data-i18n="p1-p1">The new external-ID field started life on the Company record — the natural-seeming place for an identifier tied to a client relationship. Partway through the build, the domain model made it clear that was the wrong home: numbering is fundamentally a client-level concern, and a single company can have more than one client relationship under it. Moved the field from Company to Client mid-build rather than shipping the wrong owner and fixing it later — the kind of correction that's cheap while only one piece of code depends on where a field lives, and considerably more expensive once several do.</p>
+
+    <h3 data-i18n="p2-h3">Decoupling numbering from payment references</h3>
+    <p data-i18n="p2-p1">TEAMBOX's project numbering and its ESR/QR/DATEV/ABACUS payment references had always assumed the same underlying numeric format. Decoupling them meant building a per-client job-number pattern engine that generates project numbers independently of whatever format the new external ID happens to take — so a client's payment references keep working exactly as they did before, regardless of what their client code looks like now.</p>
+    <p data-i18n="p2-p2">The external ID itself is immutable once set, to guarantee uniqueness. Once assigned, it can't drift — which matters considerably more once a second system, the client's own SAP instance, is relying on it staying exactly matched.</p>
+
+    <h3 data-i18n="p3-h3">Threading it through two frontends, and catching its own regressions</h3>
+    <p data-i18n="p3-p1">The new field touches search, filtering, and column display across five separate UI surfaces spanning both TEAMBOX's legacy ExtJS frontend and its newer Angular one — each shipped behind a feature flag, with REST API exposure and a permanent Playwright end-to-end suite covering the new behavior.</p>
+    <p data-i18n="p3-p2">Two regressions surfaced and got fixed in review before they reached anyone else. A literal external ID of <code>"0"</code> was being silently treated as unset — the classic falsy-string trap in a language that doesn't automatically distinguish "empty" from "the string zero" at every layer it needs to. And client search broke outright the moment IDs stopped being purely numeric, because parts of the existing search implementation had quietly assumed a numeric-only field the whole time, with nothing ever having tested that assumption until it was no longer true.</p>
+
+    <h2 data-i18n="status-h2">Where it stands</h2>
+    <p data-i18n="status-p1">Shipped behind a feature flag, in review as of this writing — not the finished story yet. But far enough along that the interesting failure modes, the ones that only exist once alphanumeric IDs are actually present somewhere in the system, have already surfaced and been fixed in review, rather than waiting to be found by a client in production.</p>
+
+    <div class="tags">
+      <span class="tag">Feature</span>
+      <span class="tag" data-i18n="tag-data-model">Data Model</span>
+      <span class="tag" data-i18n="tag-feature-flag">Feature Flag</span>
+      <span class="tag" data-i18n="tag-e2e">e2e Testing</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Kundennummerierung für alphanumerische IDs überarbeitet, end to end',
+    'hero-lede': 'Ein Enterprise-Kunde, der SAP parallel zu TEAMBOX betreibt, brauchte dieselben Kundencodes in beiden Systemen — eine Änderung, die fast alles berührt, was Kundennummerierung je berührt hat, inklusive einer Architekturkorrektur mitten im Bau.',
+    'meta-date': 'Juli 2026 · In Arbeit · ~69 Commits',
+
+    'why-h2': 'Die Ausgangslage',
+    'why-p1': `Ein Enterprise-Kunde, der SAP parallel zu TEAMBOX betreibt, brauchte dieselben
+      alphanumerischen Kundencodes in beiden Systemen. Das klingt klein, bis einem klar wird, dass
+      TEAMBOX' Kundennummerierung schon immer still eine rein numerische ID voraussetzte — eine
+      Annahme, die vor Jahren einbetoniert wurde und nie gegen eine echte alphanumerische
+      Anforderung getestet worden war, weil niemand bis jetzt eine brauchte.`,
+
+    'p1-h3': 'Eine Architekturkorrektur mitten im Bau, nicht davor',
+    'p1-p1': `Das neue External-ID-Feld begann sein Leben am Company-Datensatz — der
+      naheliegend wirkende Ort für eine Kennung, die an eine Kundenbeziehung gebunden ist. Mitten
+      im Bau machte das Domänenmodell klar, dass das der falsche Ort war: Nummerierung ist
+      grundsätzlich eine Client-Angelegenheit, und ein einzelnes Company kann mehr als eine
+      Client-Beziehung unter sich haben. Das Feld mitten im Bau von Company zu Client verschoben,
+      statt den falschen Besitzer auszuliefern und später zu korrigieren — die Art von Korrektur,
+      die billig ist, solange nur ein Stück Code davon abhängt, wo ein Feld liegt, und deutlich
+      teurer, sobald es mehrere tun.`,
+
+    'p2-h3': 'Nummerierung von Zahlungsreferenzen entkoppelt',
+    'p2-p1': `TEAMBOX' Projektnummerierung und seine ESR/QR/DATEV/ABACUS-Zahlungsreferenzen
+      hatten schon immer dasselbe zugrunde liegende numerische Format vorausgesetzt. Sie zu
+      entkoppeln bedeutete, eine Pattern-Engine pro Kunde für Auftragsnummern zu bauen, die
+      Projektnummern unabhängig von dem Format generiert, das die neue External ID zufällig hat —
+      damit die Zahlungsreferenzen eines Kunden genau so weiterfunktionieren wie vorher, egal wie
+      sein Kundencode jetzt aussieht.`,
+    'p2-p2': `Die External ID selbst ist einmal gesetzt unveränderlich, um Eindeutigkeit zu
+      garantieren. Einmal zugewiesen, kann sie nicht mehr abweichen — was deutlich mehr zählt,
+      sobald ein zweites System, die eigene SAP-Instanz des Kunden, sich darauf verlässt, dass sie
+      exakt übereinstimmt.`,
+
+    'p3-h3': 'Durch zwei Frontends gefädelt, eigene Regressionen selbst gefangen',
+    'p3-p1': `Das neue Feld berührt Suche, Filterung und Spaltenanzeige über fünf separate
+      UI-Oberflächen, die sowohl TEAMBOX' Legacy-ExtJS-Frontend als auch das neuere
+      Angular-Frontend umspannen — jede hinter einem Feature-Flag ausgeliefert, mit
+      REST-API-Exposure und einer dauerhaften Playwright-End-to-End-Suite für das neue Verhalten.`,
+    'p3-p2': `Zwei Regressionen tauchten auf und wurden im Review gefixt, bevor sie irgendjemand
+      anderen erreichten. Eine literale External ID von <code>"0"</code> wurde still als nicht
+      gesetzt behandelt — die klassische Falsy-String-Falle in einer Sprache, die nicht
+      automatisch auf jeder Ebene zwischen "leer" und "der String Null" unterscheidet. Und die
+      Kundensuche brach komplett, sobald IDs nicht mehr rein numerisch waren, weil Teile der
+      bestehenden Suchimplementierung die ganze Zeit still ein rein numerisches Feld voraussetzten
+      — und nichts diese Annahme je getestet hatte, bis sie nicht mehr stimmte.`,
+
+    'status-h2': 'Wo es steht',
+    'status-p1': `Hinter einem Feature-Flag ausgeliefert, zum Zeitpunkt dieses Texts im Review —
+      noch nicht die fertige Geschichte. Aber weit genug fortgeschritten, dass die interessanten
+      Fehlerfälle — die, die erst existieren, sobald alphanumerische IDs tatsächlich irgendwo im
+      System vorhanden sind — bereits im Review aufgetaucht und gefixt wurden, statt darauf zu
+      warten, von einem Kunden in Produktion gefunden zu werden.`,
+
+    'tag-data-model': 'Datenmodell',
+    'tag-feature-flag': 'Feature-Flag',
+    'tag-e2e': 'e2e-Testing',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Reworking TEAMBOX\'s client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.',
+    de: 'TEAMBOX\' Kundennummerierung für alphanumerische IDs überarbeitet, für einen Kunden mit SAP parallel im Einsatz — eine Architekturkorrektur mitten im Bau, eine entkoppelte Zahlungsreferenz-Engine, und zwei selbst gefangene Regressionen.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
