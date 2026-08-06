@@ -293,7 +293,7 @@
       <h3 data-i18n="c2-feat2-h3">Replaced an entire bespoke migration system with Doctrine — and caught a CLI flag that had never worked</h3>
       <p data-i18n="c2-feat2-p1">Built and shipped, solo, a full replacement of a homegrown YAML-driven schema and upgrade system with Doctrine Migrations: hundreds of YAML schema files and legacy upgrade scripts, plus several schema classes, deleted outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. Along the way, found that the CLI framework's long-flag parsing had never actually worked anywhere in the codebase, silently falling back to defaults instead of erroring out — an untrimmed-whitespace bug that had gone unnoticed for years behind a short-flag fallback path, the kind any long-lived codebase accumulates.</p>
       <ol class="steps">
-        <li><span data-i18n="c2-feat2-step1"><strong>A replacement, not a patch.</strong> The old DatabaseSchema/TableSchema system and its YAML fixtures are gone; a FixtureManager and Doctrine Migrations now own schema and test-database setup end to end.</span></li>
+        <li><span data-i18n="c2-feat2-step1"><strong>A replacement, not a patch.</strong> The old schema-definition layer and its YAML fixtures are gone; a dedicated fixture-management layer and Doctrine Migrations now own schema and test-database setup end to end.</span></li>
         <li><span data-i18n="c2-feat2-step2"><strong>More reliable than what it replaced.</strong> Added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system simply didn't defend against.</span></li>
         <li><span data-i18n="c2-feat2-step3"><strong>Fixed with a regression test, not just a patch.</strong> The long-flag parsing bug got a test that pins the correct behaviour down, so it can't silently regress again.</span></li>
         <li><span data-i18n="c2-feat2-step4"><strong>A real deployment blocker, found and closed.</strong> Old-system installs couldn't mark the migration baseline as applied because the metadata storage table didn't exist yet — the kind of gap that only shows up the first time someone actually runs the migration for real.</span></li>
@@ -699,9 +699,9 @@
       gesamten Code nie wirklich funktioniert hat, sondern still auf Standardwerte zurückfiel statt
       einen Fehler zu werfen — ein Bug durch nicht getrimmten Leerraum, jahrelang unbemerkt hinter
       einem Short-Flag-Fallback, wie er sich in jeder langlebigen Codebase ansammelt.`,
-    'c2-feat2-step1': `<strong>Ein Ersatz, kein Patch.</strong> Das alte DatabaseSchema/TableSchema-
-      System und seine YAML-Fixtures sind weg; ein FixtureManager und Doctrine Migrations
-      übernehmen Schema- und Test-Datenbank-Setup jetzt durchgängig.`,
+    'c2-feat2-step1': `<strong>Ein Ersatz, kein Patch.</strong> Die alte Schema-Definitionsschicht
+      und ihre YAML-Fixtures sind weg; eine eigene Fixture-Management-Schicht und Doctrine
+      Migrations übernehmen Schema- und Test-Datenbank-Setup jetzt durchgängig.`,
     'c2-feat2-step2': `<strong>Zuverlässiger als das, was es ersetzt hat.</strong> MySQL-
       Reconnect-on-Disconnect-Handling und ein Advisory-Lock rund um den Baseline-Migrations-Guard
       ergänzt — Fehlerfälle, gegen die sich das alte System schlicht nicht abgesichert hatte.`,

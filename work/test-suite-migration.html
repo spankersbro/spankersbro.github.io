@@ -103,6 +103,10 @@
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
 
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
@@ -138,13 +142,57 @@
 
   <article class="article">
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three modules tested alone all pass; the same three modules run together in one process surface a hidden bug in the middle module">
+        <text x="320" y="13" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--sub)">Run alone — each looks fine</text>
+
+        <rect x="20" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="110" y="43" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Module A</text>
+        <text x="110" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">passes alone</text>
+
+        <rect x="230" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="43" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Module B</text>
+        <text x="320" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">passes alone</text>
+
+        <rect x="440" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="530" y="43" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Module C</text>
+        <text x="530" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">passes alone</text>
+
+        <text x="320" y="107" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)">Run together — a hidden bug surfaces</text>
+
+        <rect x="10" y="118" width="620" height="90" rx="14" fill="none" stroke="var(--line)" stroke-dasharray="4 5"/>
+
+        <rect x="24" y="132" width="170" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="109" y="155" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Module A</text>
+        <text x="109" y="173" text-anchor="middle" font-size="10.5" fill="var(--sub)">passes</text>
+
+        <rect x="234" y="132" width="172" height="56" rx="12" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="320" y="155" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--accent-ink)">Module B</text>
+        <text x="320" y="173" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">bug surfaces</text>
+
+        <rect x="446" y="132" width="170" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="531" y="155" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Module C</text>
+        <text x="531" y="173" text-anchor="middle" font-size="10.5" fill="var(--sub)">passes</text>
+
+        <path d="M194 160 H234" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
+        <path d="M406 160 H446" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
+
+        <defs>
+          <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">Isolated and passing was never proof the code worked — only that the suite hadn't been allowed to find out yet.</p>
+    </div>
+
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">TEAMBOX's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes (<code>TbxTestcase</code> and <code>TbxLiveTestcase</code>) that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
+    <p data-i18n="why-p1">TEAMBOX's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
     <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split cleanly into two phases, and the second one mattered more than the first.</p>
 
     <h3 data-i18n="p1-h3">Phase one: one test format, not two</h3>
     <p data-i18n="p1-p1">Every module's paired Live and non-Live test classes were merged into single Pest-style files, batch by batch, retiring both custom base classes entirely. This was mechanical work at real scale — the line count actually went <em>down</em> once duplicate Live variants were folded together, and it accounts for the large majority of the diff across both phases.</p>
-    <p data-i18n="p1-p2">But the mechanical merge is exactly what exposed what running tests in isolation had been hiding. Nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in separate, isolated processes: a <code>BaseData</code> field-cache poisoning issue that crossed module boundaries, a mock/real class collision in the holiday-calendar code, another one in the notification-message class, and a third affecting an application-level class that had been silently affecting dozens of test files without ever failing a single one. None of these were things you'd find reading the code — they only existed as an interaction between tests that had never been allowed to run next to each other before.</p>
+    <p data-i18n="p1-p2">But the mechanical merge is exactly what exposed what running tests in isolation had been hiding. Nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in separate, isolated processes: a field-cache poisoning issue in a core data class that crossed module boundaries, a mock/real class collision in the holiday-calendar code, another one in the notification-message class, and a third affecting an application-level class that had been silently affecting dozens of test files without ever failing a single one. None of these were things you'd find reading the code — they only existed as an interaction between tests that had never been allowed to run next to each other before.</p>
     <p data-i18n="p1-p3">A rewrite this size can't live in one person's head across weeks of work, so every fix and decision went into a running delivery doc for continuity between sessions. And "done" meant something specific: each migrated module was re-run against the full suite before being marked complete, not just declared finished because its own tests passed in isolation — which, given what the merge kept finding, would have meant very little.</p>
 
     <h3 data-i18n="p2-h3">Phase two: hardening it into something you can actually trust</h3>
@@ -226,13 +274,14 @@
     'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte.',
     'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~230 Commits',
 
+    'diagram1-caption': 'Isoliert zu bestehen war nie ein Beweis, dass der Code funktioniert — nur, dass die Suite es noch nicht herausfinden durfte.',
+
     'why-h2': 'Die Ausgangslage',
     'why-p1': `TEAMBOX' PHP-Testsuite war über rund zwei Dutzend Module verteilt — Finance,
       Framework, Sync, Staff, Projektmanagement, File Storage und mehr — und jedes davon
       hatte ein selbstgebautes Dual-Runner-Setup: eine "Live"-Testklasse und eine separate
       Non-Live-Testklasse pro Feature, jede von einer von zwei eigenen Basisklassen
-      (<code>TbxTestcase</code> und <code>TbxLiveTestcase</code>) abgeleitet, die nur existierten,
-      um diese Trennung zu umgehen. Es lief, und es bestand meistens — aber es waren zwei
+      abgeleitet, die nur existierten, um diese Trennung zu umgehen. Es lief, und es bestand meistens — aber es waren zwei
       parallele Testformate für denselben Job, und niemand hatte je die Live- und Non-Live-Suite
       eines Moduls im selben Prozess laufen lassen, um zu sehen, was passiert.`,
     'why-p2': `Der Plan war, alles auf Pest 3 zu migrieren: ein Testformat, ein Bootstrap, keine

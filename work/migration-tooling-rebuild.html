@@ -103,6 +103,10 @@
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
 
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
@@ -138,11 +142,48 @@
 
   <article class="article">
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before: three separate, uncoordinated schema-change paths with nothing tying them together. After: one enforced path, which is what caught a real CLI bug.">
+        <text x="320" y="13" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--sub)">Before — three paths, nothing enforces one</text>
+
+        <rect x="20" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="110" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">YAML files</text>
+        <text x="110" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
+
+        <rect x="230" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Upgrade scripts</text>
+        <text x="320" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
+
+        <rect x="440" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="530" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Schema classes</text>
+        <text x="530" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
+
+        <text x="320" y="107" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)">After — one path, enforced</text>
+
+        <rect x="230" y="126" width="180" height="56" rx="12" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="320" y="149" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--accent-ink)">Doctrine Migrations</text>
+        <text x="320" y="167" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">the only path now</text>
+
+        <rect x="440" y="126" width="170" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="525" y="149" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">CLI bug caught here</text>
+        <text x="525" y="167" text-anchor="middle" font-size="10" fill="var(--sub)">long flags never worked</text>
+
+        <path d="M410 154 H440" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
+
+        <defs>
+          <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">Deleting the old system was the easy part. Enforcing the new one as the only path is what actually found the bugs.</p>
+    </div>
+
     <h2 data-i18n="why-h2">The setup</h2>
     <p data-i18n="why-p1">TEAMBOX ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never been forced through the specific failure modes that only show up once you stop hand-rolling every schema change and put a real migration tool in charge of it.</p>
 
     <h3 data-i18n="p1-h3">Phase one: a replacement, not a patch</h3>
-    <p data-i18n="p1-p1">Built and shipped, solo, a full replacement of the old system with Doctrine Migrations: the entire <code>DatabaseSchema</code>/<code>TableSchema</code> setup, its YAML fixtures, and the legacy upgrade scripts that went with it are gone outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. A <code>FixtureManager</code> paired with Doctrine Migrations now owns schema and test-database setup end to end.</p>
+    <p data-i18n="p1-p1">Built and shipped, solo, a full replacement of the old system with Doctrine Migrations: the entire old schema-definition layer, its YAML fixtures, and the legacy upgrade scripts that went with it are gone outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. A dedicated fixture-management layer, paired with Doctrine Migrations, now owns schema and test-database setup end to end.</p>
     <p data-i18n="p1-p2">Along the way: the CLI framework's long-flag parsing had never actually worked anywhere in the codebase. It silently fell back to defaults instead of erroring out — an untrimmed-whitespace bug that had gone unnoticed for years behind a short-flag fallback path, exactly the kind of thing any long-lived codebase accumulates. Fixed it and pinned the correct behavior down with a regression test, so it can't silently regress again.</p>
     <p data-i18n="p1-p3">Also added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system had simply never defended against, because it had never needed to. And chased an intermittent CI-only authentication failure through several dead ends — retry logic first, then in-process table drops — before landing on the actual fix: reusing a single shared database connection instead of opening a new one per test. Fifteen historical legacy-upgrade directories were deleted, but only once their behavior was confirmed already covered by the replacement — and staging-scenario migrations were deliberately written and reverted before merge, as a test method, not leftover cruft left behind by accident.</p>
 
@@ -225,6 +266,8 @@
     'hero-lede': 'Ein selbstgebautes Migrationssystem zu löschen ist der leicht zu erzählende Teil. Seinen Ersatz als einzigen Pfad für Schemaänderungen durchzusetzen ist das, was die Bugs tatsächlich gefunden hat, die ein echtes Deployment gebrochen hätten.',
     'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~112 Commits',
 
+    'diagram1-caption': 'Das alte System zu löschen war der leichte Teil. Das neue als einzigen Pfad durchzusetzen ist das, was die Bugs tatsächlich gefunden hat.',
+
     'why-h2': 'Die Ausgangslage',
     'why-p1': `TEAMBOX führte Schemaänderungen und Upgrades über ein selbstgebautes,
       YAML-gesteuertes System: Hunderte YAML-Schemadateien, eine Reihe von Legacy-Upgrade-Skripten
@@ -235,11 +278,11 @@
 
     'p1-h3': 'Phase eins: ein Ersatz, kein Pflaster',
     'p1-p1': `Solo gebaut und ausgeliefert: ein vollständiger Ersatz des alten Systems durch
-      Doctrine Migrations. Das komplette <code>DatabaseSchema</code>/<code>TableSchema</code>-Setup,
-      seine YAML-Fixtures und die dazugehörigen Legacy-Upgrade-Skripte sind komplett weg — eine
-      Netto-Reduktion von Tausenden Zeilen über Hunderte Dateien, als ein durchgehendes Stück
-      Arbeit. Ein <code>FixtureManager</code> zusammen mit Doctrine Migrations übernimmt jetzt
-      Schema- und Test-Datenbank-Setup end to end.`,
+      Doctrine Migrations. Die komplette alte Schema-Definitionsschicht, ihre YAML-Fixtures und
+      die dazugehörigen Legacy-Upgrade-Skripte sind komplett weg — eine Netto-Reduktion von
+      Tausenden Zeilen über Hunderte Dateien, als ein durchgehendes Stück Arbeit. Eine eigene
+      Fixture-Management-Schicht übernimmt jetzt zusammen mit Doctrine Migrations Schema- und
+      Test-Datenbank-Setup end to end.`,
     'p1-p2': `Auf dem Weg dahin: Das Long-Flag-Parsing des CLI-Frameworks hatte nie irgendwo in
       der Codebase tatsächlich funktioniert. Es fiel still auf Standardwerte zurück, statt einen
       Fehler zu werfen — ein Bug durch nicht getrimmten Whitespace, der jahrelang unbemerkt blieb,
