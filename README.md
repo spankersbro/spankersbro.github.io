@@ -1,8 +1,6 @@
-# spankersbro.github.io
+# davidirving.dev
 
-Public portfolio site for David Irving, served via GitHub Pages.
+Source for my personal site — [davidirving.dev](https://davidirving.dev).
 
-This repo is intentionally **public** — only fully reviewed, anonymized, public-ready
-content belongs here. Drafts, research notes, and raw work-highlight snapshots live in
-the separate private repo `spankersbro/cv` and get copied here deliberately, one piece
-at a time, never linked or built directly from that repo.
+Static HTML/CSS/JS, hosted on GitHub Pages with a custom domain. EN/DE toggle,
+no build step, no framework.
