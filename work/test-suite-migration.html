@@ -3,32 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module — David Irving</title>
+<title>Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module — David Irving</title>
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="description" id="metaDesc" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta name="description" id="metaDesc" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <link rel="canonical" href="https://davidirving.dev/work/test-suite-migration.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="David Irving">
-<meta property="og:title" content="Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module">
-<meta property="og:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta property="og:title" content="Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module">
+<meta property="og:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <meta property="og:url" content="https://davidirving.dev/work/test-suite-migration.html">
 <meta property="article:published_time" content="2026-08-05">
 <meta property="article:section" content="Featured Work">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module">
-<meta name="twitter:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta name="twitter:title" content="Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module">
+<meta name="twitter:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module",
-  "description": "Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.",
+  "headline": "Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module",
+  "description": "Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.",
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-08-05",
-  "dateModified": "2026-08-05",
+  "dateModified": "2026-08-31",
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/test-suite-migration.html" }
 }
 </script>
@@ -135,9 +135,9 @@
 
   <section class="hero">
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
-    <h1 data-i18n="hero-h1">Migrating a Legacy PHP Test Suite to Pest — Two Phases, and a Bug in Every Module</h1>
-    <p class="lede" data-i18n="hero-lede">Rewriting the suite to a modern test format was the mechanical part. The real payoff was what running every module's tests together, instead of in isolation, kept surfacing.</p>
-    <p class="meta-row" data-i18n="meta-date">June – July 2026 · Two phases · ~230 commits</p>
+    <h1 data-i18n="hero-h1">Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module</h1>
+    <p class="lede" data-i18n="hero-lede">Rewriting the suite to a modern test format was the mechanical part. The real payoff was what running every module's tests together, instead of in isolation, kept surfacing — including, eventually, a bug in the fix itself.</p>
+    <p class="meta-row" data-i18n="meta-date">June – August 2026 · Three phases · ~310 commits</p>
   </section>
 
   <article class="article">
@@ -188,7 +188,7 @@
 
     <h2 data-i18n="why-h2">The setup</h2>
     <p data-i18n="why-p1">TEAMBOX's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
-    <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split cleanly into two phases, and the second one mattered more than the first.</p>
+    <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split into three phases, and each one mattered more than the last.</p>
 
     <h3 data-i18n="p1-h3">Phase one: one test format, not two</h3>
     <p data-i18n="p1-p1">Every module's paired Live and non-Live test classes were merged into single Pest-style files, batch by batch, retiring both custom base classes entirely. This was mechanical work at real scale — the line count actually went <em>down</em> once duplicate Live variants were folded together, and it accounts for the large majority of the diff across both phases.</p>
@@ -200,9 +200,14 @@
     <p data-i18n="p2-p2">The fix for the order-dependency problem was a transaction-wrapping PHPUnit extension that rolls every test back inside its own transaction, replacing thousands of lines of hand-written <code>TRUNCATE</code>/<code>DELETE</code> cleanup code scattered across the whole suite. That manual cleanup had been quietly wrong in places — which is precisely the kind of gap that produces a test suite where the order tests run in secretly matters.</p>
     <p data-i18n="p2-p3">With that in place, the suite moved from a non-blocking, partially-skipped check to a required CI gate. Not a suggestion anymore — it has to stay green, the same way any other check that can fail a build does.</p>
 
+    <h3 data-i18n="p3-h3">Phase three: the fix from phase two had its own bug</h3>
+    <p data-i18n="p3-p1">Auditing the transaction-wrapping extension properly turned up something uncomfortable: a second custom extension built alongside it had been subscribing to the wrong test-lifecycle event, so it had never actually run — silently, since the day it was written. Going deeper surfaced more of the exact same class of bug phase one had found: fixtures using a database command that implicitly commits, quietly voiding the rollback wrapped around them, and a helper that opened a fresh database connection on every call, orphaning whatever transaction was supposed to contain it.</p>
+    <p data-i18n="p3-p2">The worst of the batch wasn't in a test at all. A dropped database connection was being blind-retried mid-run, and the reconnect logic silently discarded the open transaction — so a fixture import would commit part of its rows and report success anyway. That bug had been quietly wearing a "flaky test" costume for who knows how long.</p>
+    <p data-i18n="p3-p3">With isolation finally real, the last piece was making the suite fast enough to actually want to run: CI now executes across five isolated parallel workers, each with its own database and storage sandbox. Wall time dropped from roughly fifteen minutes to under four.</p>
+
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">The rewrite itself — Pest 3, one format, retired base classes — was necessary, but it wasn't the point. The bugs it surfaced were the real payoff, and they only showed up because of one specific, unglamorous decision: stop trusting that isolated-and-passing meant working, and actually run everything together.</p>
-    <p data-i18n="reflect-p2">"The tests pass" is a claim about a specific suite configuration, not a fact about the code underneath it. Phase two — the un-skipping, the transactional isolation, the CI gate — is what made that claim mean roughly what it's supposed to mean again, instead of describing a suite that had quietly stopped checking large parts of itself.</p>
+    <p data-i18n="reflect-p2">"The tests pass" is a claim about a specific suite configuration, not a fact about the code underneath it. That applies recursively: phase two's own supposed fix for isolation turned out to be half-silent too, and it took a third pass to actually catch it. Phases two and three — the un-skipping, the transactional isolation, catching the isolation fix that wasn't isolating anything, the CI gate, the parallel runners — are what made "the tests pass" mean roughly what it's supposed to mean again, instead of describing a suite that had quietly stopped checking large parts of itself.</p>
 
     <div class="tags">
       <span class="tag">Agentic Engineering</span>
@@ -270,9 +275,9 @@
     'nav-home': '← Startseite',
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',
-    'hero-h1': 'Eine Legacy-PHP-Testsuite zu Pest migriert — zwei Phasen, ein Bug in fast jedem Modul',
-    'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte.',
-    'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~230 Commits',
+    'hero-h1': 'Eine Legacy-PHP-Testsuite zu Pest migriert — drei Phasen, ein Bug in fast jedem Modul',
+    'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte — am Ende sogar ein Bug im eigenen Fix.',
+    'meta-date': 'Juni – August 2026 · Drei Phasen · ~310 Commits',
 
     'diagram1-caption': 'Isoliert zu bestehen war nie ein Beweis, dass der Code funktioniert — nur, dass die Suite es noch nicht herausfinden durfte.',
 
@@ -285,8 +290,8 @@
       parallele Testformate für denselben Job, und niemand hatte je die Live- und Non-Live-Suite
       eines Moduls im selben Prozess laufen lassen, um zu sehen, was passiert.`,
     'why-p2': `Der Plan war, alles auf Pest 3 zu migrieren: ein Testformat, ein Bootstrap, keine
-      künstliche Live/Unit-Trennung mehr. Was tatsächlich passierte, teilte sich klar in zwei
-      Phasen — und die zweite war die wichtigere.`,
+      künstliche Live/Unit-Trennung mehr. Was tatsächlich passierte, teilte sich in drei Phasen
+      — und jede war wichtiger als die vorherige.`,
 
     'p1-h3': 'Phase eins: ein Testformat, nicht zwei',
     'p1-p1': `Jedes Modul erhielt schrittweise eine zusammengeführte Pest-Datei aus seinen
@@ -329,6 +334,25 @@
       Check zu einem verpflichtenden CI-Gate. Kein Vorschlag mehr — sie muss jetzt grün bleiben,
       genau wie jeder andere Check, der einen Build zum Scheitern bringen kann.`,
 
+    'p3-h3': 'Phase drei: der Fix aus Phase zwei hatte seinen eigenen Bug',
+    'p3-p1': `Eine ordentliche Prüfung der Transaction-Wrapping-Erweiterung brachte etwas
+      Unbequemes zutage: eine zweite, parallel gebaute Erweiterung hatte sich beim falschen
+      Test-Lifecycle-Event angemeldet und war dadurch nie tatsächlich gelaufen — still, seit dem
+      Tag, an dem sie geschrieben wurde. Tiefer zu graben brachte mehr von genau der Bug-Klasse
+      zutage, die schon Phase eins gefunden hatte: Fixtures, die einen Datenbankbefehl nutzten,
+      der implizit committet und damit still den Rollback um sich herum aushebelt, sowie einen
+      Helper, der bei jedem Aufruf eine frische Datenbankverbindung öffnete und damit jede
+      Transaktion verwaiste, die er eigentlich einschließen sollte.`,
+    'p3-p2': `Der schlimmste Fund war gar nicht in einem Test. Eine abgebrochene
+      Datenbankverbindung wurde mitten im Lauf blind erneut versucht, und die Reconnect-Logik
+      verwarf dabei still die offene Transaktion — sodass ein Fixture-Import einen Teil seiner
+      Zeilen committete und trotzdem Erfolg meldete. Dieser Bug trug seit wer weiß wie lange ein
+      Kostüm als "flaky Test".`,
+    'p3-p3': `Mit echter Isolation blieb als letztes übrig, die Suite so schnell zu machen, dass
+      man sie auch laufen lassen will: CI läuft jetzt über fünf isolierte, parallele Worker, jeder
+      mit eigener Datenbank- und Storage-Sandbox. Die Laufzeit sank von rund fünfzehn Minuten auf
+      unter vier.`,
+
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Der Umbau selbst — Pest 3, ein Format, abgeschaffte Basisklassen — war nötig,
       aber nicht der Punkt. Die Bugs, die er zutage brachte, waren der eigentliche Gewinn, und sie
@@ -336,9 +360,12 @@
       vertrauen, dass isoliert-und-bestanden gleich funktionierend bedeutet, und tatsächlich alles
       zusammen laufen lassen.`,
     'reflect-p2': `"Die Tests bestehen" ist eine Aussage über eine bestimmte Suite-Konfiguration,
-      keine Tatsache über den darunterliegenden Code. Phase zwei — das Wiederaktivieren, die
-      transaktionale Isolation, das CI-Gate — ist das, was diese Aussage wieder ungefähr das
-      bedeuten ließ, was sie bedeuten soll, statt eine Suite zu beschreiben, die still aufgehört
+      keine Tatsache über den darunterliegenden Code. Das gilt rekursiv: Phase zweis eigener
+      vermeintlicher Fix für Isolation war selbst halb still kaputt, und es brauchte einen dritten
+      Anlauf, um das zu fangen. Phase zwei und drei — das Wiederaktivieren, die transaktionale
+      Isolation, das Auffangen des Isolations-Fixes, der gar nicht isolierte, das CI-Gate, die
+      parallelen Worker — sind das, was "die Tests bestehen" wieder ungefähr das bedeuten ließ,
+      was es bedeuten soll, statt eine Suite zu beschreiben, die still aufgehört
       hatte, große Teile von sich selbst zu prüfen.`,
 
     'tag-refactor': 'Großumbau',
@@ -348,8 +375,8 @@
   };
 
   var META_DESC = {
-    en: 'Migrating a legacy PHP test suite to Pest across two dozen modules in two phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.',
-    de: 'Eine Legacy-PHP-Testsuite über zwei Dutzend Module in zwei Phasen zu Pest migriert — und warum das gemeinsame statt isolierte Ausführen von Tests ständig echte, vorher unsichtbare Bugs zutage brachte.'
+    en: 'Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.',
+    de: 'Eine Legacy-PHP-Testsuite über zwei Dutzend Module in drei Phasen zu Pest migriert — und warum das gemeinsame statt isolierte Ausführen von Tests ständig echte, vorher unsichtbare Bugs zutage brachte.'
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
