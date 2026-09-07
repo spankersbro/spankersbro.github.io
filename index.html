@@ -76,6 +76,11 @@
     // "Agentic Engineering Archive" section in archive.html; re-create the standing
     // section once there are 2-3 real entries again.
     'agentic-support-agent': 'archive.html#ae1',
+    // Retired 2026-09-07 when the Aug 1 - Sep 7 cycle replaced the July 10-31 one.
+    // Next cycle's live ids must start at 14 (highest ever used is c4-card13).
+    'feat5': 'archive.html#c3-feat5',
+    'feat6': 'archive.html#c3-feat6',
+    'feat7': 'archive.html#c3-feat7',
   };
   (function () {
     var id = location.hash.slice(1);
@@ -287,65 +292,55 @@
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker" data-i18n="hl-kicker">Work Highlights · July 10 – July 31, 2026</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · August 1 – September 7, 2026</p>
       <h2 data-i18n="hl-h2">The latest work</h2>
       <p data-i18n="hl-p">Updated monthly, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">400</div><div class="l" data-i18n="stat-commits">commits</div></div>
-      <div class="stat"><div class="n">6</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
-      <div class="stat"><div class="n">~181k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">305</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~217k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
       <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
     </div>
-    <p class="stats-note" data-i18n="stats-note">*Dominated by a large, mostly-mechanical test-suite migration — hand-authored business logic is a smaller slice of that total.</p>
+    <p class="stats-note" data-i18n="stats-note">*Dominated by the continuing test-suite rewrite — hand-authored business logic is a smaller slice of that total.</p>
 
-    <div class="card featured" id="feat5">
-      <a class="card-anchor" href="#feat5" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat11">
+      <a class="card-anchor" href="#feat11" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat5-h3">The test-suite migration, phase two: from migrated to actually trusted</h3>
-      <p data-i18n="feat5-p1">Last cycle's migration got every module speaking one test format. This phase went after what that migration didn't fix on its own: parts of the suite were still partially skipped and non-blocking in CI, quietly hiding bugs of their own — 230 commits over three weeks turned that into a required, fully green gate.</p>
+      <h3 data-i18n="feat11-h3">The test-suite rewrite outgrew its own estimate</h3>
+      <p data-i18n="feat11-p1">What started as three phases across roughly two dozen modules kept growing. The branch now touches over two thousand files and runs sixteen thousand tests clean — and it's still an open pull request, not a merged one, because a change that size touching every test file earns a slow review, not a fast one.</p>
       <ol class="steps">
-        <li><span data-i18n="feat5-step1"><strong>Transactional isolation, not manual cleanup.</strong> Built a PHPUnit extension that wraps every test in a rolled-back transaction, replacing thousands of lines of hand-written cleanup code across the whole suite.</span></li>
-        <li><span data-i18n="feat5-step2"><strong>Un-skipping is how you find out what's actually broken.</strong> Eighteen previously-disabled tests came back online — and several had been quietly hiding real bugs, including a database reconnect that silently dropped the session timezone on every request.</span></li>
-        <li><span data-i18n="feat5-step3"><strong>Order-dependent tests, exposed.</strong> A transaction-savepoint depth leak on skipped tests, and tests that only ever passed because of the order they ran in — both invisible until the isolation work forced them to run standalone.</span></li>
-        <li><span data-i18n="feat5-step4"><strong>A gate, not a suggestion.</strong> The suite moved from non-blocking to a required CI check — it now has to stay green, not just exist.</span></li>
+        <li><span data-i18n="feat11-step1"><strong>Two extensions that had never run, not once.</strong> Both checked <code>instanceof</code> against a class name that didn't exist — which PHP quietly evaluates as false. Fixing the typo immediately surfaced 29 files leaking fixture data into whatever test ran next.</span></li>
+        <li><span data-i18n="feat11-step2"><strong>Five attempts at the CI topology, all left in the history.</strong> Reverted worker splits, a retreat to sequential, a two-phase compromise — the real blocker turned out to be shared storage forcing suites to serialise, not the worker split itself.</span></li>
+        <li><span data-i18n="feat11-step3"><strong>Ten hidden order-dependencies, only visible under real parallelism.</strong> Fixing them held one counter-intuitive pattern throughout: global fixes mostly made things worse, per-test fixes held.</span></li>
+        <li><span data-i18n="feat11-step4"><strong>A coverage trade, written down instead of hidden.</strong> One test ate 46% of total runtime by design — proving a fast path against a slow reference. The trim kept the comparison that mattered and documented the trade next to the code.</span></li>
       </ol>
-      <p data-i18n="feat5-p2">The migration itself moved the format; this phase is what made the result something you can actually rely on — a suite that fails loudly instead of one that quietly stops meaning anything.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat5-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag" data-i18n="feat5-tag-techdebt">Technical Debt</span></div>
-      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat5-link">Read the full writeup →</a>
+      <p data-i18n="feat11-p2">Mainline still runs the old suite while the branch waits on review — which is the point being made in the writeup: something this size doesn't get to skip review just because its own numbers look good.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat11-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat11-link">Read the full writeup →</a>
     </div>
 
-    <div class="card featured" id="feat6">
-      <a class="card-anchor" href="#feat6" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat12">
+      <a class="card-anchor" href="#feat12" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat6-h3">Reworked client numbering end-to-end to support alphanumeric IDs — while it was still moving underneath</h3>
-      <p data-i18n="feat6-p1">An enterprise client running SAP alongside TEAMBOX needed the same alphanumeric client codes in both systems — a change that touches nearly everything client-numbering ever touches: two frontend stacks, a decades-old payment-reference format, and the assumption, baked in for years, that a client ID is just a number.</p>
+      <h3 data-i18n="feat12-h3">An end-to-end suite joined CI — and immediately found two real bugs</h3>
+      <p data-i18n="feat12-p1">A Playwright end-to-end suite went live in CI this window. The interesting part wasn't adding it — it was that both of its early intermittent failures turned out to be real frontend bugs, not test flakiness.</p>
       <ol class="steps">
-        <li><span data-i18n="feat6-step1"><strong>Moved the field once the domain model demanded it.</strong> The new external-ID field started on the company record, then moved to the client record mid-build once that became the obviously correct owner — the kind of correction that's cheap early and expensive if you wait.</span></li>
-        <li><span data-i18n="feat6-step2"><strong>Decoupled the parts that used to be tangled together.</strong> A new per-client job-number pattern engine separates project numbering and payment references from the new external-ID format, instead of leaving them implicitly coupled to "the client number is numeric."</span></li>
-        <li><span data-i18n="feat6-step3"><strong>Immutable once set, on purpose.</strong> The external ID locks after creation to guarantee uniqueness — a constraint added deliberately, not a limitation discovered later.</span></li>
-        <li><span data-i18n="feat6-step4"><strong>Caught its own regressions before anyone else did.</strong> A literal external ID of "0" was being treated as unset, and client search silently broke the moment IDs stopped being purely numeric — both found and fixed in review, before either could reach a real client.</span></li>
+        <li><span data-i18n="feat12-step1"><strong>A frontend bug wearing a test-flake costume.</strong> A popup menu forwarded scroll events straight to a handler that assumed an element target — scroll events target the document, which has no such method. A type cast had kept the compiler quiet about it.</span></li>
+        <li><span data-i18n="feat12-step2"><strong>A CSS class that doesn't exist.</strong> A missing icon-font weight caused a one-frame layout shift on first hover — enough, occasionally, to make an automated click land on the wrong element.</span></li>
+        <li><span data-i18n="feat12-step3"><strong>Closed a diagnosis gap along the way.</strong> Until now, no e2e failure produced a server-side trace at all, because the stack was torn down with its volumes before logs were captured — which is why the first investigation had to be done the hard way.</span></li>
       </ol>
-      <p data-i18n="feat6-p2">Shipped behind its feature flag for a staged rollout, with a permanent end-to-end test suite added alongside it. The workflow behind how it actually got built — implementer, reviewer, and tester run as separate, independently-checked roles — is written up in full in <a href="strategies/implementer-reviewer-tester.html">Agentic Strategies →</a>.</p>
-      <div class="tags"><span class="tag">Feature</span><span class="tag" data-i18n="feat6-tag-data-model">Data Model</span><span class="tag" data-i18n="feat6-tag-feature-flag">Feature Flag</span><span class="tag" data-i18n="feat6-tag-e2e">e2e Testing</span></div>
-      <a class="card-link" href="work/client-numbering-rework.html" data-i18n="feat6-link">Read the full writeup →</a>
+      <p data-i18n="feat12-p2">Both root-caused and fixed at the source, not papered over with a retry.</p>
+      <div class="tags"><span class="tag" data-i18n="feat12-tag-testing">Testing</span><span class="tag">Playwright</span><span class="tag" data-i18n="feat12-tag-frontend">Frontend</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat12-link">Read the full writeup →</a>
     </div>
 
-    <div class="card featured" id="feat7">
-      <a class="card-anchor" href="#feat7" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat7-h3">Enforcing one path for schema changes surfaced a run of bugs that would have broken real deployments</h3>
-      <p data-i18n="feat7-p1">Making a proper schema-migration tool the only way schema changes happen — no more parallel legacy upgrade paths — turned up problems that had gone undetected for years, the kind any twenty-year-old codebase accumulates.</p>
-      <ol class="steps">
-        <li><span data-i18n="feat7-step1"><strong>A flag that had never worked.</strong> The legacy upgrade tool's CLI flag parser had no working long-form flag at all — a bug invisible for as long as everyone happened to use the short form.</span></li>
-        <li><span data-i18n="feat7-step2"><strong>A crash on every real run.</strong> One of its flags crashed on every actual execution — not an edge case, the normal path.</span></li>
-        <li><span data-i18n="feat7-step3"><strong>A subtle auth mismatch.</strong> CI database authentication was failing from a password-decoding mismatch between the old credential convention and a newer one — the kind of gap that only shows up once both conventions exist at the same time.</span></li>
-        <li><span data-i18n="feat7-step4"><strong>Cleanup with a paper trail.</strong> Fifteen historical legacy upgrade directories deleted once confirmed superseded, and the migration strategy now lives as an architecture decision record that gates schema-change review going forward — not just tribal knowledge.</span></li>
-      </ol>
-      <p data-i18n="feat7-p2">None of these bugs were the point of the migration — they were what the migration had to survive finding, on its way to becoming the one real path for schema changes.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">CI/CD</span><span class="tag" data-i18n="feat7-tag-database">Database</span><span class="tag" data-i18n="feat7-tag-release-eng">Release Engineering</span></div>
-      <a class="card-link" href="work/migration-tooling-rebuild.html" data-i18n="feat7-link">Read the full writeup →</a>
+    <div class="card" id="card13">
+      <a class="card-anchor" href="#card13" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="card13-h3">Housekeeping that found a real bug, and unblocked everyone else's PRs</h3>
+      <p data-i18n="card13-p">A required static-analysis check had been failing on every mainline run — and blocking every open PR behind it — because the hosted scanner dropped support for the Java version it was bundled with. Traced and bumped to a supported runtime rather than just silencing the check. Separately, a pass to clean up log noise turned up a real bug along the way: two API models wired to the wrong entity meant a bank-accounts read silently returned empty and writes were silently dropped — found by chasing noise, not by looking for it, and covered with new tests.</p>
+      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card13-tag-reliability">Reliability</span></div>
     </div>
   </section>
 
@@ -544,93 +539,72 @@
     'fact-3': '300+ Enterprise-Kunden',
     'fact-4': 'Schwerpunkt Agentic Engineering',
     'hero-cta': 'Auf LinkedIn kontaktieren →',
-    'hl-kicker': 'Arbeits-Highlights · 10. – 31. Juli 2026',
+    'hl-kicker': 'Arbeits-Highlights · 1. August – 7. September 2026',
     'hl-h2': 'Die aktuellsten Arbeiten',
     'hl-p': 'Wird monatlich aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
     'stat-lines': 'Zeilen bearbeitet',
     'stat-builds': 'Agentic-Eng.-Builds',
-    'stats-note': '*Dominiert von einem großen, überwiegend mechanischen Umbau der Testsuite — handgeschriebene Businesslogik macht davon nur einen kleineren Teil aus.',
+    'stats-note': '*Dominiert vom weiterlaufenden Test-Suite-Umbau — handgeschriebene Businesslogik macht davon nur einen kleineren Teil aus.',
     'eyebrow-featured': 'Vorzeigeprojekt',
-    'feat5-h3': 'Die Test-Suite-Migration, Phase zwei: von migriert zu tatsächlich vertrauenswürdig',
-    'feat5-p1': `Die Migration im letzten Zyklus brachte jedes Modul auf ein einheitliches
-      Testformat. Diese Phase ging das an, was diese Migration allein nicht behoben hatte: Teile
-      der Suite waren noch teilweise übersprungen und in der CI nicht blockierend — und
-      versteckten dabei eigene Bugs. 230 Commits in drei Wochen machten daraus ein
-      verpflichtendes, durchgehend grünes Gate.`,
-    'feat5-step1': `<strong>Transaktionale Isolation statt manueller Aufräumarbeit.</strong>
-      Eine PHPUnit-Erweiterung gebaut, die jeden Test in eine zurückgerollte Transaktion
-      einbettet und dabei Tausende Zeilen handgeschriebenen Aufräumcode in der gesamten Suite
-      ersetzt.`,
-    'feat5-step2': `<strong>Entsperren zeigt, was tatsächlich kaputt ist.</strong> Achtzehn
-      zuvor deaktivierte Tests wieder aktiviert — mehrere davon versteckten echte Bugs, darunter
-      einen DB-Reconnect, der die Session-Zeitzone bei jedem Request stillschweigend verwarf.`,
-    'feat5-step3': `<strong>Reihenfolgeabhängige Tests, offengelegt.</strong> Ein
-      Transaction-Savepoint-Tiefenleck bei übersprungenen Tests und Tests, die nur wegen ihrer
-      Ausführungsreihenfolge bestanden — beides unsichtbar, bis die Isolationsarbeit sie zwang,
-      eigenständig zu laufen.`,
-    'feat5-step4': `<strong>Ein Gate, kein Vorschlag.</strong> Die Suite wechselte von
-      nicht-blockierend zu einem verpflichtenden CI-Check — sie muss jetzt grün bleiben, statt
-      nur zu existieren.`,
-    'feat5-p2': `Die Migration selbst hat das Format verändert; diese Phase ist das, was das
-      Ergebnis tatsächlich verlässlich gemacht hat — eine Suite, die laut versagt, statt still
-      aufzuhören, etwas zu bedeuten.`,
-    'feat5-tag-test-infra': 'Test-Infrastruktur',
-    'feat5-tag-techdebt': 'Technische Schulden',
-    'feat5-link': 'Den vollständigen Text lesen →',
-    'feat6-h3': 'Kundennummerierung Ende-zu-Ende umgebaut, um alphanumerische IDs zu unterstützen — während sich der Boden noch bewegte',
-    'feat6-p1': `Ein Enterprise-Kunde, der parallel zu TEAMBOX SAP einsetzt, brauchte in
-      beiden Systemen dieselben alphanumerischen Kundencodes — eine Änderung, die fast alles
-      berührt, was Kundennummerierung je berührt: zwei Frontend-Stacks, ein jahrzehntealtes
-      Zahlungsreferenzformat und die seit Jahren einbetonierte Annahme, dass eine Kundennummer
-      einfach eine Zahl ist.`,
-    'feat6-step1': `<strong>Das Feld verschoben, sobald das Domänenmodell es verlangte.</strong>
-      Das neue externe-ID-Feld startete am Firmendatensatz, wanderte dann mitten im Bau zum
-      Kundendatensatz, sobald klar wurde, dass das der eigentlich richtige Ort ist — die Art von
-      Korrektur, die früh billig und spät teuer ist.`,
-    'feat6-step2': `<strong>Entkoppelt, was vorher verflochten war.</strong> Eine neue,
-      pro-Kunde konfigurierbare Auftragsnummern-Engine trennt Projektnummerierung und
-      Zahlungsreferenzen vom neuen externen-ID-Format, statt sie implizit an die Annahme
-      "die Kundennummer ist numerisch" zu koppeln.`,
-    'feat6-step3': `<strong>Absichtlich unveränderlich nach dem Setzen.</strong> Die externe ID
-      wird nach dem Anlegen gesperrt, um Eindeutigkeit zu garantieren — eine bewusst eingebaute
-      Einschränkung, keine später entdeckte Limitierung.`,
-    'feat6-step4': `<strong>Eigene Regressionen gefunden, bevor es jemand anderes tat.</strong>
-      Eine externe ID mit dem Literal "0" wurde fälschlich als nicht gesetzt behandelt, und die
-      Kundensuche brach still, sobald IDs nicht mehr rein numerisch waren — beides im Review
-      gefunden und behoben, bevor es einen echten Kunden erreichen konnte.`,
-    'feat6-p2': `Ausgeliefert, hinter seinem Feature-Flag für einen stufenweisen Rollout, mit
-      einer dauerhaften End-to-End-Testsuite daneben aufgebaut. Wie das Ganze tatsächlich
-      entstanden ist — Implementierung, Review und Test als getrennte, unabhängig geprüfte
-      Rollen — steht ausführlich unter <a href="strategies/implementer-reviewer-tester.html">Agentic Strategies →</a>.`,
-    'feat6-tag-data-model': 'Datenmodell',
-    'feat6-tag-feature-flag': 'Feature-Flag',
-    'feat6-tag-e2e': 'e2e-Tests',
-    'feat6-link': 'Den vollständigen Text lesen →',
-    'feat7-h3': 'Ein einziger Pfad für Schemaänderungen deckte eine Reihe von Bugs auf, die echte Deployments gebrochen hätten',
-    'feat7-p1': `Ein richtiges Schema-Migrationstool als einzigen Weg für Schemaänderungen
-      durchzusetzen — keine parallelen Legacy-Upgrade-Pfade mehr — förderte Probleme zutage, die
-      jahrelang unentdeckt geblieben waren, wie sie sich in jeder zwanzig Jahre alten Codebase
-      ansammeln.`,
-    'feat7-step1': `<strong>Ein Flag, das nie funktioniert hatte.</strong> Der CLI-Flag-Parser
-      des Legacy-Upgrade-Tools hatte überhaupt kein funktionierendes Langform-Flag — ein Bug,
-      unsichtbar, solange jeder zufällig die Kurzform benutzte.`,
-    'feat7-step2': `<strong>Ein Absturz bei jedem echten Lauf.</strong> Eines seiner Flags
-      stürzte bei jeder tatsächlichen Ausführung ab — kein Randfall, sondern der Normalfall.`,
-    'feat7-step3': `<strong>Ein subtiler Auth-Mismatch.</strong> Die CI-Datenbankauthentifizierung
-      schlug wegen eines Passwort-Dekodierungs-Mismatches zwischen der alten und einer neueren
-      Credential-Konvention fehl — die Art von Lücke, die erst sichtbar wird, wenn beide
-      Konventionen gleichzeitig existieren.`,
-    'feat7-step4': `<strong>Aufräumen mit Nachweis.</strong> Fünfzehn historische
-      Legacy-Upgrade-Verzeichnisse gelöscht, nachdem bestätigt war, dass sie abgelöst waren, und
-      die Migrationsstrategie lebt jetzt als Architekturentscheidung, die künftig
-      Schemaänderungs-Reviews gate — kein Herrschaftswissen mehr.`,
-    'feat7-p2': `Keiner dieser Bugs war der Zweck der Migration — sie waren das, was die
-      Migration überleben musste, auf dem Weg zum einen echten Pfad für Schemaänderungen.`,
-    'feat7-tag-database': 'Datenbank',
-    'feat7-tag-release-eng': 'Release-Engineering',
-    'feat7-link': 'Den vollständigen Text lesen →',
+    'feat11-h3': 'Der Test-Suite-Umbau wuchs über die eigene Schätzung hinaus',
+    'feat11-p1': `Was als drei Phasen über rund zwei Dutzend Module begann, wuchs immer weiter.
+      Der Branch betrifft inzwischen über zweitausend Dateien und führt sechzehntausend Tests
+      sauber aus — und ist weiterhin ein offener Pull Request, kein gemergter, denn eine Änderung
+      dieser Größe, die jede Testdatei betrifft, verdient ein langsames Review, kein schnelles.`,
+    'feat11-step1': `<strong>Zwei Erweiterungen, die kein einziges Mal gelaufen waren.</strong>
+      Beide prüften <code>instanceof</code> gegen einen Klassennamen, der nicht existierte — was
+      PHP still als false auswertet. Den Tippfehler zu beheben brachte sofort 29 Dateien zutage,
+      die Fixture-Daten in den jeweils nächsten Test durchsickern ließen.`,
+    'feat11-step2': `<strong>Fünf Anläufe bei der CI-Topologie, alle in der Historie belassen.</strong>
+      Zurückgerollte Worker-Aufteilungen, ein Rückzug auf sequenziell, ein Zweiphasen-Kompromiss —
+      der eigentliche Blocker war ein geteilter Storage, der Suiten zur Serialisierung zwang,
+      nicht die Worker-Aufteilung selbst.`,
+    'feat11-step3': `<strong>Zehn versteckte Reihenfolge-Abhängigkeiten, erst unter echter
+      Parallelität sichtbar.</strong> Beim Beheben zeigte sich durchgehend ein kontraintuitives
+      Muster: globale Fixes machten die Lage meist schlimmer, Fixes pro Test hielten.`,
+    'feat11-step4': `<strong>Ein Coverage-Trade-off, dokumentiert statt versteckt.</strong>
+      Ein einzelner Test machte bewusst 46 % der Gesamtlaufzeit aus — um einen schnellen Pfad
+      gegen eine langsame Referenz zu beweisen. Der Zuschnitt behielt den wichtigen Vergleich und
+      dokumentierte den Trade-off direkt neben dem Code.`,
+    'feat11-p2': `Der Mainline läuft währenddessen weiter auf der alten Suite, während der
+      Branch auf sein Review wartet — genau der Punkt, den der volle Bericht macht: Etwas dieser
+      Größe überspringt kein Review, nur weil die eigenen Zahlen gut aussehen.`,
+    'feat11-tag-test-infra': 'Test-Infrastruktur',
+    'feat11-link': 'Den vollständigen Text lesen →',
+
+    'feat12-h3': 'Eine End-to-End-Suite kam zur CI dazu — und fand sofort zwei echte Bugs',
+    'feat12-p1': `Eine Playwright-End-to-End-Suite ging in diesem Zeitraum in der CI live. Das
+      Interessante war nicht, sie hinzuzufügen — es war, dass sich ihre beiden anfänglichen,
+      intermittierenden Fehlschläge als echte Frontend-Bugs erwiesen, nicht als Testflakiness.`,
+    'feat12-step1': `<strong>Ein Frontend-Bug im Kostüm eines Testflakes.</strong> Ein
+      Popup-Menü leitete Scroll-Events direkt an einen Handler weiter, der ein Element-Target
+      voraussetzte — Scroll-Events zielen auf das Dokument, das keine solche Methode hat. Ein
+      Type-Cast hatte den Compiler still gehalten.`,
+    'feat12-step2': `<strong>Eine CSS-Klasse, die nicht existiert.</strong> Eine fehlende
+      Icon-Font-Gewichtung verursachte beim ersten Hover eine Ein-Frame-Layoutverschiebung — genug,
+      um gelegentlich einen automatisierten Klick auf das falsche Element treffen zu lassen.`,
+    'feat12-step3': `<strong>Nebenbei eine Diagnoselücke geschlossen.</strong> Bis dahin
+      erzeugte kein e2e-Fehlschlag überhaupt einen serverseitigen Trace, weil der Stack samt
+      Volumes abgebaut wurde, bevor Logs erfasst werden konnten — weshalb die erste Untersuchung
+      auf die harte Tour gemacht werden musste.`,
+    'feat12-p2': `Beide root-caused und an der Quelle behoben, nicht mit einem Retry
+      überklebt.`,
+    'feat12-tag-testing': 'Testing',
+    'feat12-tag-frontend': 'Frontend',
+    'feat12-link': 'Den vollständigen Text lesen →',
+
+    'card13-h3': 'Aufräumarbeit, die einen echten Bug fand und alle anderen PRs entblockte',
+    'card13-p': `Ein verpflichtender Static-Analysis-Check war bei jedem Mainline-Lauf
+      fehlgeschlagen — und blockierte jede offene PR dahinter — weil der gehostete Scanner die
+      Unterstützung für die gebündelte Java-Version fallen ließ. Nachverfolgt und auf eine
+      unterstützte Laufzeit gehoben, statt den Check einfach stummzuschalten. Separat brachte
+      eine Aufräumaktion gegen Log-Rauschen nebenbei einen echten Bug zutage: Zwei API-Modelle
+      waren an die falsche Entität verdrahtet, sodass ein Bankkonten-Read still leer zurückkam
+      und Writes still verworfen wurden — gefunden, weil Rauschen verfolgt wurde, nicht weil
+      danach gesucht wurde, und mit neuen Tests abgedeckt.`,
+    'card13-tag-reliability': 'Zuverlässigkeit',
     'strategies-kicker': 'Agentic Strategies',
     'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
     'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',

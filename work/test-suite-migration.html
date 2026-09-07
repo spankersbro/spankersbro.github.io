@@ -3,32 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module — David Irving</title>
+<title>Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan — David Irving</title>
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="description" id="metaDesc" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta name="description" id="metaDesc" content="Migrating a legacy PHP test suite to Pest across four phases — from a handful of modules to a 2,000-file, 16,000-test rewrite still working through review — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <link rel="canonical" href="https://davidirving.dev/work/test-suite-migration.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="David Irving">
-<meta property="og:title" content="Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module">
-<meta property="og:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta property="og:title" content="Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan">
+<meta property="og:description" content="Migrating a legacy PHP test suite to Pest across four phases — from a handful of modules to a 2,000-file, 16,000-test rewrite still working through review — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <meta property="og:url" content="https://davidirving.dev/work/test-suite-migration.html">
 <meta property="article:published_time" content="2026-08-05">
 <meta property="article:section" content="Featured Work">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module">
-<meta name="twitter:description" content="Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
+<meta name="twitter:title" content="Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan">
+<meta name="twitter:description" content="Migrating a legacy PHP test suite to Pest across four phases — from a handful of modules to a 2,000-file, 16,000-test rewrite still working through review — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module",
-  "description": "Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.",
+  "headline": "Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan",
+  "description": "Migrating a legacy PHP test suite to Pest across four phases — from a handful of modules to a 2,000-file, 16,000-test rewrite still working through review — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.",
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-08-05",
-  "dateModified": "2026-08-31",
+  "dateModified": "2026-09-07",
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/test-suite-migration.html" }
 }
 </script>
@@ -135,9 +135,9 @@
 
   <section class="hero">
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
-    <h1 data-i18n="hero-h1">Migrating a Legacy PHP Test Suite to Pest — Three Phases, and a Bug in Every Module</h1>
-    <p class="lede" data-i18n="hero-lede">Rewriting the suite to a modern test format was the mechanical part. The real payoff was what running every module's tests together, instead of in isolation, kept surfacing — including, eventually, a bug in the fix itself.</p>
-    <p class="meta-row" data-i18n="meta-date">June – August 2026 · Three phases · ~310 commits</p>
+    <h1 data-i18n="hero-h1">Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan</h1>
+    <p class="lede" data-i18n="hero-lede">Rewriting the suite to a modern test format was the mechanical part. The real payoff was what running every module's tests together, instead of in isolation, kept surfacing — including, eventually, a bug in the fix itself, and a rewrite that kept growing well past its original scope.</p>
+    <p class="meta-row" data-i18n="meta-date">June – September 2026 · Four phases · 2,071 files, still in review</p>
   </section>
 
   <article class="article">
@@ -202,17 +202,74 @@
 
     <h3 data-i18n="p3-h3">Phase three: the fix from phase two had its own bug</h3>
     <p data-i18n="p3-p1">Auditing the transaction-wrapping extension properly turned up something uncomfortable: a second custom extension built alongside it had been subscribing to the wrong test-lifecycle event, so it had never actually run — silently, since the day it was written. Going deeper surfaced more of the exact same class of bug phase one had found: fixtures using a database command that implicitly commits, quietly voiding the rollback wrapped around them, and a helper that opened a fresh database connection on every call, orphaning whatever transaction was supposed to contain it.</p>
-    <p data-i18n="p3-p2">The worst of the batch wasn't in a test at all. A dropped database connection was being blind-retried mid-run, and the reconnect logic silently discarded the open transaction — so a fixture import would commit part of its rows and report success anyway. That bug had been quietly wearing a "flaky test" costume for who knows how long.</p>
-    <p data-i18n="p3-p3">With isolation finally real, the last piece was making the suite fast enough to actually want to run: CI now executes across five isolated parallel workers, each with its own database and storage sandbox. Wall time dropped from roughly fifteen minutes to under four.</p>
+    <p data-i18n="p3-p2">The most interesting find wasn't in a test at all — it was in how the suite's own connection-retry handling behaved once real isolation put it under pressure. Hardening that path closed a gap that had been quietly wearing a "flaky test" costume for who knows how long.</p>
+    <p data-i18n="p3-p3">With isolation finally real, the last piece was making the suite fast enough to actually want to run: on the branch, CI moved to five isolated parallel workers, each with its own database and storage sandbox, cutting wall time from roughly fifteen minutes to under four. The branch itself was still a work in progress — more on that below.</p>
+
+    <h3 data-i18n="p4-h3">Phase four: the rewrite outgrew the plan</h3>
+    <p data-i18n="p4-p1">What started as three phases across roughly two dozen modules kept growing. By early September the same branch touched 2,071 files (+129,063 / −88,332 lines), and the suite it produces runs 16,136 Pest tests across 29 suites with zero failures, errors, warnings, or deprecations. It is still an open pull request, not a merged one — a change that size, touching every test file in the codebase, earns a slow review rather than a fast one, and mainline still runs the old suite while it waits.</p>
+    <p data-i18n="p4-p2">Two of the three custom test extensions built for the earlier phases had their own hidden failure: both checked <code>instanceof</code> against a class name that didn't exist, which PHP evaluates as false rather than throwing an error. Neither extension had ever actually run — not once, for their entire lifetime. Fixing the typo immediately surfaced 29 files quietly leaking fixture data into whatever test ran next.</p>
+    <p data-i18n="p4-p3">The CI topology took five attempts, and none of the failed ones were hidden from the history: four parallel workers (reverted the same day — too flaky), a retreat to fully sequential, a two-phase split, five workers once storage was isolated per worker, and finally a switch from hand-split workers to the test runner's own process-parallel mode. The real blocker across most of those attempts was never the worker split — it was a shared object-storage bucket that forced every storage-touching suite to serialise behind it, leaving one worker running ten suites for 419 seconds while four others finished in under three minutes and then sat idle.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five attempts at the CI topology, left to right: four parallel workers, reverted the same day; a retreat to fully sequential; a two-phase split; five workers once storage was isolated; and finally the test runner's own process-parallel mode, adopted">
+        <text x="320" y="14" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--sub)">Five attempts at the CI topology</text>
+
+        <rect x="16" y="34" width="112" height="60" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="72" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">4 workers</text>
+        <text x="72" y="71" text-anchor="middle" font-size="9.5" fill="var(--sub)">reverted</text>
+        <text x="72" y="83" text-anchor="middle" font-size="9.5" fill="var(--sub)">same day</text>
+
+        <rect x="140" y="34" width="112" height="60" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="196" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">Sequential</text>
+        <text x="196" y="71" text-anchor="middle" font-size="9.5" fill="var(--sub)">no parallelism,</text>
+        <text x="196" y="83" text-anchor="middle" font-size="9.5" fill="var(--sub)">just a retreat</text>
+
+        <rect x="264" y="34" width="112" height="60" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="320" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">Two-phase</text>
+        <text x="320" y="71" text-anchor="middle" font-size="9.5" fill="var(--sub)">storage still</text>
+        <text x="320" y="83" text-anchor="middle" font-size="9.5" fill="var(--sub)">serialised</text>
+
+        <rect x="388" y="34" width="112" height="60" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="444" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">5 workers</text>
+        <text x="444" y="71" text-anchor="middle" font-size="9.5" fill="var(--sub)">storage now</text>
+        <text x="444" y="83" text-anchor="middle" font-size="9.5" fill="var(--sub)">isolated</text>
+
+        <rect x="512" y="34" width="112" height="60" rx="10" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="568" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-ink)">Process-</text>
+        <text x="568" y="71" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-ink)">parallel</text>
+        <text x="568" y="86" text-anchor="middle" font-size="9.5" fill="var(--accent-ink)">adopted</text>
+
+        <path d="M128 64 H140" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowD2)"/>
+        <path d="M252 64 H264" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowD2)"/>
+        <path d="M376 64 H388" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowD2)"/>
+        <path d="M500 64 H512" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowD2)"/>
+
+        <defs>
+          <marker id="arrowD2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--sub)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram2-caption">Every dead end stayed in the commit history — the fix came from correctly blaming shared storage, not the worker split.</p>
+    </div>
+    <p data-i18n="p4-p4">One projection was wrong in an instructive way: it assumed each worker's process-bootstrap cost was the ~17 seconds measured locally. In CI it's closer to 36. Across 29 invocations that's over 1,000 seconds of pure startup against roughly 760 seconds of actual testing — startup, not load balance, had quietly become the dominant cost. That's what finally pointed at replacing the hand-split workers rather than continuing to tune them.</p>
+    <p data-i18n="p4-p5">Getting to genuine parallelism also meant fixing ten order-dependencies that had predated the branch by a long way — hidden for years behind a per-suite process boundary, and only surfaced once which files shared a worker started varying from run to run. Fixing them held one clear, counter-intuitive pattern: global fixes mostly made things worse, and per-test fixes held. Resetting one shared value globally took the parallel run from 4 failures to 47; only two genuinely process-wide values — active language and time zone — turned out to be safe to reset centrally.</p>
+    <p data-i18n="p4-p6">One coverage decision was made and written down rather than applied quietly: a single reporting test accounted for roughly 46% of the entire suite's runtime, most of it spent deliberately — computing an unoptimised reference path to prove a much faster path matches it. Trimming redundant coverage cut that file's time by more than a third without touching the comparison that actually mattered, and the trade is documented next to the code rather than hidden. When a later, unrelated fix changed the test count, the same trade was revisited and re-affirmed rather than quietly left to rot.</p>
+
+    <h3 data-i18n="p4b-h3">And on the front end</h3>
+    <p data-i18n="p4b-p1">A Playwright end-to-end suite joined CI in the same window, and its early flakes both turned out to be real bugs rather than test flakiness — a popup menu forwarding scroll events to a handler that assumed an element target, and an icon font's missing weight causing a one-frame layout shift that made an automated click land on the wrong element. Both were root-caused and fixed at the source, not papered over with a retry.</p>
 
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">The rewrite itself — Pest 3, one format, retired base classes — was necessary, but it wasn't the point. The bugs it surfaced were the real payoff, and they only showed up because of one specific, unglamorous decision: stop trusting that isolated-and-passing meant working, and actually run everything together.</p>
     <p data-i18n="reflect-p2">"The tests pass" is a claim about a specific suite configuration, not a fact about the code underneath it. That applies recursively: phase two's own supposed fix for isolation turned out to be half-silent too, and it took a third pass to actually catch it. Phases two and three — the un-skipping, the transactional isolation, catching the isolation fix that wasn't isolating anything, the CI gate, the parallel runners — are what made "the tests pass" mean roughly what it's supposed to mean again, instead of describing a suite that had quietly stopped checking large parts of itself.</p>
+    <p data-i18n="reflect-p3">The same discipline applies to the branch itself: something this size doesn't get to skip review just because its own numbers look good. It merges when it's ready, not when the numbers say it's ready.</p>
 
     <div class="tags">
       <span class="tag">Agentic Engineering</span>
       <span class="tag">Test Infrastructure</span>
       <span class="tag">Pest</span>
+      <span class="tag">CI/CD</span>
+      <span class="tag">Playwright</span>
       <span class="tag" data-i18n="tag-refactor">Large-Scale Refactor</span>
     </div>
 
@@ -275,11 +332,12 @@
     'nav-home': '← Startseite',
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',
-    'hero-h1': 'Eine Legacy-PHP-Testsuite zu Pest migriert — drei Phasen, ein Bug in fast jedem Modul',
-    'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte — am Ende sogar ein Bug im eigenen Fix.',
-    'meta-date': 'Juni – August 2026 · Drei Phasen · ~310 Commits',
+    'hero-h1': 'Eine Legacy-PHP-Testsuite zu Pest migriert — vier Phasen, und ein Pull Request, der über sich hinauswuchs',
+    'hero-lede': 'Die Suite in ein modernes Testformat umzuschreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests jedes Moduls zutage brachte — am Ende sogar ein Bug im eigenen Fix, und ein Umbau, der weit über seinen ursprünglichen Umfang hinauswuchs.',
+    'meta-date': 'Juni – September 2026 · Vier Phasen · 2.071 Dateien, noch im Review',
 
     'diagram1-caption': 'Isoliert zu bestehen war nie ein Beweis, dass der Code funktioniert — nur, dass die Suite es noch nicht herausfinden durfte.',
+    'diagram2-caption': 'Jede Sackgasse blieb in der Commit-Historie — der Fix kam davon, den geteilten Storage statt der Worker-Aufteilung als Ursache zu erkennen.',
 
     'why-h2': 'Die Ausgangslage',
     'why-p1': `TEAMBOX' PHP-Testsuite war über rund zwei Dutzend Module verteilt — Finance,
@@ -343,15 +401,66 @@
       der implizit committet und damit still den Rollback um sich herum aushebelt, sowie einen
       Helper, der bei jedem Aufruf eine frische Datenbankverbindung öffnete und damit jede
       Transaktion verwaiste, die er eigentlich einschließen sollte.`,
-    'p3-p2': `Der schlimmste Fund war gar nicht in einem Test. Eine abgebrochene
-      Datenbankverbindung wurde mitten im Lauf blind erneut versucht, und die Reconnect-Logik
-      verwarf dabei still die offene Transaktion — sodass ein Fixture-Import einen Teil seiner
-      Zeilen committete und trotzdem Erfolg meldete. Dieser Bug trug seit wer weiß wie lange ein
-      Kostüm als "flaky Test".`,
+    'p3-p2': `Der interessanteste Fund lag gar nicht in einem Test selbst, sondern darin, wie
+      sich die eigene Retry-Logik der Suite für Verbindungsabbrüche unter echter Isolation
+      verhielt. Diesen Pfad zu härten schloss eine Lücke, die seit wer weiß wie lange ein Kostüm
+      als "flaky Test" trug.`,
     'p3-p3': `Mit echter Isolation blieb als letztes übrig, die Suite so schnell zu machen, dass
-      man sie auch laufen lassen will: CI läuft jetzt über fünf isolierte, parallele Worker, jeder
-      mit eigener Datenbank- und Storage-Sandbox. Die Laufzeit sank von rund fünfzehn Minuten auf
-      unter vier.`,
+      man sie auch laufen lassen will: auf dem Branch lief CI fortan über fünf isolierte, parallele
+      Worker, jeder mit eigener Datenbank- und Storage-Sandbox — die Laufzeit sank von rund fünfzehn
+      Minuten auf unter vier. Der Branch selbst war dabei noch in Arbeit — mehr dazu weiter unten.`,
+
+    'p4-h3': 'Phase vier: der Umbau wuchs über den Plan hinaus',
+    'p4-p1': `Was als drei Phasen über rund zwei Dutzend Module begann, wuchs immer weiter. Anfang
+      September betraf derselbe Branch 2.071 Dateien (+129.063 / −88.332 Zeilen), und die Suite,
+      die er erzeugt, führt 16.136 Pest-Tests über 29 Suiten aus — ohne Fehlschläge, Errors,
+      Warnungen oder Deprecations. Es ist weiterhin ein offener Pull Request, kein gemergter — eine
+      Änderung dieser Größe, die jede Testdatei im Code betrifft, verdient ein langsames Review statt
+      ein schnelles, und der Mainline läuft währenddessen weiter auf der alten Suite.`,
+    'p4-p2': `Zwei der drei eigens gebauten Test-Erweiterungen aus den früheren Phasen hatten ihr
+      eigenes verstecktes Problem: Beide prüften <code>instanceof</code> gegen einen Klassennamen,
+      der nicht existierte — was PHP als false auswertet statt einen Fehler zu werfen. Keine der
+      beiden Erweiterungen war je tatsächlich gelaufen, kein einziges Mal, ihr ganzes Bestehen lang.
+      Den Tippfehler zu beheben brachte sofort 29 Dateien zutage, die still Fixture-Daten in den
+      jeweils nächsten Test durchsickern ließen.`,
+    'p4-p3': `Die CI-Topologie brauchte fünf Anläufe, und keiner der gescheiterten wurde aus der
+      Historie getilgt: vier parallele Worker (noch am selben Tag zurückgerollt — zu instabil), ein
+      Rückzug auf vollständig sequenziell, eine Zweiphasen-Aufteilung, fünf Worker, sobald Storage
+      pro Worker isoliert war, und schließlich der Wechsel von handaufgeteilten Workern zum eigenen
+      Process-Parallel-Modus des Test-Runners. Der eigentliche Blocker über die meisten dieser
+      Versuche war nie die Worker-Aufteilung — es war ein geteilter Object-Storage-Bucket, der jede
+      storage-berührende Suite dahinter serialisierte, sodass ein Worker zehn Suiten 419 Sekunden
+      lang durchlief, während vier andere in unter drei Minuten fertig waren und dann leerliefen.`,
+    'p4-p4': `Eine Projektion war auf lehrreiche Weise falsch: Sie ging von den lokal gemessenen
+      ~17 Sekunden Prozess-Bootstrap pro Worker aus. In der CI sind es eher 36. Über 29 Aufrufe
+      hinweg sind das über 1.000 Sekunden reiner Startzeit gegen rund 760 Sekunden tatsächliches
+      Testen — der Start, nicht die Lastverteilung, war still zum dominanten Kostenfaktor geworden.
+      Das war es, was schließlich auf den Ersatz der handaufgeteilten Worker hinwies statt auf
+      weiteres Nachjustieren.`,
+    'p4-p5': `Echte Parallelität zu erreichen bedeutete auch, zehn Reihenfolge-Abhängigkeiten zu
+      beheben, die dem Branch weit vorausgingen — jahrelang hinter einer Prozessgrenze pro Suite
+      verborgen, und erst sichtbar, als sich von Lauf zu Lauf zu ändern begann, welche Dateien sich
+      einen Worker teilten. Beim Beheben zeigte sich ein klares, kontraintuitives Muster: globale
+      Fixes machten die Lage meist schlimmer, Fixes pro Test hielten. Einen gemeinsamen Wert global
+      zurückzusetzen brachte den parallelen Lauf von 4 auf 47 Fehlschläge; nur zwei wirklich
+      prozessweite Werte — aktive Sprache und Zeitzone — erwiesen sich als sicher genug, um zentral
+      zurückgesetzt zu werden.`,
+    'p4-p6': `Eine Coverage-Entscheidung wurde getroffen und dokumentiert, statt sie still
+      umzusetzen: Ein einzelner Reporting-Test machte rund 46 % der gesamten Suiten-Laufzeit aus,
+      der meiste davon bewusst — er berechnet einen unoptimierten Referenzpfad, um zu beweisen, dass
+      ein deutlich schnellerer Pfad zum gleichen Ergebnis kommt. Redundante Coverage zu kürzen
+      senkte die Laufzeit dieser Datei um mehr als ein Drittel, ohne den eigentlich wichtigen
+      Vergleich anzutasten — und der Trade-off steht dokumentiert neben dem Code, statt versteckt zu
+      sein. Als ein späterer, unabhängiger Fix die Testzahl änderte, wurde derselbe Trade-off erneut
+      geprüft und bestätigt, statt ihn still veralten zu lassen.`,
+
+    'p4b-h3': 'Und auf der Frontend-Seite',
+    'p4b-p1': `Eine Playwright-End-to-End-Suite kam im selben Zeitraum zur CI dazu, und ihre
+      anfänglichen Flakes erwiesen sich beide als echte Bugs statt als Testflakiness — ein
+      Popup-Menü, das Scroll-Events an einen Handler weiterleitete, der ein Element-Target
+      voraussetzte, und eine fehlende Schriftschnittgewichtung, die eine Ein-Frame-Layoutverschiebung
+      auslöste und einen automatisierten Klick auf das falsche Element treffen ließ. Beide wurden
+      an der Quelle root-caused und behoben, nicht mit einem Retry überklebt.`,
 
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Der Umbau selbst — Pest 3, ein Format, abgeschaffte Basisklassen — war nötig,
@@ -367,6 +476,9 @@
       parallelen Worker — sind das, was "die Tests bestehen" wieder ungefähr das bedeuten ließ,
       was es bedeuten soll, statt eine Suite zu beschreiben, die still aufgehört
       hatte, große Teile von sich selbst zu prüfen.`,
+    'reflect-p3': `Dieselbe Disziplin gilt für den Branch selbst: Etwas dieser Größe überspringt
+      kein Review, nur weil die eigenen Zahlen gut aussehen. Er wird gemergt, wenn er bereit ist —
+      nicht, wenn die Zahlen es nahelegen.`,
 
     'tag-refactor': 'Großumbau',
     'footer-copy': '&copy; 2026 David Irving.',
@@ -375,8 +487,8 @@
   };
 
   var META_DESC = {
-    en: 'Migrating a legacy PHP test suite to Pest across two dozen modules in three phases — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.',
-    de: 'Eine Legacy-PHP-Testsuite über zwei Dutzend Module in drei Phasen zu Pest migriert — und warum das gemeinsame statt isolierte Ausführen von Tests ständig echte, vorher unsichtbare Bugs zutage brachte.'
+    en: 'Migrating a legacy PHP test suite to Pest across four phases — from a handful of modules to a 2,000-file, 16,000-test rewrite still working through review — and why running tests together instead of in isolation kept surfacing real, previously-invisible bugs.',
+    de: 'Eine Legacy-PHP-Testsuite über vier Phasen zu Pest migriert — von einer Handvoll Modulen zu einem 2.000-Dateien-, 16.000-Tests-Umbau, der noch im Review steckt — und warum das gemeinsame statt isolierte Ausführen von Tests ständig echte, vorher unsichtbare Bugs zutage brachte.'
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };

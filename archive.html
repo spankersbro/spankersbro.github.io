@@ -177,9 +177,9 @@
 
   <section class="block" id="cycle-20260710">
     <div class="block-head">
-      <p class="kicker" data-i18n="c3-kicker">July 10 – July 31, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <p class="kicker" data-i18n="c3-kicker">July 10 – July 31, 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Superseded</span></p>
       <h2 data-i18n="c3-h2">400 commits, 6 workstreams</h2>
-      <p data-i18n="c3-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+      <p data-i18n="c3-p">Replaced on the homepage by the August 1 – September 7 cycle — kept here in full.</p>
     </div>
 
     <div class="stats">
@@ -254,6 +254,60 @@
       <h3 data-i18n="c3-card10-h3">Moved timezone, country, and language out of static config and into the database</h3>
       <p data-i18n="c3-card10-p">Continued moving installation settings out of hardcoded environment config: timezone, country, and language are now per-installation database values instead of static-file constants, with a migration script for existing installs and admin UI so they're actually editable going forward.</p>
       <div class="tags"><span class="tag" data-i18n="c3-card10-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="c3-card10-tag-config">Configuration</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="cycle-20260801">
+    <div class="block-head">
+      <p class="kicker" data-i18n="c4-kicker">August 1 – September 7, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <h2 data-i18n="c4-h2">305 commits, 8 workstreams</h2>
+      <p data-i18n="c4-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">305</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~217k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
+    </div>
+    <p class="stats-note" data-i18n="c4-stats-note">*Dominated by the continuing test-suite rewrite — hand-authored business logic is a smaller slice of that total.</p>
+
+    <div class="card featured" id="c4-feat11">
+      <a class="card-anchor" href="#c4-feat11" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c4-feat11-h3">The test-suite rewrite outgrew its own estimate</h3>
+      <p data-i18n="c4-feat11-p1">What started as three phases across roughly two dozen modules kept growing. The branch now touches over two thousand files and runs sixteen thousand tests clean — and it's still an open pull request, not a merged one, because a change that size touching every test file earns a slow review, not a fast one.</p>
+      <ol class="steps">
+        <li><span data-i18n="c4-feat11-step1"><strong>Two extensions that had never run, not once.</strong> Both checked <code>instanceof</code> against a class name that didn't exist — which PHP quietly evaluates as false. Fixing the typo immediately surfaced 29 files leaking fixture data into whatever test ran next.</span></li>
+        <li><span data-i18n="c4-feat11-step2"><strong>Five attempts at the CI topology, all left in the history.</strong> Reverted worker splits, a retreat to sequential, a two-phase compromise — the real blocker turned out to be shared storage forcing suites to serialise, not the worker split itself.</span></li>
+        <li><span data-i18n="c4-feat11-step3"><strong>Ten hidden order-dependencies, only visible under real parallelism.</strong> Fixing them held one counter-intuitive pattern throughout: global fixes mostly made things worse, per-test fixes held.</span></li>
+        <li><span data-i18n="c4-feat11-step4"><strong>A coverage trade, written down instead of hidden.</strong> One test ate 46% of total runtime by design — proving a fast path against a slow reference. The trim kept the comparison that mattered and documented the trade next to the code.</span></li>
+      </ol>
+      <p data-i18n="c4-feat11-p2">Mainline still runs the old suite while the branch waits on review — which is the point being made in the writeup: something this size doesn't get to skip review just because its own numbers look good.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="c4-feat11-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="c4-feat11-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card featured" id="c4-feat12">
+      <a class="card-anchor" href="#c4-feat12" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c4-feat12-h3">An end-to-end suite joined CI — and immediately found two real bugs</h3>
+      <p data-i18n="c4-feat12-p1">A Playwright end-to-end suite went live in CI this window. The interesting part wasn't adding it — it was that both of its early intermittent failures turned out to be real frontend bugs, not test flakiness.</p>
+      <ol class="steps">
+        <li><span data-i18n="c4-feat12-step1"><strong>A frontend bug wearing a test-flake costume.</strong> A popup menu forwarded scroll events straight to a handler that assumed an element target — scroll events target the document, which has no such method. A type cast had kept the compiler quiet about it.</span></li>
+        <li><span data-i18n="c4-feat12-step2"><strong>A CSS class that doesn't exist.</strong> A missing icon-font weight caused a one-frame layout shift on first hover — enough, occasionally, to make an automated click land on the wrong element.</span></li>
+        <li><span data-i18n="c4-feat12-step3"><strong>Closed a diagnosis gap along the way.</strong> Until now, no e2e failure produced a server-side trace at all, because the stack was torn down with its volumes before logs were captured — which is why the first investigation had to be done the hard way.</span></li>
+      </ol>
+      <p data-i18n="c4-feat12-p2">Both root-caused and fixed at the source, not papered over with a retry.</p>
+      <div class="tags"><span class="tag" data-i18n="c4-feat12-tag-testing">Testing</span><span class="tag">Playwright</span><span class="tag" data-i18n="c4-feat12-tag-frontend">Frontend</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="c4-feat12-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="c4-card13">
+      <a class="card-anchor" href="#c4-card13" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="c4-card13-h3">Housekeeping that found a real bug, and unblocked everyone else's PRs</h3>
+      <p data-i18n="c4-card13-p">A required static-analysis check had been failing on every mainline run — and blocking every open PR behind it — because the hosted scanner dropped support for the Java version it was bundled with. Traced and bumped to a supported runtime rather than just silencing the check. Separately, a pass to clean up log noise turned up a real bug along the way: two API models wired to the wrong entity meant a bank-accounts read silently returned empty and writes were silently dropped — found by chasing noise, not by looking for it, and covered with new tests.</p>
+      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="c4-card13-tag-reliability">Reliability</span></div>
     </div>
   </section>
 
@@ -559,9 +613,9 @@
     'stat-lines': 'Zeilen bearbeitet',
     'stat-builds': 'Agentic-Eng.-Builds',
     'eyebrow-featured': 'Vorzeigeprojekt',
-    'c3-kicker': '10. – 31. Juli 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c3-kicker': '10. – 31. Juli 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c3-h2': '400 Commits, 6 Workstreams',
-    'c3-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c3-p': 'Auf der Startseite durch den Zyklus 1. August – 7. September ersetzt — hier vollständig aufbewahrt.',
     'c3-stats-note': '*Dominiert von einer großen, größtenteils mechanischen Test-Suite-Migration — handgeschriebene Business-Logik macht davon nur einen kleineren Teil aus.',
     'c3-feat5-h3': 'Die Test-Suite-Migration, Phase zwei: von migriert zu tatsächlich vertrauenswürdig',
     'c3-feat5-p1': `Die Migration im letzten Zyklus brachte jedes Modul auf ein einheitliches
@@ -662,6 +716,70 @@
       Installationen und Admin-UI, damit sie künftig tatsächlich editierbar sind.`,
     'c3-card10-tag-techdebt': 'Technische Schulden',
     'c3-card10-tag-config': 'Konfiguration',
+
+    'c4-kicker': '1. August – 7. September 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c4-h2': '305 Commits, 8 Workstreams',
+    'c4-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c4-stats-note': '*Dominiert vom weiterlaufenden Test-Suite-Umbau — handgeschriebene Business-Logik macht davon nur einen kleineren Teil aus.',
+
+    'c4-feat11-h3': 'Der Test-Suite-Umbau wuchs über die eigene Schätzung hinaus',
+    'c4-feat11-p1': `Was als drei Phasen über rund zwei Dutzend Module begann, wuchs immer weiter.
+      Der Branch betrifft inzwischen über zweitausend Dateien und führt sechzehntausend Tests
+      sauber aus — und ist weiterhin ein offener Pull Request, kein gemergter, denn eine Änderung
+      dieser Größe, die jede Testdatei betrifft, verdient ein langsames Review, kein schnelles.`,
+    'c4-feat11-step1': `<strong>Zwei Erweiterungen, die kein einziges Mal gelaufen waren.</strong>
+      Beide prüften <code>instanceof</code> gegen einen Klassennamen, der nicht existierte — was
+      PHP still als false auswertet. Den Tippfehler zu beheben brachte sofort 29 Dateien zutage,
+      die Fixture-Daten in den jeweils nächsten Test durchsickern ließen.`,
+    'c4-feat11-step2': `<strong>Fünf Anläufe bei der CI-Topologie, alle in der Historie belassen.</strong>
+      Zurückgerollte Worker-Aufteilungen, ein Rückzug auf sequenziell, ein Zweiphasen-Kompromiss —
+      der eigentliche Blocker war ein geteilter Storage, der Suiten zur Serialisierung zwang,
+      nicht die Worker-Aufteilung selbst.`,
+    'c4-feat11-step3': `<strong>Zehn versteckte Reihenfolge-Abhängigkeiten, erst unter echter
+      Parallelität sichtbar.</strong> Beim Beheben zeigte sich durchgehend ein kontraintuitives
+      Muster: globale Fixes machten die Lage meist schlimmer, Fixes pro Test hielten.`,
+    'c4-feat11-step4': `<strong>Ein Coverage-Trade-off, dokumentiert statt versteckt.</strong>
+      Ein einzelner Test machte bewusst 46 % der Gesamtlaufzeit aus — um einen schnellen Pfad
+      gegen eine langsame Referenz zu beweisen. Der Zuschnitt behielt den wichtigen Vergleich und
+      dokumentierte den Trade-off direkt neben dem Code.`,
+    'c4-feat11-p2': `Der Mainline läuft währenddessen weiter auf der alten Suite, während der
+      Branch auf sein Review wartet — genau der Punkt, den der volle Bericht macht: Etwas dieser
+      Größe überspringt kein Review, nur weil die eigenen Zahlen gut aussehen.`,
+    'c4-feat11-tag-test-infra': 'Test-Infrastruktur',
+    'c4-feat11-link': 'Vollständigen Bericht lesen →',
+
+    'c4-feat12-h3': 'Eine End-to-End-Suite kam zur CI dazu — und fand sofort zwei echte Bugs',
+    'c4-feat12-p1': `Eine Playwright-End-to-End-Suite ging in diesem Zeitraum in der CI live. Das
+      Interessante war nicht, sie hinzuzufügen — es war, dass sich ihre beiden anfänglichen,
+      intermittierenden Fehlschläge als echte Frontend-Bugs erwiesen, nicht als Testflakiness.`,
+    'c4-feat12-step1': `<strong>Ein Frontend-Bug im Kostüm eines Testflakes.</strong> Ein
+      Popup-Menü leitete Scroll-Events direkt an einen Handler weiter, der ein Element-Target
+      voraussetzte — Scroll-Events zielen auf das Dokument, das keine solche Methode hat. Ein
+      Type-Cast hatte den Compiler still gehalten.`,
+    'c4-feat12-step2': `<strong>Eine CSS-Klasse, die nicht existiert.</strong> Eine fehlende
+      Icon-Font-Gewichtung verursachte beim ersten Hover eine Ein-Frame-Layoutverschiebung — genug,
+      um gelegentlich einen automatisierten Klick auf das falsche Element treffen zu lassen.`,
+    'c4-feat12-step3': `<strong>Nebenbei eine Diagnoselücke geschlossen.</strong> Bis dahin
+      erzeugte kein e2e-Fehlschlag überhaupt einen serverseitigen Trace, weil der Stack samt
+      Volumes abgebaut wurde, bevor Logs erfasst werden konnten — weshalb die erste Untersuchung
+      auf die harte Tour gemacht werden musste.`,
+    'c4-feat12-p2': `Beide root-caused und an der Quelle behoben, nicht mit einem Retry
+      überklebt.`,
+    'c4-feat12-tag-testing': 'Testing',
+    'c4-feat12-tag-frontend': 'Frontend',
+    'c4-feat12-link': 'Vollständigen Bericht lesen →',
+
+    'c4-card13-h3': 'Aufräumarbeit, die einen echten Bug fand und alle anderen PRs entblockte',
+    'c4-card13-p': `Ein verpflichtender Static-Analysis-Check war bei jedem Mainline-Lauf
+      fehlgeschlagen — und blockierte jede offene PR dahinter — weil der gehostete Scanner die
+      Unterstützung für die gebündelte Java-Version fallen ließ. Nachverfolgt und auf eine
+      unterstützte Laufzeit gehoben, statt den Check einfach stummzuschalten. Separat brachte
+      eine Aufräumaktion gegen Log-Rauschen nebenbei einen echten Bug zutage: Zwei API-Modelle
+      waren an die falsche Entität verdrahtet, sodass ein Bankkonten-Read still leer zurückkam
+      und Writes still verworfen wurden — gefunden, weil Rauschen verfolgt wurde, nicht weil
+      danach gesucht wurde, und mit neuen Tests abgedeckt.`,
+    'c4-card13-tag-reliability': 'Zuverlässigkeit',
+
     'c2-kicker': '26. Juni – 17. Juli 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c2-h2': '189 Commits, 9 Workstreams',
     'c2-p': 'Auf der Startseite durch den Zyklus 10.–31. Juli ersetzt — hier vollständig erhalten.',

@@ -28,7 +28,7 @@
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-08-05",
-  "dateModified": "2026-08-05",
+  "dateModified": "2026-09-07",
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/research/osint-real-time-tracker.html" }
 }
 </script>
@@ -103,6 +103,10 @@
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
 
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
@@ -147,9 +151,81 @@
     <p data-i18n="p1-p3">Sentiment is the most elaborate part of the schema: a continuous score, a 1–10 tension rating, a dominant emotion plus secondary tones, a six-way nuance classification, and a four-axis valence breakdown across hostility, fear, defiance, and calm. The prompt explicitly asks for "a detailed, dispassionate computational linguistics narrative" explaining which grammatical markers, idioms, or regional slang in the <em>original</em> language carry that emotion — which is exactly the native-language-nuance claim, and it's a real, required field in the schema, not marketing copy describing something the model happens to do sometimes.</p>
     <p data-i18n="p1-p4">Credibility is a fixed rubric, not a vibe: source reputation, cross-referencing, evidence level, contextual plausibility, and freshness, each worth up to twenty points with its own required justification string. The total isn't something Gemini asserts directly — the server sums the five sub-scores itself, so the headline number is always traceable back to five specific, visible judgments underneath it.</p>
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Raw source text in any language goes into one Gemini call with a structured response schema, which returns five structured outputs at once: title and summary, geolocation, sentiment, credibility, and category and severity">
+        <rect x="230" y="14" width="180" height="50" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="35" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">Raw source text</text>
+        <text x="320" y="52" text-anchor="middle" font-size="10" fill="var(--sub)">any language</text>
+
+        <path d="M320 64 V90" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowD1)"/>
+
+        <rect x="190" y="90" width="260" height="52" rx="12" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="320" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent-ink)">One Gemini call</text>
+        <text x="320" y="129" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">structured responseSchema</text>
+
+        <path d="M258 142 L70 160" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrowD1)"/>
+        <path d="M292 142 L195 160" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrowD1)"/>
+        <path d="M320 142 V160" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrowD1)"/>
+        <path d="M348 142 L445 160" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrowD1)"/>
+        <path d="M382 142 L570 160" stroke="var(--sub)" stroke-width="1.5" fill="none" marker-end="url(#arrowD1)"/>
+
+        <rect x="16" y="160" width="112" height="54" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="72" y="182" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Title &amp;</text>
+        <text x="72" y="196" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Summary</text>
+
+        <rect x="140" y="160" width="112" height="54" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="196" y="189" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Geolocation</text>
+
+        <rect x="264" y="160" width="112" height="54" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="320" y="189" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Sentiment</text>
+
+        <rect x="388" y="160" width="112" height="54" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="444" y="189" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Credibility</text>
+
+        <rect x="512" y="160" width="112" height="54" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="568" y="182" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Category &amp;</text>
+        <text x="568" y="196" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">Severity</text>
+
+        <defs>
+          <marker id="arrowD1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--sub)"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">One call, one schema, five structured judgments back — not five separate round-trips.</p>
+    </div>
+
     <h3 data-i18n="p2-h3">An hourly harvester, and the distributed-systems bug it needed</h3>
     <p data-i18n="p2-p1">A background scheduler runs the same pipeline unattended, aimed at named authoritative sources across six sectors — Ukraine frontline reporting, Red Sea maritime alerts, Sudan and the Sahel, East Asia, the Caucasus, and cyber incidents — using Gemini's search grounding rather than an open-ended crawl, with every harvest and its full audit trail written to Firestore.</p>
     <p data-i18n="p2-p2">Running on Cloud Run means the app can have more than one instance alive at once, each running its own independent copy of that scheduler. Without a lock, every instance's "has an hour passed since the last harvest?" check can pass at the same moment, since the state only gets saved <em>after</em> a harvest finishes — which means multiple instances can all decide to run a full, quota-burning harvest simultaneously. The fix is a Firestore transaction that atomically checks and claims the harvest slot before the slow Gemini call even starts, so only one instance ever wins the race. It's a small piece of code, and it's the kind of bug that's invisible in local development and only exists because of how the actual deployment target behaves.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Without a lock, three Cloud Run instances all check the last-harvest time at once and all pass, triggering three simultaneous harvests. With a Firestore transaction claiming the harvest slot first, only one instance passes and the other two back off.">
+        <text x="320" y="14" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--sub)">No lock — every instance checks at once</text>
+        <rect x="20" y="24" width="180" height="46" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="110" y="44" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Instance A</text>
+        <text x="110" y="59" text-anchor="middle" font-size="9.5" fill="var(--sub)">check passes → harvests</text>
+        <rect x="230" y="24" width="180" height="46" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="44" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Instance B</text>
+        <text x="320" y="59" text-anchor="middle" font-size="9.5" fill="var(--sub)">check passes → harvests</text>
+        <rect x="440" y="24" width="180" height="46" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="530" y="44" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Instance C</text>
+        <text x="530" y="59" text-anchor="middle" font-size="9.5" fill="var(--sub)">check passes → harvests</text>
+
+        <text x="320" y="107" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)">Firestore transaction claims the slot first</text>
+        <rect x="10" y="118" width="620" height="76" rx="14" fill="none" stroke="var(--line)" stroke-dasharray="4 5"/>
+        <rect x="24" y="132" width="176" height="46" rx="10" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="112" y="151" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent-ink)">Instance A</text>
+        <text x="112" y="166" text-anchor="middle" font-size="9.5" fill="var(--accent-ink)">claims slot → harvests</text>
+        <rect x="232" y="132" width="176" height="46" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="320" y="151" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Instance B</text>
+        <text x="320" y="166" text-anchor="middle" font-size="9.5" fill="var(--sub)">slot taken → skips</text>
+        <rect x="440" y="132" width="176" height="46" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="528" y="151" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Instance C</text>
+        <text x="528" y="166" text-anchor="middle" font-size="9.5" fill="var(--sub)">slot taken → skips</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram2-caption">The check itself was never the problem — it was that nothing stopped every instance from passing it at the same moment.</p>
+    </div>
 
     <h3 data-i18n="p3-h3">A real security bug, found before it became an incident</h3>
     <p data-i18n="p3-p1">The app's AI-Studio-generated starting point had Firestore rules wide open — <code>allow read, write: if true</code> — with the React frontend writing directly to Firestore for core functionality. That meant anyone with the Firebase client config, which is necessarily public in any browser-based app, could read or write data directly, bypassing the backend and its logic entirely. One endpoint made this worse in a specific way: the reset function didn't touch Firestore from the server at all — the <em>client</em> was doing the actual purge-and-reseed, with no authentication check anywhere in that path.</p>
@@ -240,6 +316,9 @@
       Ereignisse auf einer Live-Karte. Solo gebaut in Google AI Studio, React und Express
       im Frontend und Backend, Gemini für die eigentliche Analyse, Firestore für die
       Persistenz, deployed auf Cloud Run.`,
+
+    'diagram1-caption': 'Ein Call, ein Schema, fünf strukturierte Urteile zurück — nicht fünf separate Round-Trips.',
+    'diagram2-caption': 'Die Prüfung selbst war nie das Problem — es war, dass nichts verhinderte, dass jede Instanz sie im selben Moment bestand.',
 
     'p1-h3': 'Ein Gemini-Call, fünf strukturierte Ausgaben',
     'p1-p1': `Die zentrale Route nimmt Rohtext und macht einen einzelnen Gemini-Call mit
