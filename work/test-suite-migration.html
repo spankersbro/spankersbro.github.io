@@ -203,7 +203,7 @@
     <h3 data-i18n="p3-h3">Phase three: the fix from phase two had its own bug</h3>
     <p data-i18n="p3-p1">Auditing the transaction-wrapping extension properly turned up something uncomfortable: a second custom extension built alongside it had been subscribing to the wrong test-lifecycle event, so it had never actually run — silently, since the day it was written. Going deeper surfaced more of the exact same class of bug phase one had found: fixtures using a database command that implicitly commits, quietly voiding the rollback wrapped around them, and a helper that opened a fresh database connection on every call, orphaning whatever transaction was supposed to contain it.</p>
     <p data-i18n="p3-p2">The most interesting find wasn't in a test at all — it was in how the suite's own connection-retry handling behaved once real isolation put it under pressure. Hardening that path closed a gap that had been quietly wearing a "flaky test" costume for who knows how long.</p>
-    <p data-i18n="p3-p3">With isolation finally real, the last piece was making the suite fast enough to actually want to run: on the branch, CI moved to five isolated parallel workers, each with its own database and storage sandbox, cutting wall time from roughly fifteen minutes to under four. The branch itself was still a work in progress — more on that below.</p>
+    <p data-i18n="p3-p3">With isolation finally real, the last piece was making the suite fast enough to actually want to run: on the branch, CI moved to five isolated parallel workers, each with its own database and storage sandbox, cutting wall time from roughly thirteen minutes to about five. The branch itself was still a work in progress — more on that below.</p>
 
     <h3 data-i18n="p4-h3">Phase four: the rewrite outgrew the plan</h3>
     <p data-i18n="p4-p1">What started as three phases across roughly two dozen modules kept growing. By early September the same branch touched 2,071 files (+129,063 / −88,332 lines), and the suite it produces runs 16,136 Pest tests across 29 suites with zero failures, errors, warnings, or deprecations. It is still an open pull request, not a merged one — a change that size, touching every test file in the codebase, earns a slow review rather than a fast one, and mainline still runs the old suite while it waits.</p>
@@ -407,8 +407,8 @@
       als "flaky Test" trug.`,
     'p3-p3': `Mit echter Isolation blieb als letztes übrig, die Suite so schnell zu machen, dass
       man sie auch laufen lassen will: auf dem Branch lief CI fortan über fünf isolierte, parallele
-      Worker, jeder mit eigener Datenbank- und Storage-Sandbox — die Laufzeit sank von rund fünfzehn
-      Minuten auf unter vier. Der Branch selbst war dabei noch in Arbeit — mehr dazu weiter unten.`,
+      Worker, jeder mit eigener Datenbank- und Storage-Sandbox — die Laufzeit sank von rund dreizehn
+      Minuten auf etwa fünf. Der Branch selbst war dabei noch in Arbeit — mehr dazu weiter unten.`,
 
     'p4-h3': 'Phase vier: der Umbau wuchs über den Plan hinaus',
     'p4-p1': `Was als drei Phasen über rund zwei Dutzend Module begann, wuchs immer weiter. Anfang
