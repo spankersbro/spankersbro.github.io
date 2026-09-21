@@ -185,6 +185,7 @@
   .card p + p{margin-top:10px}
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+  .card-video{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line);background:#000;margin:4px 0 14px;box-shadow:var(--ring)}
 
   /* per-card permalink, for grabbing a direct link to one highlight */
   .card-anchor{position:absolute;top:16px;right:16px;width:26px;height:26px;display:flex;align-items:center;
@@ -438,6 +439,10 @@
       <a class="card-anchor" href="#projects-wirefront" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-projects">Side Project</p>
       <h3 data-i18n="wirefront-h3">Wirefront — a browser vector-tank shooter with live co-op, built solo</h3>
+      <video class="card-video" autoplay loop muted playsinline poster="assets/wirefront/poster.jpg" aria-label="Wirefront gameplay recording">
+        <source src="assets/wirefront/wirefront-loop.webm" type="video/webm">
+        <source src="assets/wirefront/wirefront-loop.mp4" type="video/mp4">
+      </video>
       <p data-i18n="wirefront-p1">A homage to 1980s vector-scope arcade combat games. Drive and fire across a wireframe battlefield against wave-based enemy tanks — the cannon points wherever the hull points, so aiming is driving. No installs, runs straight in the browser, keyboard or touch controls.</p>
       <ol class="steps">
         <li><span data-i18n="wirefront-step1"><strong>Real hidden-line-removal rendering, not a filter.</strong> Three.js <code>EdgesGeometry</code> plus a void-colored occlusion fill — the actual technique vector monitors used, not a wireframe shader effect.</span></li>
