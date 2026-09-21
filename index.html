@@ -252,6 +252,7 @@
       <a class="nav-link" data-i18n="nav-featured-work" href="work/">Featured Work</a>
       <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
       <a class="nav-link" data-i18n="nav-research" href="#research">Research</a>
+      <a class="nav-link" data-i18n="nav-projects" href="#projects">Side Projects</a>
       <a class="nav-link" data-i18n="nav-archive" href="archive.html">Archive</a>
       <div class="btn-group">
         <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
@@ -424,6 +425,31 @@
     </div>
 
     <a class="card-link" href="research/" data-i18n="research-viewall">View all Personal AI Research →</a>
+  </section>
+
+  <section class="block" id="projects">
+    <div class="block-head">
+      <p class="kicker" data-i18n="projects-kicker">Side Projects · September 2026</p>
+      <h2 data-i18n="projects-h2">Outside TEAMBOX, outside research: things built for fun</h2>
+      <p data-i18n="projects-p">Not every personal build is a research prototype. Some are just for the enjoyment of building something that works and is fun to use.</p>
+    </div>
+
+    <div class="card" id="projects-wirefront">
+      <a class="card-anchor" href="#projects-wirefront" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-projects">Side Project</p>
+      <h3 data-i18n="wirefront-h3">Wirefront — a browser vector-tank shooter with live co-op, built solo</h3>
+      <p data-i18n="wirefront-p1">A homage to 1980s vector-scope arcade combat games. Drive and fire across a wireframe battlefield against wave-based enemy tanks — the cannon points wherever the hull points, so aiming is driving. No installs, runs straight in the browser, keyboard or touch controls.</p>
+      <ol class="steps">
+        <li><span data-i18n="wirefront-step1"><strong>Real hidden-line-removal rendering, not a filter.</strong> Three.js <code>EdgesGeometry</code> plus a void-colored occlusion fill — the actual technique vector monitors used, not a wireframe shader effect.</span></li>
+        <li><span data-i18n="wirefront-step2"><strong>Every sound synthesized, no audio files.</strong> Engine hum, cannon fire, and explosions generated live with the WebAudio API.</span></li>
+        <li><span data-i18n="wirefront-step3"><strong>A shared, append-only leaderboard.</strong> Firestore security rules validate the document shape on write and block updates or deletes outright, so a score can be added but never altered.</span></li>
+        <li><span data-i18n="wirefront-step4"><strong>Live co-op presence.</strong> Firebase Realtime Database puts everyone with the page open into one shared global room as a real ally tank, with join/leave comms and client-side collision between allies.</span></li>
+      </ol>
+      <p data-i18n="wirefront-p2">The single-player game and the co-op presence layer above are both live. A fully shared world — where every player fights the same enemies on the same wave — is the next phase, not yet built.</p>
+      <div class="tags"><span class="tag">Three.js</span><span class="tag">WebAudio</span><span class="tag">Firebase RTDB</span><span class="tag">Firestore</span></div>
+      <a class="card-link" href="https://wirefront.davidirving.dev/" target="_blank" rel="noopener" data-i18n="wirefront-link">Play →</a>
+      <a class="card-link" href="https://github.com/spankersbro/wirefront" target="_blank" rel="noopener" data-i18n="wirefront-github-link">View on GitHub →</a>
+    </div>
   </section>
 
 </div>
@@ -709,6 +735,32 @@
     'crimes-link': 'Live-App ansehen →',
     'crimes-writeup-link': 'Den vollständigen Text lesen →',
     'research-viewall': 'Alle Personal AI Research ansehen →',
+    'nav-projects': 'Nebenprojekte',
+    'projects-kicker': 'Nebenprojekte · September 2026',
+    'projects-h2': 'Außerhalb von TEAMBOX, außerhalb der Recherche: aus Spaß gebaut',
+    'projects-p': 'Nicht jedes persönliche Projekt ist ein Forschungsprototyp. Manche entstehen einfach aus Freude daran, etwas zu bauen, das funktioniert und Spaß macht.',
+    'eyebrow-projects': 'Nebenprojekt',
+    'wirefront-h3': 'Wirefront — ein Browser-Vektor-Panzer-Shooter mit Live-Koop, solo gebaut',
+    'wirefront-p1': `Eine Hommage an Vektor-Arcade-Kampfspiele der 1980er. Über ein Drahtgitter-Schlachtfeld
+      fahren und auf wellenweise anrückende Feindpanzer feuern — der Turm zeigt immer in Fahrtrichtung
+      des Rumpfs, Zielen bedeutet also Fahren. Keine Installation nötig, läuft direkt im Browser,
+      Tastatur- oder Touch-Steuerung.`,
+    'wirefront-step1': `<strong>Echtes Hidden-Line-Removal, kein Shader-Effekt.</strong> Three.js
+      <code>EdgesGeometry</code> plus eine im Hintergrundton eingefärbte Verdeckungsfläche — die
+      tatsächliche Technik, die Vektor-Monitore damals genutzt haben.`,
+    'wirefront-step2': `<strong>Jeder Sound synthetisiert, keine Audiodateien.</strong> Motorbrummen,
+      Kanonenfeuer und Explosionen werden live über die WebAudio-API erzeugt.`,
+    'wirefront-step3': `<strong>Eine gemeinsame, nur anhängbare Bestenliste.</strong> Firestore-Regeln
+      prüfen beim Schreiben die Dokumentstruktur und blockieren Updates oder Löschungen vollständig —
+      ein Score kann hinzugefügt, aber nie verändert werden.`,
+    'wirefront-step4': `<strong>Live-Koop-Präsenz.</strong> Firebase Realtime Database bringt alle,
+      die die Seite offen haben, in einen gemeinsamen globalen Raum als echten verbündeten Panzer —
+      inklusive Beitritts-/Verlassens-Meldungen und Kollision zwischen Verbündeten.`,
+    'wirefront-p2': `Sowohl das Einzelspieler-Spiel als auch die Koop-Präsenzebene darüber sind live.
+      Eine vollständig geteilte Welt — in der alle Spieler dieselben Gegner in derselben Welle
+      bekämpfen — ist die nächste Phase, aber noch nicht gebaut.`,
+    'wirefront-link': 'Spielen →',
+    'wirefront-github-link': 'Auf GitHub ansehen →',
     'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz',
