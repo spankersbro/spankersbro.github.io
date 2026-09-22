@@ -7,25 +7,25 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="description" id="metaDesc" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.">
+<meta name="description" id="metaDesc" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.">
 <link rel="canonical" href="https://davidirving.dev/strategies/definition-of-done.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="David Irving">
 <meta property="og:title" content="Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished">
-<meta property="og:description" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.">
+<meta property="og:description" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.">
 <meta property="og:url" content="https://davidirving.dev/strategies/definition-of-done.html">
 <meta property="article:published_time" content="2026-09-22">
 <meta property="article:modified_time" content="2026-09-22">
 <meta property="article:section" content="Agentic Strategies">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished">
-<meta name="twitter:description" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.">
+<meta name="twitter:description" content="A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished",
-  "description": "A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.",
+  "description": "A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.",
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-09-22",
@@ -149,7 +149,7 @@
   <section class="hero">
     <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
     <h1 data-i18n="hero-h1">Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished</h1>
-    <p class="lede" data-i18n="hero-lede">A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.</p>
+    <p class="lede" data-i18n="hero-lede">A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.</p>
     <p class="meta-row" data-i18n="meta-date">Published September 2026</p>
   </section>
 
@@ -165,14 +165,13 @@
       <li><a href="#tooling" data-i18n="toc-7">Tooling: engineering gaps vs. decision gaps</a></li>
       <li><a href="#adoption" data-i18n="toc-8">Adoption plan</a></li>
       <li><a href="#measurement" data-i18n="toc-9">Measurement</a></li>
-      <li><a href="#limits" data-i18n="toc-10">Honest limits</a></li>
     </ol>
   </nav>
 
   <article class="article">
 
     <h2 data-i18n="why-h2">Why this exists</h2>
-    <p data-i18n="why-p">A companion to <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — that piece is the story of one feature. This one is everything underneath that story: the operating model, why a fixed checklist beats trusting an agent's own sense of "done," the codebase habits that make agent work easier or harder, what's actually worth measuring, and — because a method that only shows its wins isn't trustworthy — where this genuinely hasn't been proven yet.</p>
+    <p data-i18n="why-p">A companion to <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — that piece is the story of one feature. This one is everything underneath that story: the operating model, why a fixed checklist beats trusting an agent's own sense of "done," the codebase habits that make agent work easier or harder, and what's actually worth measuring.</p>
 
     <div class="diagram">
       <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A closed loop: claim, check, evidence, next step, back to claim. Tests and a second reviewer feed the check step. A human node sits outside the loop, connected only to claim, labelled not replaced.">
@@ -449,15 +448,6 @@
       <li data-i18n="s9-li3"><strong>What not to chase:</strong> a rising raw test count on its own. More tests that don't individually earn their place by the weak/strong distinction above just make the suite slower without making it more trustworthy.</li>
     </ul>
 
-    <h2 id="limits" data-i18n="limits-h2">10. Honest limits</h2>
-    <p data-i18n="limits-p1">None of this is a finished system. Stated plainly, on purpose, because a method that skips this section reads as advocacy rather than something usable:</p>
-    <ul>
-      <li data-i18n="limits-li1"><strong>One person wrote this and has used it.</strong> It hasn't been through a team retrospective, and nobody else has tested it in practice yet.</li>
-      <li data-i18n="limits-li2"><strong>Onboarding beyond me has happened exactly once</strong> — see Adoption plan above for what changes next.</li>
-      <li data-i18n="limits-li3"><strong>Every rule here grew out of backend work in one language.</strong> None of it has been tried against frontend or TypeScript work yet.</li>
-      <li data-i18n="limits-li4"><strong>No agent has ever been briefed with this checklist from the actual start of a ticket.</strong> Every rule in it was written from a problem found after the fact, not designed in ahead of one.</li>
-    </ul>
-
   </article>
 
 </div>
@@ -518,7 +508,7 @@
     'nav-strategies': 'Alle Strategies',
     'hero-kicker': 'Agentic Strategies',
     'hero-h1': 'Definition of Done: Warum eine Checkliste entscheidet, wann KI-gestützte Arbeit fertig ist',
-    'hero-lede': 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, das Betriebsmodell dahinter, Codebase-Gewohnheiten, die helfen oder schaden, was zu messen ist, und eine ehrliche Bestandsaufnahme dessen, was diese Methode noch nicht bewiesen hat.',
+    'hero-lede': 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, das Betriebsmodell dahinter, Codebase-Gewohnheiten, die helfen oder schaden, und was sich tatsächlich zu messen lohnt.',
     'meta-date': 'Veröffentlicht im September 2026',
 
     'toc-label': 'Auf dieser Seite',
@@ -531,10 +521,9 @@
     'toc-7': 'Tooling: technische Lücken vs. Entscheidungslücken',
     'toc-8': 'Onboarding-Plan',
     'toc-9': 'Messung',
-    'toc-10': 'Ehrliche Grenzen',
 
     'why-h2': 'Warum das hier existiert',
-    'why-p': 'Ein Begleitstück zu <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — jener Text erzählt die Geschichte eines einzelnen Features. Dieser hier ist alles darunter: das Betriebsmodell, warum eine feste Checkliste besser funktioniert als das eigene Gefühl des Agents für "fertig", die Codebase-Gewohnheiten, die Agent-Arbeit leichter oder schwerer machen, was sich tatsächlich zu messen lohnt, und — weil eine Methode, die nur ihre Erfolge zeigt, nicht vertrauenswürdig ist — wo das ehrlich gesagt noch nicht bewiesen ist.',
+    'why-p': 'Ein Begleitstück zu <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — jener Text erzählt die Geschichte eines einzelnen Features. Dieser hier ist alles darunter: das Betriebsmodell, warum eine feste Checkliste besser funktioniert als das eigene Gefühl des Agents für "fertig", die Codebase-Gewohnheiten, die Agent-Arbeit leichter oder schwerer machen, und was sich tatsächlich zu messen lohnt.',
 
     'diagram-loop-caption': 'Ein geschlossener Kreislauf, keine gerade Linie. Nur Scoping, Entscheidungen und das Erkennen falscher Annahmen bleiben menschlich — dieser Teil wurde nie ersetzt.',
 
@@ -620,12 +609,6 @@
     's9-li2': '<strong>Test- und Assertion-Anzahl, die sich in die von der Änderung nahegelegte Richtung bewegt</strong> — nicht nur die Pass/Fail-Zeile. Eine Suite, die von 40 auf 41 Tests geht, aber bei derselben Assertion-Anzahl bleibt, verdient einen zweiten Blick, bevor man ihr vertraut.',
     's9-li3': '<strong>Was nicht zu jagen ist:</strong> eine steigende rohe Testanzahl für sich allein. Mehr Tests, die sich ihren Platz nicht einzeln nach der Schwach/Stark-Unterscheidung oben verdienen, machen die Suite nur langsamer, ohne sie vertrauenswürdiger zu machen.',
 
-    'limits-h2': '10. Ehrliche Grenzen',
-    'limits-p1': 'Nichts davon ist ein fertiges System. Absichtlich klar ausgesprochen, denn eine Methode, die diesen Abschnitt auslässt, liest sich wie Werbung und nicht wie etwas Nutzbares:',
-    'limits-li1': '<strong>Eine einzige Person hat das geschrieben und benutzt es.</strong> Es gab noch keine Team-Retrospektive dazu, und niemand sonst hat es bisher in der Praxis getestet.',
-    'limits-li2': '<strong>Onboarding über mich hinaus hat genau einmal stattgefunden</strong> — siehe Onboarding-Plan oben für das, was sich als Nächstes ändert.',
-    'limits-li3': '<strong>Jede Regel hier ist aus Backend-Arbeit in einer einzigen Sprache entstanden.</strong> Noch nichts davon wurde an Frontend- oder TypeScript-Arbeit erprobt.',
-    'limits-li4': '<strong>Kein Agent wurde je von Anfang eines Tickets an mit dieser Checkliste gebrieft.</strong> Jede Regel darin ist aus einem im Nachhinein gefundenen Problem entstanden, nicht von vornherein mitgeplant.',
 
     'footer-copy': '&copy; 2026 David Irving.',
     'footer-impressum': 'Impressum',
@@ -633,8 +616,8 @@
   };
 
   var META_DESC = {
-    en: "A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, what to measure, and an honest account of what this method hasn't proven yet.",
-    de: 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, das Betriebsmodell dahinter, Codebase-Gewohnheiten, die helfen oder schaden, was zu messen ist, und eine ehrliche Bestandsaufnahme dessen, was diese Methode noch nicht bewiesen hat.'
+    en: "A fixed set of gates instead of an agent's own judgment, the operating model behind it, codebase habits that help or hurt, and what's actually worth measuring.",
+    de: 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, das Betriebsmodell dahinter, Codebase-Gewohnheiten, die helfen oder schaden, und was sich tatsächlich zu messen lohnt.'
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
