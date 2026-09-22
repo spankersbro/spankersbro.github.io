@@ -464,6 +464,21 @@
       <a class="card-link" href="https://wirefront.davidirving.dev/" target="_blank" rel="noopener" data-i18n="wirefront-link">Play →</a>
       <a class="card-link" href="https://github.com/spankersbro/wirefront" target="_blank" rel="noopener" data-i18n="wirefront-github-link">View on GitHub →</a>
     </div>
+
+    <div class="card" id="projects-rippletype">
+      <a class="card-anchor" href="#projects-rippletype" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-projects">Side Project</p>
+      <h3 data-i18n="rippletype-h3">Ripple Type — a WebGL text effect built after staring at a TV title card for thirty seconds</h3>
+      <p data-i18n="rippletype-p1">Type any word and it ripples outward in ink and dust — a homage to the title-card treatment in <em>Pluribus</em>, rebuilt from scratch by looking at the effect and asking how it would actually work, not from any production asset.</p>
+      <ol class="steps">
+        <li><span data-i18n="rippletype-step1"><strong>The hatching is real displacement, not a filter.</strong> A hand-written GLSL fragment shader samples a procedural line pattern at a per-pixel radially-displaced UV, so the lines genuinely bend where the wave passes through.</span></li>
+        <li><span data-i18n="rippletype-step2"><strong>The background rings aren't drawn — they're the wave.</strong> A hashed per-cell dot field renders at a density driven by the same scalar ripple value used for the text displacement, so the concentric rings and the letter distortion come from one shared field.</span></li>
+        <li><span data-i18n="rippletype-step3"><strong>Two ripple layers, not one.</strong> A constant low-amplitude ambient wave keeps the text alive at rest; click anywhere to layer a stronger, decaying ripple on top.</span></li>
+      </ol>
+      <div class="tags"><span class="tag">WebGL</span><span class="tag">GLSL</span><span class="tag">Canvas 2D</span></div>
+      <a class="card-link" href="https://davidirving.dev/ripple-type/" target="_blank" rel="noopener" data-i18n="rippletype-link">Play →</a>
+      <a class="card-link" href="https://github.com/spankersbro/ripple-type" target="_blank" rel="noopener" data-i18n="rippletype-github-link">View on GitHub →</a>
+    </div>
   </section>
 
 </div>
@@ -780,6 +795,13 @@
       bekämpfen — ist die nächste Phase, aber noch nicht gebaut.`,
     'wirefront-link': 'Spielen →',
     'wirefront-github-link': 'Auf GitHub ansehen →',
+    'rippletype-h3': 'Ripple Type — ein WebGL-Texteffekt, gebaut nachdem ich dreißig Sekunden auf einen TV-Vorspann gestarrt habe',
+    'rippletype-p1': 'Ein beliebiges Wort tippen, und es kräuselt sich nach außen in Tinte und Staub — eine Hommage an die Vorspann-Optik von <em>Pluribus</em>, von Grund auf neu gebaut, indem der Effekt betrachtet und gefragt wurde, wie er tatsächlich funktionieren würde, nicht anhand eines echten Produktions-Assets.',
+    'rippletype-step1': '<strong>Die Schraffur ist echte Verschiebung, kein Filter.</strong> Ein handgeschriebener GLSL-Fragment-Shader tastet ein prozedurales Linienmuster an einer pro Pixel radial verschobenen UV ab, sodass sich die Linien tatsächlich biegen, wo die Welle durchläuft.',
+    'rippletype-step2': '<strong>Die Ringe im Hintergrund sind nicht gezeichnet — sie sind die Welle.</strong> Ein gehashtes Punktfeld pro Zelle rendert mit einer Dichte, die vom selben skalaren Wellenwert gesteuert wird wie die Textverschiebung, sodass die konzentrischen Ringe und die Buchstabenverzerrung aus einem gemeinsamen Feld stammen.',
+    'rippletype-step3': '<strong>Zwei Wellenebenen, nicht eine.</strong> Eine konstante Welle niedriger Amplitude hält den Text im Ruhezustand lebendig; ein Klick irgendwo legt eine stärkere, abklingende Welle darüber.',
+    'rippletype-link': 'Spielen →',
+    'rippletype-github-link': 'Auf GitHub ansehen →',
     'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz',
