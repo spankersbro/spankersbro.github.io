@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.">
+<link rel="canonical" href="https://davidirving.dev/strategies/definition-of-done.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished">
+<meta property="og:description" content="A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.">
+<meta property="og:url" content="https://davidirving.dev/strategies/definition-of-done.html">
+<meta property="article:published_time" content="2026-09-22">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished">
+<meta name="twitter:description" content="A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished",
+  "description": "A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-09-22",
+  "dateModified": "2026-09-22",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/definition-of-done.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+    --bad:#c0392b; --bad-bg:#fdecea;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3);
+           --bad:#f0836f; --bad-bg:#2a1512; }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3);
+           --bad:#f0836f; --bad-bg:#2a1512; }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+           --bad:#c0392b; --bad-bg:#fdecea; }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  .tbl{width:100%;border-collapse:collapse;margin:0 0 24px;font-size:14.5px}
+  .tbl th{text-align:left;color:var(--sub);font-weight:600;font-size:12px;letter-spacing:.03em;text-transform:uppercase;padding:0 12px 8px 0;border-bottom:1px solid var(--line)}
+  .tbl td{padding:12px 12px 12px 0;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td:first-child{color:var(--sub);width:38%}
+  .tbl td.bad{color:var(--bad)}
+  .callout{background:var(--mono-bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 20px;font-size:14.5px;line-height:1.65;color:var(--mono-ink)}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Definition of Done: Why a Checklist Decides When AI-Assisted Work Is Finished</h1>
+    <p class="lede" data-i18n="hero-lede">A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.</p>
+    <p class="meta-row" data-i18n="meta-date">Published September 2026</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five phases in a row, connected by forward arrows: before code, development, local verification, publish, review hand-off. A gate that fails sends work back a step instead of letting it continue.">
+        <rect x="6" y="60" width="118" height="66" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="65" y="97" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Before code</text>
+
+        <rect x="141" y="60" width="118" height="66" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="200" y="97" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Development</text>
+
+        <rect x="276" y="60" width="118" height="66" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="335" y="90" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Local</text>
+        <text x="335" y="104" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">verification</text>
+
+        <rect x="411" y="60" width="118" height="66" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="470" y="97" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">Publish</text>
+
+        <rect x="546" y="60" width="88" height="66" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="590" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">Review</text>
+        <text x="590" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">hand-off</text>
+
+        <path d="M124 93 H139" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrowD)"/>
+        <path d="M259 93 H274" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrowD)"/>
+        <path d="M394 93 H409" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrowD)"/>
+        <path d="M529 93 H544" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrowD)"/>
+
+        <defs>
+          <marker id="arrowD" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <text x="320" y="165" text-anchor="middle" font-size="11.5" fill="var(--bad)">a gate fails → go back a step, don't continue</text>
+        <text x="320" y="190" text-anchor="middle" font-size="11" fill="var(--sub)">never push unless the full suite is green · never hand off commits no CI run has seen</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">Five phases, a fixed checklist inside each one. A failed gate sends the work back a step — it doesn't get to carry on.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p">A companion to <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — that piece is the story of one feature. This one is the checklist behind it: how I actually decide AI-assisted work is finished, why a fixed list beats judgment, and where this method genuinely hasn't been proven yet.</p>
+
+    <h2 data-i18n="s1-h2">1. The agent doesn't decide when it's done — a fixed list of gates does</h2>
+    <p data-i18n="s1-p1">An agent reports success the moment it stops working. That's not the same claim as finished. So "finished" gets written down, in full, before the work starts — and it doesn't change while the work is happening. Each gate can fail. On failure, the work goes back a step; it doesn't continue past it. And the gates stay deliberately boring, on purpose: boring means a person can check one without having to read the code behind it.</p>
+    <p data-i18n="s1-p2">The list I actually use runs to dozens of checks across the five phases above. Two rules sit underneath all of them and never bend: never push unless the full suite is green, and never hand a change to a person while it's carrying commits no CI run has ever seen.</p>
+
+    <h2 data-i18n="s2-h2">2. What a green suite can't see</h2>
+    <p data-i18n="s2-p1">Every row below got through a fully green test suite. None of these are hypothetical — each one is a real class of defect the suite itself was structurally unable to catch, which is the actual reason a separate gate exists for it.</p>
+    <table class="tbl">
+      <tr><th data-i18n="s2-th1">Gate</th><th data-i18n="s2-th2">What it catches</th></tr>
+      <tr><td data-i18n="s2-r1a">Static analysis, not just a syntax check</td><td data-i18n="s2-r1b">A syntax checker confirms the file parses. It has no idea whether a method actually exists — an invented method name only fails once its exact line runs, and in an error branch that can be never.</td></tr>
+      <tr><td data-i18n="s2-r2a">A confidence check on names and identifiers</td><td data-i18n="s2-r2b">An agent writes a plausible method name, a plausible requirement, and a plausible ticket number with exactly the same confidence it writes correct ones. Only the first of those three can ever fail a test on its own.</td></tr>
+      <tr><td data-i18n="s2-r3a">Trace every change back to an actual requirement</td><td data-i18n="s2-r3b">A design choice the agent made on its own, written up as something the ticket demanded, sails through every test — the code is right, the justification is invented, and the build stays green. Only tracing the change back to a real line in the requirement finds it.</td></tr>
+      <tr><td data-i18n="s2-r4a">Break the guard on purpose</td><td data-i18n="s2-r4b">A guard isn't covered until you've actually watched its test fail. Delete the guard and re-run; if the test still passes, it was never testing the guard in the first place.</td></tr>
+    </table>
+
+    <h2 data-i18n="s3-h2">3. Codebase habits that make agent work harder</h2>
+    <p data-i18n="s3-p1">None of these are bugs. Every example passed review and CI. An agent doesn't skim — it reads every comment as if it were true, and it copies the style of whatever code sits around it. A habit a human reader would just shrug off becomes something an agent actively repeats.</p>
+    <table class="tbl">
+      <tr><th data-i18n="s3-th1">Habit</th><th data-i18n="s3-th2">What the agent does with it</th></tr>
+      <tr><td data-i18n="s3-r1a">One fact written in four places — a commit message plus three docblocks</td><td data-i18n="s3-r1b">Copies all four. The next time the fact changes, three of the four quietly go stale.</td></tr>
+      <tr><td data-i18n="s3-r2a">"Why we chose this" explained in a docblock instead of the ticket or an ADR</td><td data-i18n="s3-r2b">Reads it as current, settled truth. Inline narrative can't be reviewed, can't be tested, and nobody ever goes back to update it.</td></tr>
+      <tr><td data-i18n="s3-r3a">Two styles in one commit — typed on one method, not the next</td><td data-i18n="s3-r3b">Can't tell which one is the actual convention, so it copies whichever one it happened to read most recently.</td></tr>
+      <tr><td data-i18n="s3-r4a">A check bypassed instead of fixed</td><td data-i18n="s3-r4b">Treats the bypass as the local convention. The real defect goes untracked, and one bypass quietly becomes the pattern.</td></tr>
+      <tr><td data-i18n="s3-r5a">Writing against an old convention while a migration sits mid-review</td><td data-i18n="s3-r5b">The conversion cost stays invisible to whoever wrote it, and grows a little with every file added on the old pattern in the meantime.</td></tr>
+    </table>
+    <p data-i18n="s3-p2">One more rule, separate from the table above: no AI attribution anywhere, in a commit, a PR, or a comment. That one isn't about agent behavior — it's about who a commit history is allowed to credit.</p>
+
+    <h2 data-i18n="s4-h2">4. Tests that actually find bugs</h2>
+    <p data-i18n="s4-p1">The problem is rarely too few tests — agents write plenty. The problem is tests that keep passing while the code underneath them is broken. One question filters out most of the weak ones: what can actually break in this change?</p>
+    <table class="tbl">
+      <tr><th data-i18n="s4-th1">Weak test</th><th data-i18n="s4-th2">Strong test</th></tr>
+      <tr><td data-i18n="s4-r1a">Store a value, reload it, confirm it's the same.</td><td data-i18n="s4-r1b">Send 250 and 251 characters at a length limit.</td></tr>
+      <tr><td data-i18n="s4-r2a">Tests the ORM, which every field already shares.</td><td data-i18n="s4-r2b">Confirms the value is rejected before any database write happens, with the right error key.</td></tr>
+      <tr><td data-i18n="s4-r3a">Survives almost any bug in the feature.</td><td data-i18n="s4-r3b">Fails the moment the validation actually breaks.</td></tr>
+    </table>
+    <div class="callout" data-i18n="s4-callout">A trap worth naming: stashing a fix, watching the test fail, restoring the fix, watching it pass again proves the test's result changed. It does not prove the test exercises the fixed code. In one real case the test flipped for a reason that had nothing to do with the actual fix. Confirm <em>why</em> it flips — not only that it flips.</div>
+
+    <h2 data-i18n="s5-h2">5. Confidence and claims</h2>
+    <p data-i18n="s5-p1">An agent writes an unproven theory in exactly the same confident style it writes a proven fact. From the prose alone, a reader can't tell them apart.</p>
+    <ul>
+      <li data-i18n="s5-li1">Before writing "the root cause is X" — was it actually reproduced, or is there just data that happens to be consistent with it?</li>
+      <li data-i18n="s5-li2">Data that's merely consistent with a theory is not confirmation of that theory.</li>
+      <li data-i18n="s5-li3">Not reproduced yet? The honest word is "hypothesis," not "cause."</li>
+      <li data-i18n="s5-li4">A confident, wrong root cause is worse than an honest "not sure yet" — it sends whoever picks this up next to investigate exactly the wrong thing.</li>
+    </ul>
+
+    <h2 data-i18n="limits-h2">6. Honest limits</h2>
+    <p data-i18n="limits-p1">None of this is a finished system. Stated plainly, on purpose, because a method that skips this section reads as advocacy rather than something usable:</p>
+    <ul>
+      <li data-i18n="limits-li1"><strong>One person wrote this and has used it.</strong> It hasn't been through a team retrospective, and nobody else has tested it in practice yet.</li>
+      <li data-i18n="limits-li2"><strong>A real onboarding attempt happened exactly once.</strong> Nobody currently owns keeping it running or repeating it.</li>
+      <li data-i18n="limits-li3"><strong>Every rule here grew out of backend work in one language.</strong> None of it has been tried against frontend or TypeScript work yet.</li>
+      <li data-i18n="limits-li4"><strong>No agent has ever been briefed with this checklist from the actual start of a ticket.</strong> Every rule in it was written from a problem found after the fact, not designed in ahead of one.</li>
+      <li data-i18n="limits-li5"><strong>Part of what this depends on is blocked by a decision above my level, not by engineering.</strong> That part just has to wait its turn.</li>
+      <li data-i18n="limits-li6"><strong>Some of the tooling that makes this possible is real, but genuinely too hard to set up.</strong> A hand-edited config file and a raw token pasted into the right place is a real barrier for anyone without a fair amount of patience — not a footnote.</li>
+      <li data-i18n="limits-li7"><strong>Coverage gets reported on every single run.</strong> Close to nobody, including me on plenty of weeks, actually reads it.</li>
+    </ul>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-strategies': 'Alle Strategies',
+    'hero-kicker': 'Agentic Strategies',
+    'hero-h1': 'Definition of Done: Warum eine Checkliste entscheidet, wann KI-gestützte Arbeit fertig ist',
+    'hero-lede': 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, die Codebase-Gewohnheiten, die Agent-Arbeit leichter oder schwerer machen, und eine ehrliche Bestandsaufnahme dessen, was diese Methode noch nicht bewiesen hat.',
+    'meta-date': 'Veröffentlicht im September 2026',
+    'diagram1-caption': 'Fünf Phasen, in jeder eine feste Checkliste. Ein Gate, das fehlschlägt, schickt die Arbeit einen Schritt zurück — sie darf nicht einfach weiterlaufen.',
+
+    'why-h2': 'Warum das hier existiert',
+    'why-p': 'Ein Begleitstück zu <a href="implementer-reviewer-tester.html">Implementer, Reviewer, Tester</a> — jener Text erzählt die Geschichte eines einzelnen Features. Dieser hier ist die Checkliste dahinter: wie ich tatsächlich entscheide, dass KI-gestützte Arbeit fertig ist, warum eine feste Liste besser funktioniert als Einschätzung, und wo diese Methode ehrlich gesagt noch nicht bewiesen ist.',
+
+    's1-h2': '1. Nicht der Agent entscheidet, wann er fertig ist — eine feste Liste von Gates tut es',
+    's1-p1': 'Ein Agent meldet Erfolg in dem Moment, in dem er aufhört zu arbeiten. Das ist nicht dieselbe Aussage wie fertig. Also wird "fertig" vollständig aufgeschrieben, bevor die Arbeit beginnt — und ändert sich während der Arbeit nicht mehr. Jedes Gate kann fehlschlagen. Bei einem Fehlschlag geht die Arbeit einen Schritt zurück; sie läuft nicht einfach daran vorbei weiter. Und die Gates bleiben absichtlich langweilig: langweilig heißt, dass eine Person sie prüfen kann, ohne den Code dahinter lesen zu müssen.',
+    's1-p2': 'Die Liste, die ich tatsächlich benutze, umfasst mehrere Dutzend Prüfungen über die fünf Phasen oben. Zwei Regeln stehen darunter und lassen sich nie aufweichen: nie pushen, solange nicht die komplette Suite grün ist, und eine Änderung nie an eine Person übergeben, solange sie Commits trägt, die noch kein CI-Lauf gesehen hat.',
+
+    's2-h2': '2. Was eine grüne Suite nicht sieht',
+    's2-p1': 'Jede Zeile unten hat eine vollständig grüne Test-Suite passiert. Keines davon ist hypothetisch — jede ist eine echte Fehlerklasse, die die Suite strukturell gar nicht erkennen konnte, was genau der Grund ist, warum es dafür ein eigenes Gate gibt.',
+    's2-th1': 'Gate', 's2-th2': 'Was es findet',
+    's2-r1a': 'Statische Analyse, nicht nur ein Syntax-Check',
+    's2-r1b': 'Ein Syntax-Checker bestätigt nur, dass die Datei geparst werden kann. Er weiß nicht, ob eine Methode tatsächlich existiert — ein erfundener Methodenname schlägt erst fehl, wenn genau diese Zeile ausgeführt wird, und in einem Fehlerzweig kann das nie passieren.',
+    's2-r2a': 'Ein Plausibilitäts-Check auf Namen und Bezeichner',
+    's2-r2b': 'Ein Agent schreibt einen plausiblen Methodennamen, eine plausible Anforderung und eine plausible Ticketnummer mit genau derselben Sicherheit, mit der er korrekte schreibt. Nur der erste dieser drei kann überhaupt allein einen Test zum Scheitern bringen.',
+    's2-r3a': 'Jede Änderung bis zu einer echten Anforderung zurückverfolgen',
+    's2-r3b': 'Eine Design-Entscheidung, die der Agent selbst getroffen und als vom Ticket gefordert dargestellt hat, besteht jeden Test — der Code ist richtig, die Begründung ist erfunden, und der Build bleibt grün. Nur das Zurückverfolgen bis zu einer echten Zeile in der Anforderung findet das.',
+    's2-r4a': 'Das Guard absichtlich brechen',
+    's2-r4b': 'Ein Guard ist erst abgedeckt, wenn man seinen Test tatsächlich hat fehlschlagen sehen. Guard löschen und neu laufen lassen — besteht der Test trotzdem, hat er den Guard nie wirklich geprüft.',
+
+    's3-h2': '3. Codebase-Gewohnheiten, die Agent-Arbeit schwerer machen',
+    's3-p1': 'Keines davon sind Bugs. Jedes Beispiel hat Review und CI bestanden. Ein Agent überfliegt nichts — er liest jeden Kommentar, als wäre er wahr, und übernimmt den Stil des Codes, der ihn umgibt. Eine Gewohnheit, über die ein menschlicher Leser nur die Schultern zuckt, wird beim Agent zu etwas, das aktiv wiederholt wird.',
+    's3-th1': 'Gewohnheit', 's3-th2': 'Was der Agent damit macht',
+    's3-r1a': 'Eine Tatsache an vier Stellen geschrieben — eine Commit-Message plus drei Docblocks',
+    's3-r1b': 'Übernimmt alle vier. Sobald sich die Tatsache das nächste Mal ändert, veralten drei der vier still.',
+    's3-r2a': '"Warum wir uns dafür entschieden haben" in einem Docblock statt im Ticket oder einer ADR',
+    's3-r2b': 'Liest es als aktuelle, feststehende Wahrheit. Erzählender Text im Code kann nicht reviewt, nicht getestet werden, und niemand aktualisiert ihn je wieder.',
+    's3-r3a': 'Zwei Stile in einem Commit — bei einer Methode typisiert, bei der nächsten nicht',
+    's3-r3b': 'Kann nicht erkennen, welcher der eigentliche Standard ist, und übernimmt einfach den, den er zuletzt gelesen hat.',
+    's3-r4a': 'Eine Prüfung umgangen statt behoben',
+    's3-r4b': 'Behandelt die Umgehung als lokalen Standard. Der eigentliche Defekt bleibt untracked, und aus einer Umgehung wird still das Muster.',
+    's3-r5a': 'Gegen eine alte Konvention schreiben, während eine Migration noch im Review hängt',
+    's3-r5b': 'Die Umstellungskosten bleiben für den Autor unsichtbar und wachsen mit jeder Datei, die in der Zwischenzeit noch nach dem alten Muster dazukommt.',
+    's3-p2': 'Noch eine Regel, unabhängig von der Tabelle oben: keine KI-Zuschreibung, nirgendwo — nicht in einem Commit, nicht in einem PR, nicht in einem Kommentar. Die hat nichts mit Agent-Verhalten zu tun — es geht darum, wem eine Commit-Historie Anerkennung zuschreiben darf.',
+
+    's4-h2': '4. Tests, die tatsächlich Bugs finden',
+    's4-p1': 'Das Problem sind selten zu wenige Tests — Agents schreiben reichlich davon. Das Problem sind Tests, die weiter bestehen, während der Code darunter kaputt ist. Eine Frage filtert die meisten schwachen heraus: Was kann an dieser Änderung überhaupt kaputtgehen?',
+    's4-th1': 'Schwacher Test', 's4-th2': 'Starker Test',
+    's4-r1a': 'Einen Wert speichern, neu laden, bestätigen, dass er gleich ist.',
+    's4-r1b': '250 und 251 Zeichen an ein Längenlimit senden.',
+    's4-r2a': 'Testet das ORM, das sich ohnehin jedes Feld teilt.',
+    's4-r2b': 'Bestätigt, dass der Wert vor jedem Datenbank-Schreibvorgang abgelehnt wird, mit dem richtigen Error-Key.',
+    's4-r3a': 'Übersteht fast jeden Bug im Feature.',
+    's4-r3b': 'Schlägt in dem Moment fehl, in dem die Validierung tatsächlich bricht.',
+    's4-callout': 'Eine Falle, die man benennen sollte: einen Fix stashen, den Test fehlschlagen sehen, den Fix wiederherstellen, den Test wieder bestehen sehen — das beweist, dass sich das Testergebnis geändert hat. Es beweist nicht, dass der Test den reparierten Code tatsächlich prüft. In einem echten Fall kippte der Test aus einem Grund, der mit dem eigentlichen Fix nichts zu tun hatte. Bestätigen, <em>warum</em> er kippt — nicht nur, dass er kippt.',
+
+    's5-h2': '5. Sicherheit und Behauptungen',
+    's5-p1': 'Ein Agent schreibt eine unbewiesene Theorie im exakt gleichen sicheren Ton wie eine bewiesene Tatsache. Allein am Text lässt sich das nicht unterscheiden.',
+    's5-li1': 'Vor dem Satz "die Ursache ist X" — wurde das tatsächlich reproduziert, oder gibt es nur Daten, die dazu passen?',
+    's5-li2': 'Daten, die lediglich zu einer Theorie passen, sind keine Bestätigung dieser Theorie.',
+    's5-li3': 'Noch nicht reproduziert? Das ehrliche Wort ist "Hypothese", nicht "Ursache".',
+    's5-li4': 'Eine sicher vorgetragene, falsche Ursache ist schlimmer als ein ehrliches "noch nicht sicher" — sie schickt die nächste Person, genau das Falsche zu untersuchen.',
+
+    'limits-h2': '6. Ehrliche Grenzen',
+    'limits-p1': 'Nichts davon ist ein fertiges System. Absichtlich klar ausgesprochen, denn eine Methode, die diesen Abschnitt auslässt, liest sich wie Werbung und nicht wie etwas Nutzbares:',
+    'limits-li1': '<strong>Eine einzige Person hat das geschrieben und benutzt es.</strong> Es gab noch kein Team-Retrospektive dazu, und niemand sonst hat es bisher in der Praxis getestet.',
+    'limits-li2': '<strong>Ein echter Onboarding-Versuch hat genau einmal stattgefunden.</strong> Aktuell besitzt niemand die Aufgabe, ihn am Laufen zu halten oder zu wiederholen.',
+    'limits-li3': '<strong>Jede Regel hier ist aus Backend-Arbeit in einer einzigen Sprache entstanden.</strong> Noch nichts davon wurde an Frontend- oder TypeScript-Arbeit erprobt.',
+    'limits-li4': '<strong>Kein Agent wurde je von Anfang eines Tickets an mit dieser Checkliste gebrieft.</strong> Jede Regel darin ist aus einem im Nachhinein gefundenen Problem entstanden, nicht von vornherein mitgeplant.',
+    'limits-li5': '<strong>Ein Teil dessen, worauf das aufbaut, ist durch eine Entscheidung oberhalb meiner Ebene blockiert, nicht durch Technik.</strong> Der Teil muss einfach warten.',
+    'limits-li6': '<strong>Ein Teil des Toolings, das das hier möglich macht, ist real, aber ehrlich gesagt zu schwer aufzusetzen.</strong> Eine von Hand editierte Config-Datei und ein roher Token an der richtigen Stelle sind für jeden ohne einiges an Geduld eine echte Hürde — keine Fußnote.',
+    'limits-li7': '<strong>Coverage wird bei jedem einzelnen Lauf berichtet.</strong> So gut wie niemand, ich eingeschlossen an manchen Wochen, liest sie tatsächlich.',
+
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: "A fixed set of gates instead of an agent's own judgment, the codebase habits that make agent work easier or harder, and an honest account of what this method hasn't proven yet.",
+    de: 'Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, die Codebase-Gewohnheiten, die Agent-Arbeit leichter oder schwerer machen, und eine ehrliche Bestandsaufnahme dessen, was diese Methode noch nicht bewiesen hat.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
