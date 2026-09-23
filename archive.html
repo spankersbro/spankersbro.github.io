@@ -257,11 +257,63 @@
     </div>
   </section>
 
+  <section class="block" id="cycle-20260908">
+    <div class="block-head">
+      <p class="kicker" data-i18n="c5-kicker">September 8 – 23, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <h2 data-i18n="c5-h2">242 commits, 8 workstreams</h2>
+      <p data-i18n="c5-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">242</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~236k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">13</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
+    </div>
+    <p class="stats-note" data-i18n="c5-stats-note">*Mostly the merged test-suite rewrite and a regenerated database baseline. About 46k lines are outside tests, fixtures and schema.</p>
+
+    <div class="card featured" id="c5-feat14">
+      <a class="card-anchor" href="#c5-feat14" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c5-feat14-h3">One SSO login in three failed, and the first two diagnoses were wrong</h3>
+      <p data-i18n="c5-feat14-p1">A customer reported single sign-on failing at random. Two reasonable theories were checked and ruled out first: a misconfigured identity provider, then a token-refresh race. The real causes were elsewhere.</p>
+      <ol class="steps">
+        <li><span data-i18n="c5-feat14-step1"><strong>Every login used the same cookie name.</strong> Two login flows running at once shared one state cookie, so the first to finish deleted it for the other. Hundreds of failures a week, logged at info level, unseen for three months.</span></li>
+        <li><span data-i18n="c5-feat14-step2"><strong>An API call nobody needed.</strong> A profile lookup after login returned 401 on about one login in seven. The same data was already in the ID token. It now comes from there, validated, with the old path kept as a fallback so no customer regresses.</span></li>
+        <li><span data-i18n="c5-feat14-step3"><strong>A real identity provider in CI.</strong> The end-to-end stack now runs a real Keycloak: six scenarios, including five simultaneous logins and a token revoked mid-session. It found one more defect on its first runs, a login callback processed twice, which is now fixed too.</span></li>
+      </ol>
+      <p data-i18n="c5-feat14-p2">Every fix was mutation-tested: remove the guard and a test fails. What no test proves is listed as a known limit, not claimed.</p>
+      <div class="tags"><span class="tag" data-i18n="c5-feat14-tag-security">Security</span><span class="tag">OAuth2 / OIDC</span><span class="tag">Keycloak</span><span class="tag">CI/CD</span></div>
+    </div>
+
+    <div class="card featured" id="c5-feat15">
+      <a class="card-anchor" href="#c5-feat15" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c5-feat15-h3">The test-suite rewrite merged, and a passing run now has to be silent</h3>
+      <p data-i18n="c5-feat15-p1">Last cycle this was an open pull request touching two thousand files. It merged on September 21: over sixteen thousand tests on five parallel workers, each with its own database, in about seventy seconds.</p>
+      <ol class="steps">
+        <li><span data-i18n="c5-feat15-step1"><strong>Green is not enough.</strong> A run that prints a warning, an error or leftover test data fails the gate, even when every test passes.</span></li>
+        <li><span data-i18n="c5-feat15-step2"><strong>Five guards enforce isolation.</strong> A transaction per test, cache resets, config-drift detection, log-noise detection and a database checksum after each test.</span></li>
+        <li><span data-i18n="c5-feat15-step3"><strong>Production fixes rode along, each with a test.</strong> A timed-out backup no longer leaves an unreadable archive, shell commands get a hard timeout, and a profiling extension stays out of the production image.</span></li>
+      </ol>
+      <p data-i18n="c5-feat15-p2">Review raised 26 items: 17 fixed, 6 did not survive checking, 3 folded in on request.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="c5-feat15-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="c5-feat15-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="c5-card16">
+      <a class="card-anchor" href="#c5-card16" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="c5-card16-h3">Configuring a twenty-year-old PHP app from the environment</h3>
+      <p data-i18n="c5-card16-p">Configuration is moving out of runtime code and into the deployment environment, so every container behaves the same way. Runtime <code>ini_set()</code> calls are gone, but not blindly: removing one would have turned a three-record CSV into one garbled row, so line-ending handling got its own utility first. A settings class now reads each value from the environment, then the config file, then a default, without changing over 500 call sites. PATH lookups for system binaries became configured paths that fail loudly; one of them had let an upgrade skip a SQL file and still report success. The command-line tool is moving to Symfony Console, with its "did you mean" prompt switched off on purpose: it could turn a typo into a database reset. The first part has merged; the rest is in review.</p>
+      <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="c5-card16-tag-config">Configuration</span><span class="tag" data-i18n="c5-card16-tag-reliability">Reliability</span></div>
+    </div>
+  </section>
+
   <section class="block" id="cycle-20260801">
     <div class="block-head">
-      <p class="kicker" data-i18n="c4-kicker">August 1 – September 7, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <p class="kicker" data-i18n="c4-kicker">August 1 – September 7, 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Superseded</span></p>
       <h2 data-i18n="c4-h2">305 commits, 8 workstreams</h2>
-      <p data-i18n="c4-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+      <p data-i18n="c4-p">Replaced on the homepage by the September 8 – 23 cycle — kept here in full.</p>
     </div>
 
     <div class="stats">
@@ -717,9 +769,34 @@
     'c3-card10-tag-techdebt': 'Technische Schulden',
     'c3-card10-tag-config': 'Konfiguration',
 
-    'c4-kicker': '1. August – 7. September 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c5-kicker': '8. – 23. September 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c5-h2': '242 Commits, 8 Workstreams',
+    'c5-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c5-stats-note': '*Größtenteils der gemergte Test-Suite-Umbau und eine neu erzeugte Datenbank-Baseline. Etwa 46k Zeilen liegen außerhalb von Tests, Fixtures und Schema.',
+    'c5-feat14-h3': `Jeder dritte SSO-Login schlug fehl, und die ersten zwei Diagnosen waren falsch`,
+    'c5-feat14-p1': `Ein Kunde meldete zufällige Fehler beim Single Sign-on. Zwei naheliegende Theorien wurden zuerst geprüft und verworfen: ein falsch konfigurierter Identity Provider, dann ein Race beim Token-Refresh. Die echten Ursachen lagen woanders.`,
+    'c5-feat14-step1': `<strong>Jeder Login nutzte denselben Cookie-Namen.</strong> Zwei gleichzeitige Login-Flows teilten sich ein State-Cookie, also löschte der erste fertige es für den anderen. Hunderte Fehler pro Woche, auf Info-Level geloggt, drei Monate lang unbemerkt.`,
+    'c5-feat14-step2': `<strong>Ein API-Aufruf, den niemand brauchte.</strong> Eine Profilabfrage nach dem Login antwortete bei etwa jedem siebten Login mit 401. Dieselben Daten standen schon im ID-Token. Sie kommen jetzt von dort, validiert, mit dem alten Weg als Fallback, damit kein Kunde schlechter dasteht.`,
+    'c5-feat14-step3': `<strong>Ein echter Identity Provider in der CI.</strong> Der End-to-End-Stack startet jetzt ein echtes Keycloak: sechs Szenarien, darunter fünf gleichzeitige Logins und ein mitten in der Sitzung widerrufenes Token. Schon in den ersten Läufen fand es einen weiteren Fehler, einen doppelt verarbeiteten Login-Callback, der inzwischen ebenfalls behoben ist.`,
+    'c5-feat14-p2': `Jeder Fix wurde mit Mutation-Tests geprüft: Guard entfernen, und ein Test schlägt fehl. Was kein Test beweist, steht als bekannte Grenze drin, nicht als Behauptung.`,
+    'c5-feat14-tag-security': `Sicherheit`,
+    'c5-feat15-h3': `Der Test-Suite-Umbau ist gemergt, und ein grüner Lauf muss jetzt auch still sein`,
+    'c5-feat15-p1': `Im letzten Zyklus war das noch ein offener Pull Request über zweitausend Dateien. Am 21. September wurde er gemergt: über sechzehntausend Tests auf fünf parallelen Workern, jeder mit eigener Datenbank, in etwa siebzig Sekunden.`,
+    'c5-feat15-step1': `<strong>Grün reicht nicht.</strong> Ein Lauf, der eine Warnung, einen Fehler oder übrig gebliebene Testdaten ausgibt, fällt durch, auch wenn jeder Test besteht.`,
+    'c5-feat15-step2': `<strong>Fünf Guards erzwingen die Isolation.</strong> Eine Transaktion pro Test, Cache-Resets, Erkennung von Config-Drift, Erkennung von Log-Rauschen und eine Datenbank-Prüfsumme nach jedem Test.`,
+    'c5-feat15-step3': `<strong>Produktions-Fixes kamen mit, jeder mit eigenem Test.</strong> Ein abgebrochenes Backup hinterlässt kein unlesbares Archiv mehr, Shell-Befehle haben ein hartes Timeout, und eine Profiling-Erweiterung bleibt aus dem Produktions-Image draußen.`,
+    'c5-feat15-p2': `Das Review brachte 26 Punkte: 17 behoben, 6 hielten der Prüfung nicht stand, 3 auf Wunsch eingearbeitet.`,
+    'c5-feat15-tag-test-infra': `Test-Infrastruktur`,
+    'c5-feat15-link': `Den vollständigen Text lesen →`,
+    'c5-card16-h3': `Eine zwanzig Jahre alte PHP-Anwendung aus der Umgebung konfigurieren`,
+    'c5-card16-p': `Die Konfiguration wandert aus dem Laufzeit-Code in die Deployment-Umgebung, damit sich jeder Container gleich verhält. Die <code>ini_set()</code>-Aufrufe zur Laufzeit sind weg, aber nicht blind: Einen davon zu entfernen hätte eine CSV mit drei Datensätzen in eine verstümmelte Zeile verwandelt, also bekam die Zeilenende-Behandlung zuerst ein eigenes Werkzeug. Eine Settings-Klasse liest jeden Wert jetzt aus der Umgebung, dann aus der Config-Datei, dann aus einem Default, ohne über 500 Aufrufstellen zu ändern. PATH-Suchen nach System-Binaries wurden zu konfigurierten Pfaden, die laut fehlschlagen; eine davon hatte ein Upgrade eine SQL-Datei überspringen und trotzdem Erfolg melden lassen. Das Kommandozeilen-Tool zieht auf Symfony Console um, mit bewusst abgeschalteter „Meinten Sie …“-Rückfrage: Sie konnte aus einem Tippfehler einen Datenbank-Reset machen. Der erste Teil ist gemergt, der Rest ist im Review.`,
+    'c5-card16-tag-config': `Konfiguration`,
+    'c5-card16-tag-reliability': `Zuverlässigkeit`,
+    'stat-merged': 'PRs gemergt',
+
+    'c4-kicker': '1. August – 7. September 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c4-h2': '305 Commits, 8 Workstreams',
-    'c4-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c4-p': 'Auf der Startseite durch den Zyklus 8. – 23. September ersetzt — hier vollständig aufbewahrt.',
     'c4-stats-note': '*Dominiert vom weiterlaufenden Test-Suite-Umbau — handgeschriebene Business-Logik macht davon nur einen kleineren Teil aus.',
 
     'c4-feat11-h3': 'Der Test-Suite-Umbau wuchs über die eigene Schätzung hinaus',
