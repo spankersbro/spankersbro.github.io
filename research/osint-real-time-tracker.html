@@ -137,7 +137,7 @@
     <p class="kicker" data-i18n="hero-kicker">Personal AI Research</p>
     <h1 data-i18n="hero-h1">OSINT Real-Time Tracker: Multilingual Conflict Monitoring, Built Solo with Gemini</h1>
     <p class="lede" data-i18n="hero-lede">A maps-based dashboard that turns open-source conflict reports into structured, geolocated, credibility-scored events. The interesting part wasn't getting Gemini to return clean JSON — it was everything built around it to make that output something you could actually trust.</p>
-    <p class="meta-row" data-i18n="meta-date">July 2026 · Live at <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a></p>
+    <p class="meta-row" data-i18n="meta-date">July – September 2026 · Live at <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a></p>
   </section>
 
   <article class="article">
@@ -231,9 +231,14 @@
     <p data-i18n="p3-p1">The app's AI-Studio-generated starting point had Firestore rules wide open — <code>allow read, write: if true</code> — with the React frontend writing directly to Firestore for core functionality. That meant anyone with the Firebase client config, which is necessarily public in any browser-based app, could read or write data directly, bypassing the backend and its logic entirely. One endpoint made this worse in a specific way: the reset function didn't touch Firestore from the server at all — the <em>client</em> was doing the actual purge-and-reseed, with no authentication check anywhere in that path.</p>
     <p data-i18n="p3-p2">The fix moved the backend onto the Firebase Admin SDK — real service credentials that don't depend on client-side rules at all — locked the Firestore rules to block direct client writes on every sensitive collection, and gated the reset and system-log endpoints behind real Firebase ID-token verification. It was found by recognizing the same class of bug in a sibling project and checking for it here deliberately, rather than from an incident or an external report — the more useful way to find this kind of thing, if you can manage it.</p>
 
-    <h3 data-i18n="p4-h3">What's actually gated, and what's an honest fallback</h3>
-    <p data-i18n="p4-p1">Two things are currently reserved for my own signed-in account rather than open to any visitor: submitting a fresh block of text for live analysis, and manually triggering a harvest. That's a cost-control decision — Gemini calls aren't free — not a limitation in the pipeline itself, which handles arbitrary multilingual input the same way regardless of who's driving it. Everyone else gets full read access to the credibility, sentiment, and geolocation breakdowns, and to a set of curated sample events that exercise the same pipeline.</p>
-    <p data-i18n="p4-p2">If Gemini itself is unavailable, the app falls back to a basic keyword-matching heuristic rather than failing outright — and it says so, visibly, in the resulting event's own justification text. An offline fallback dressed up as the real feature would be a worse failure mode than an honest one that admits it's degraded.</p>
+    <h3 data-i18n="p4-h3">What's gated, and what happens when the model is down</h3>
+    <p data-i18n="p4-p1">Two things are reserved for my own signed-in account: submitting a fresh block of text for live analysis, and manually triggering a harvest. That's a cost-control decision — Gemini calls aren't free — not a limitation of the pipeline. Everyone else gets full read access to the credibility, sentiment and geolocation breakdowns of real harvested events.</p>
+    <p data-i18n="p4-p2">If Gemini is unavailable, the app shows the data it already has and logs the real reason. It does not generate anything to fill the gap. That was not always true, which is what the next section is about.</p>
+
+    <h3 data-i18n="p5-h3">The week I found out it had never harvested anything</h3>
+    <p data-i18n="p5-p1">In early August I found that the production API key had been the literal text "Not found." since the first deploy. The app looked healthy the whole time, because a fallback path quietly filled the feed with invented events: a made-up social-media post, made-up credibility scores, dated to today. It was tagged as seed data, but the content was never tied to a real incident. I had described the app as harvesting real data. That was wrong.</p>
+    <p data-i18n="p5-p2">The fix was to remove the invented data entirely, not to label it better, and then to make every event prove where it came from. Each harvest now pulls real candidate articles from GDELT and ReliefWeb first, and an event is kept only if its source URL matches one of those articles or one of Gemini's own search citations. Anything else is dropped, not stored. A fuzzy duplicate check catches the same event reported with different wording, which exact-title matching never did.</p>
+    <p data-i18n="p5-p3">The gate then rejected every event for four days. The cause: Gemini drops its search citations entirely when a request combines the search tool with structured JSON output, so the gate had nothing to match against. Search and extraction are now two separate calls, and extraction may only use sources the search call actually returned. Two more quiet failures turned up along the way: a free news source throttling harder than documented, and, in September, scale-to-zero hosting killing the hourly timer between requests.</p>
 
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">Getting a model to return clean structured JSON isn't the hard part anymore — modern models do that reliably, most of the time. What actually took the work was everything built around that call: retry logic with exponential backoff and a model-fallback cascade for when Gemini itself is flaky or rate-limited, a distributed lock so an autoscaled deployment doesn't quietly burn its own quota racing itself, and treating "the AI-Studio default has wide-open database rules" as a real problem to go fix, rather than something to leave alone because it's a side project and nobody's watching.</p>
@@ -307,7 +312,7 @@
     'hero-kicker': 'Personal AI Research',
     'hero-h1': 'OSINT Real-Time Tracker: Mehrsprachiges Konfliktmonitoring, solo mit Gemini gebaut',
     'hero-lede': 'Ein kartenbasiertes Dashboard, das offene Konfliktberichte in strukturierte, georeferenzierte, glaubwürdigkeitsbewertete Ereignisse verwandelt. Der interessante Teil war nicht, Gemini zu saubere JSON-Ausgaben zu bewegen — es war alles, was drumherum gebaut wurde, um dieser Ausgabe tatsächlich vertrauen zu können.',
-    'meta-date': 'Juli 2026 · Live auf <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a>',
+    'meta-date': 'Juli – September 2026 · Live auf <a href="https://osint.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">osint.davidirving.dev</a>',
 
     'what-h2': 'Was es tut',
     'what-p1': `Der Tracker nimmt offene Quellenberichte auf — Social-Media-Posts,
@@ -387,21 +392,14 @@
       durch einen Vorfall oder eine externe Meldung, was der nützlichere Weg ist, so etwas
       zu finden, wenn man es schafft.`,
 
-    'p4-h3': 'Was tatsächlich gesperrt ist, und was ein ehrlicher Fallback ist',
-    'p4-p1': `Zwei Dinge sind derzeit meinem eigenen angemeldeten Account vorbehalten,
-      statt für jeden Besucher offen zu sein: einen neuen Textblock zur Live-Analyse
-      einzureichen, und eine Ernte manuell auszulösen. Das ist eine Kostenkontroll-
-      Entscheidung — Gemini-Calls sind nicht kostenlos — keine Einschränkung der Pipeline
-      selbst, die beliebige mehrsprachige Eingaben unabhängig davon gleich behandelt, wer
-      sie steuert. Alle anderen erhalten vollen Lesezugriff auf die Glaubwürdigkeits-,
-      Sentiment- und Georeferenz-Aufschlüsselungen und auf eine Reihe kuratierter
-      Beispielereignisse, die dieselbe Pipeline durchlaufen.`,
-    'p4-p2': `Wenn Gemini selbst nicht verfügbar ist, fällt die App auf eine einfache
-      Keyword-Abgleich-Heuristik zurück, statt komplett auszufallen — und sie sagt das auch
-      sichtbar, in der Begründung des jeweiligen Ereignisses selbst. Ein Offline-Fallback,
-      der als echtes Feature ausgegeben wird, wäre ein schlimmerer Fehlerfall als einer,
-      der ehrlich zugibt, dass er degradiert ist.`,
+    'p4-h3': `Was geschützt ist, und was passiert, wenn das Modell ausfällt`,
+    'p4-p1': `Zwei Dinge sind meinem eigenen angemeldeten Konto vorbehalten: einen frischen Textblock zur Live-Analyse einreichen und einen Harvest manuell auslösen. Das ist eine Kostenentscheidung — Gemini-Aufrufe sind nicht gratis — keine Einschränkung der Pipeline. Alle anderen haben vollen Lesezugriff auf die Glaubwürdigkeits-, Stimmungs- und Geolokalisierungs-Auswertungen echter gesammelter Ereignisse.`,
+    'p4-p2': `Wenn Gemini nicht verfügbar ist, zeigt die App die Daten, die sie schon hat, und loggt den echten Grund. Sie erzeugt nichts, um die Lücke zu füllen. Das war nicht immer so, und davon handelt der nächste Abschnitt.`,
 
+    'p5-h3': `Die Woche, in der ich herausfand, dass es nie etwas gesammelt hatte`,
+    'p5-p1': `Anfang August stellte ich fest, dass der Produktions-API-Key seit dem ersten Deploy wörtlich der Text „Not found.“ gewesen war. Die App sah die ganze Zeit gesund aus, weil ein Fallback-Pfad den Feed still mit erfundenen Ereignissen füllte: ein ausgedachter Social-Media-Post, ausgedachte Glaubwürdigkeitswerte, auf heute datiert. Sie waren als Seed-Daten markiert, aber der Inhalt gehörte nie zu einem echten Vorfall. Ich hatte die App als Sammler echter Daten beschrieben. Das war falsch.`,
+    'p5-p2': `Die Lösung war, die erfundenen Daten ganz zu entfernen, nicht besser zu beschriften, und dann jedes Ereignis beweisen zu lassen, woher es kommt. Jeder Harvest holt jetzt zuerst echte Kandidaten-Artikel von GDELT und ReliefWeb, und ein Ereignis bleibt nur, wenn seine Quell-URL zu einem dieser Artikel oder zu einem von Geminis eigenen Suchzitaten passt. Alles andere wird verworfen, nicht gespeichert. Eine unscharfe Duplikatprüfung erkennt dasselbe Ereignis in anderer Formulierung, was der exakte Titelvergleich nie tat.`,
+    'p5-p3': `Danach verwarf das Gate vier Tage lang jedes Ereignis. Die Ursache: Gemini lässt seine Suchzitate komplett weg, wenn eine Anfrage das Such-Tool mit strukturierter JSON-Ausgabe kombiniert, also hatte das Gate nichts zum Abgleichen. Suche und Extraktion sind jetzt zwei getrennte Aufrufe, und die Extraktion darf nur Quellen verwenden, die die Suche tatsächlich geliefert hat. Unterwegs zeigten sich zwei weitere stille Fehler: eine kostenlose Nachrichtenquelle, die stärker drosselte als dokumentiert, und im September Scale-to-Zero-Hosting, das den stündlichen Timer zwischen Anfragen beendete.`,
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Ein Modell dazu zu bringen, saubere strukturierte JSON-Ausgaben zu
       liefern, ist nicht mehr der schwierige Teil — moderne Modelle tun das die meiste Zeit

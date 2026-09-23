@@ -137,7 +137,7 @@
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
     <h1 data-i18n="hero-h1">Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About</h1>
     <p class="lede" data-i18n="hero-lede">Deleting a homegrown migration system is the easy part to describe. Enforcing its replacement as the only path for schema changes is what actually found the bugs that would have broken a real deployment.</p>
-    <p class="meta-row" data-i18n="meta-date">June – July 2026 · Two phases · ~112 commits</p>
+    <p class="meta-row" data-i18n="meta-date">June – September 2026 · Three phases · in review</p>
   </section>
 
   <article class="article">
@@ -191,6 +191,11 @@
     <p data-i18n="p2-p1">Deleting the bespoke system is what made this pipeline fundamentally different from what came before. But enforcing Doctrine Migrations as the single path for schema changes — no more parallel legacy upgrade routes left running alongside it "just in case" — is what actually found the bugs that would have broken a real deployment.</p>
     <p data-i18n="p2-p2">A CLI flag parser where no long-form flag had ever worked, caught again from a different angle once enforcement made the gap unavoidable. A separate upgrade flag that crashed on every single real execution — not an edge case, the normal path. And a CI database-authentication failure traced to a password-decoding mismatch between the old credential convention and a newer one, the kind of gap that only appears once both conventions exist side by side and something finally has to pick.</p>
     <p data-i18n="p2-p3">The most serious find: old-system installs couldn't mark the new migration baseline as applied, because the metadata-storage table the new system expected didn't exist yet on those installs. That's a real deployment blocker, and it's the kind that only shows up the first time someone actually runs the migration for real — no test environment that starts from a clean slate would ever hit it. The migration strategy itself now lives as an architecture decision record that gates schema-change review going forward, instead of staying tribal knowledge that only one person actually understood.</p>
+
+    <h3 data-i18n="p3-h3">Phase three: re-integrating it, and guarding the destructive paths</h3>
+    <p data-i18n="p3-p1">The original branch was built on an infrastructure stack that has not shipped yet, so in September the work was re-integrated directly onto mainline. That meant regenerating the migration baseline from current mainline and proving it by round trip, not inspection: rebuild a database through the migrations, then compare it table by table against a fresh reference. 286 of 286 tables matched, with no definition differing.</p>
+    <p data-i18n="p3-p2">Review found real data-loss paths, and each was fixed only after reproducing it. The baseline script drops every table before creating it, so running the documented migrate command on an existing database would have emptied it; the baseline now refuses if any table exists. A failed "which tables exist?" query read as "no tables", which silenced that guard; it now aborts. One command meant for the test database ran against the live one after a constructor change. And an existing install whose baseline had died halfway could be marked as fully applied on retry, because the check looked at one table out of 286.</p>
+    <p data-i18n="p3-p3">Merging mainline in brought 27 conflicts and three breaks that produced no conflict at all. The worst: two branches disagreed on a function's parameter order, so a positional argument meaning "use the test database" landed in "skip the database", and the whole suite booted without one. Every call site now uses named arguments, so a future reorder cannot flip it silently. The pull request is in review.</p>
 
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">Deleting a bespoke system wholesale and rebuilding it on a real, maintained tool is what made this migration pipeline fundamentally different from what it replaced. But the flag-parsing fix, the table-existence check, and the connection-reuse fix are what made it safe to actually point at production.</p>
@@ -264,7 +269,7 @@
     'hero-kicker': 'Featured Work',
     'hero-h1': 'Ein selbstgebautes Schema-Migrationssystem durch Doctrine ersetzt — und einen CLI-Bug gefunden, von dem niemand wusste',
     'hero-lede': 'Ein selbstgebautes Migrationssystem zu löschen ist der leicht zu erzählende Teil. Seinen Ersatz als einzigen Pfad für Schemaänderungen durchzusetzen ist das, was die Bugs tatsächlich gefunden hat, die ein echtes Deployment gebrochen hätten.',
-    'meta-date': 'Juni – Juli 2026 · Zwei Phasen · ~112 Commits',
+    'meta-date': 'Juni – September 2026 · Drei Phasen · im Review',
 
     'diagram1-caption': 'Das alte System zu löschen war der leichte Teil. Das neue als einzigen Pfad durchzusetzen ist das, was die Bugs tatsächlich gefunden hat.',
 
@@ -322,6 +327,10 @@
       künftig Schemaänderungs-Reviews gate, statt Herrschaftswissen zu bleiben, das nur eine Person
       wirklich verstand.`,
 
+    'p3-h3': 'Phase drei: neu integriert, und die destruktiven Pfade abgesichert',
+    'p3-p1': `Der ursprüngliche Branch baute auf einem Infrastruktur-Stack auf, der noch nicht ausgeliefert ist, also wurde die Arbeit im September direkt auf den Mainline neu integriert. Dazu gehörte, die Migrations-Baseline aus dem aktuellen Mainline neu zu erzeugen und per Round Trip zu beweisen statt per Durchsicht: eine Datenbank über die Migrationen neu aufbauen und Tabelle für Tabelle mit einer frischen Referenz vergleichen. 286 von 286 Tabellen stimmten überein, keine Definition wich ab.`,
+    'p3-p2': `Das Review fand echte Datenverlust-Pfade, und jeder wurde erst behoben, nachdem er reproduziert war. Das Baseline-Skript löscht jede Tabelle, bevor es sie anlegt, also hätte der dokumentierte Migrate-Befehl auf einer bestehenden Datenbank sie geleert; die Baseline verweigert jetzt, wenn irgendeine Tabelle existiert. Eine fehlgeschlagene Abfrage „welche Tabellen gibt es?“ wurde als „keine Tabellen“ gelesen und schaltete diesen Guard stumm; sie bricht jetzt ab. Ein Befehl für die Testdatenbank lief nach einer Konstruktor-Änderung gegen die Live-Datenbank. Und eine bestehende Installation, deren Baseline auf halbem Weg abgebrochen war, konnte beim erneuten Versuch als vollständig angewendet markiert werden, weil die Prüfung eine von 286 Tabellen ansah.`,
+    'p3-p3': `Das Einmergen des Mainline brachte 27 Konflikte und drei Brüche, die gar keinen Konflikt erzeugten. Der schlimmste: Zwei Branches waren sich über die Parameter-Reihenfolge einer Funktion uneinig, also landete ein Positionsargument mit der Bedeutung „Testdatenbank verwenden“ in „Datenbank überspringen“, und die ganze Suite startete ohne eine. Jeder Aufruf nutzt jetzt benannte Argumente, damit eine künftige Umsortierung das nicht still umdrehen kann. Der Pull Request ist im Review.`,
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Ein selbstgebautes System komplett zu löschen und auf einem echten, gepflegten
       Tool neu aufzubauen ist das, was diese Migrations-Pipeline grundlegend anders gemacht hat als

@@ -81,6 +81,13 @@
     'feat5': 'archive.html#c3-feat5',
     'feat6': 'archive.html#c3-feat6',
     'feat7': 'archive.html#c3-feat7',
+    // Retired 2026-09-23 when the Sep 8 - 23 cycle replaced the Aug 1 - Sep 7 one.
+    // Next cycle's live ids must start at 17 (highest ever used is c5-card16).
+    'feat11': 'archive.html#c4-feat11',
+    'feat12': 'archive.html#c4-feat12',
+    'card13': 'archive.html#c4-card13',
+    // Dropped from the homepage strategies teaser (cap 4); the full page is unchanged.
+    'strategy-implementer-reviewer-tester': 'strategies/implementer-reviewer-tester.html',
   };
   (function () {
     var id = location.hash.slice(1);
@@ -294,55 +301,53 @@
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker" data-i18n="hl-kicker">Work Highlights · August 1 – September 7, 2026</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · September 8 – 23, 2026</p>
       <h2 data-i18n="hl-h2">The latest work</h2>
       <p data-i18n="hl-p">Updated monthly, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">305</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">242</div><div class="l" data-i18n="stat-commits">commits</div></div>
       <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
-      <div class="stat"><div class="n">~217k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
-      <div class="stat"><div class="n">3</div><div class="l" data-i18n="stat-builds">agentic-eng. builds</div></div>
+      <div class="stat"><div class="n">~236k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">13</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
     </div>
-    <p class="stats-note" data-i18n="stats-note">*Dominated by the continuing test-suite rewrite — hand-authored business logic is a smaller slice of that total.</p>
+    <p class="stats-note" data-i18n="stats-note">*Mostly the merged test-suite rewrite and a regenerated database baseline. About 46k lines are outside tests, fixtures and schema.</p>
 
-    <div class="card featured" id="feat11">
-      <a class="card-anchor" href="#feat11" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat14">
+      <a class="card-anchor" href="#feat14" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat11-h3">The test-suite rewrite outgrew its own estimate</h3>
-      <p data-i18n="feat11-p1">What started as three phases across roughly two dozen modules kept growing. The branch now touches over two thousand files and runs sixteen thousand tests clean — and it's still an open pull request, not a merged one, because a change that size touching every test file earns a slow review, not a fast one.</p>
+      <h3 data-i18n="feat14-h3">One SSO login in three failed, and the first two diagnoses were wrong</h3>
+      <p data-i18n="feat14-p1">A customer reported single sign-on failing at random. Two reasonable theories were checked and ruled out first: a misconfigured identity provider, then a token-refresh race. The real causes were elsewhere.</p>
       <ol class="steps">
-        <li><span data-i18n="feat11-step1"><strong>Two extensions that had never run, not once.</strong> Both checked <code>instanceof</code> against a class name that didn't exist — which PHP quietly evaluates as false. Fixing the typo immediately surfaced 29 files leaking fixture data into whatever test ran next.</span></li>
-        <li><span data-i18n="feat11-step2"><strong>Five attempts at the CI topology, all left in the history.</strong> Reverted worker splits, a retreat to sequential, a two-phase compromise — the real blocker turned out to be shared storage forcing suites to serialise, not the worker split itself.</span></li>
-        <li><span data-i18n="feat11-step3"><strong>Ten hidden order-dependencies, only visible under real parallelism.</strong> Fixing them held one counter-intuitive pattern throughout: global fixes mostly made things worse, per-test fixes held.</span></li>
-        <li><span data-i18n="feat11-step4"><strong>A coverage trade, written down instead of hidden.</strong> One test ate 46% of total runtime by design — proving a fast path against a slow reference. The trim kept the comparison that mattered and documented the trade next to the code.</span></li>
+        <li><span data-i18n="feat14-step1"><strong>Every login used the same cookie name.</strong> Two login flows running at once shared one state cookie, so the first to finish deleted it for the other. Hundreds of failures a week, logged at info level, unseen for three months.</span></li>
+        <li><span data-i18n="feat14-step2"><strong>An API call nobody needed.</strong> A profile lookup after login returned 401 on about one login in seven. The same data was already in the ID token. It now comes from there, validated, with the old path kept as a fallback so no customer regresses.</span></li>
+        <li><span data-i18n="feat14-step3"><strong>A real identity provider in CI.</strong> The end-to-end stack now runs a real Keycloak: six scenarios, including five simultaneous logins and a token revoked mid-session. It found one more defect on its first runs, a login callback processed twice, which is now fixed too.</span></li>
       </ol>
-      <p data-i18n="feat11-p2">Mainline still runs the old suite while the branch waits on review — which is the point being made in the writeup: something this size doesn't get to skip review just because its own numbers look good.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat11-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
-      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat11-link">Read the full writeup →</a>
+      <p data-i18n="feat14-p2">Every fix was mutation-tested: remove the guard and a test fails. What no test proves is listed as a known limit, not claimed.</p>
+      <div class="tags"><span class="tag" data-i18n="feat14-tag-security">Security</span><span class="tag">OAuth2 / OIDC</span><span class="tag">Keycloak</span><span class="tag">CI/CD</span></div>
     </div>
 
-    <div class="card featured" id="feat12">
-      <a class="card-anchor" href="#feat12" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat15">
+      <a class="card-anchor" href="#feat15" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat12-h3">An end-to-end suite joined CI — and immediately found two real bugs</h3>
-      <p data-i18n="feat12-p1">A Playwright end-to-end suite went live in CI this window. The interesting part wasn't adding it — it was that both of its early intermittent failures turned out to be real frontend bugs, not test flakiness.</p>
+      <h3 data-i18n="feat15-h3">The test-suite rewrite merged, and a passing run now has to be silent</h3>
+      <p data-i18n="feat15-p1">Last cycle this was an open pull request touching two thousand files. It merged on September 21: over sixteen thousand tests on five parallel workers, each with its own database, in about seventy seconds.</p>
       <ol class="steps">
-        <li><span data-i18n="feat12-step1"><strong>A frontend bug wearing a test-flake costume.</strong> A popup menu forwarded scroll events straight to a handler that assumed an element target — scroll events target the document, which has no such method. A type cast had kept the compiler quiet about it.</span></li>
-        <li><span data-i18n="feat12-step2"><strong>A CSS class that doesn't exist.</strong> A missing icon-font weight caused a one-frame layout shift on first hover — enough, occasionally, to make an automated click land on the wrong element.</span></li>
-        <li><span data-i18n="feat12-step3"><strong>Closed a diagnosis gap along the way.</strong> Until now, no e2e failure produced a server-side trace at all, because the stack was torn down with its volumes before logs were captured — which is why the first investigation had to be done the hard way.</span></li>
+        <li><span data-i18n="feat15-step1"><strong>Green is not enough.</strong> A run that prints a warning, an error or leftover test data fails the gate, even when every test passes.</span></li>
+        <li><span data-i18n="feat15-step2"><strong>Five guards enforce isolation.</strong> A transaction per test, cache resets, config-drift detection, log-noise detection and a database checksum after each test.</span></li>
+        <li><span data-i18n="feat15-step3"><strong>Production fixes rode along, each with a test.</strong> A timed-out backup no longer leaves an unreadable archive, shell commands get a hard timeout, and a profiling extension stays out of the production image.</span></li>
       </ol>
-      <p data-i18n="feat12-p2">Both root-caused and fixed at the source, not papered over with a retry.</p>
-      <div class="tags"><span class="tag" data-i18n="feat12-tag-testing">Testing</span><span class="tag">Playwright</span><span class="tag" data-i18n="feat12-tag-frontend">Frontend</span><span class="tag">CI/CD</span></div>
-      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat12-link">Read the full writeup →</a>
+      <p data-i18n="feat15-p2">Review raised 26 items: 17 fixed, 6 did not survive checking, 3 folded in on request.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat15-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat15-link">Read the full writeup →</a>
     </div>
 
-    <div class="card" id="card13">
-      <a class="card-anchor" href="#card13" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card13-h3">Housekeeping that found a real bug, and unblocked everyone else's PRs</h3>
-      <p data-i18n="card13-p">A required static-analysis check had been failing on every mainline run — and blocking every open PR behind it — because the hosted scanner dropped support for the Java version it was bundled with. Traced and bumped to a supported runtime rather than just silencing the check. Separately, a pass to clean up log noise turned up a real bug along the way: two API models wired to the wrong entity meant a bank-accounts read silently returned empty and writes were silently dropped — found by chasing noise, not by looking for it, and covered with new tests.</p>
-      <div class="tags"><span class="tag">CI/CD</span><span class="tag" data-i18n="card13-tag-reliability">Reliability</span></div>
+    <div class="card" id="card16">
+      <a class="card-anchor" href="#card16" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="card16-h3">Configuring a twenty-year-old PHP app from the environment</h3>
+      <p data-i18n="card16-p">Configuration is moving out of runtime code and into the deployment environment, so every container behaves the same way. Runtime <code>ini_set()</code> calls are gone, but not blindly: removing one would have turned a three-record CSV into one garbled row, so line-ending handling got its own utility first. A settings class now reads each value from the environment, then the config file, then a default, without changing over 500 call sites. PATH lookups for system binaries became configured paths that fail loudly; one of them had let an upgrade skip a SQL file and still report success. The command-line tool is moving to Symfony Console, with its "did you mean" prompt switched off on purpose: it could turn a typo into a database reset. The first part has merged; the rest is in review.</p>
+      <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="card16-tag-config">Configuration</span><span class="tag" data-i18n="card16-tag-reliability">Reliability</span></div>
     </div>
   </section>
 
@@ -351,6 +356,15 @@
       <p class="kicker" data-i18n="strategies-kicker">Agentic Strategies</p>
       <h2 data-i18n="strategies-h2">How I actually build and work with AI agents</h2>
       <p data-i18n="strategies-p">Long-form writeups on the methodology — scoping, review discipline, verification, documentation architecture — for anyone doing this kind of work themselves, not just a list of what got built.</p>
+    </div>
+
+    <div class="card" id="strategy-writing-for-the-reader">
+      <a class="card-anchor" href="#strategy-writing-for-the-reader" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <h3 data-i18n="strategy5-h3">Writing for the Reader: What Changed When Agents Started Writing My Tickets</h3>
+      <p data-i18n="strategy5-p1">Nothing the agents wrote was wrong. It was just too long to read. A shape and a limit for each kind of text, the one habit behind most of the length, and why the fix for long titles was not in the title.</p>
+      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy5-tag-writing">Writing</span><span class="tag" data-i18n="strategy5-tag-review">Code Review</span></div>
+      <a class="card-link" href="strategies/writing-for-the-reader.html" data-i18n="strategy5-link">Read the full writeup →</a>
     </div>
 
     <div class="card" id="strategy-definition-of-done">
@@ -378,15 +392,6 @@
       <p data-i18n="strategy2-p1">Running several AI-assisted projects at once creates a specific failure mode: each one drifts its own way, and every session re-explains context the last one already worked out. Persistent per-project instructions, one shared style guide, and a memory system that carries lessons across sessions — the scaffolding that stops it.</p>
       <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy2-tag-consistency">Consistency</span><span class="tag" data-i18n="strategy2-tag-memory">Memory Systems</span></div>
       <a class="card-link" href="strategies/instructions-style-memory.html" data-i18n="strategy2-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="strategy-implementer-reviewer-tester">
-      <a class="card-anchor" href="#strategy-implementer-reviewer-tester" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
-      <h3 data-i18n="strategy1-h3">Implementer, Reviewer, Tester: A Workflow for Shipping Features Fast with Claude Code</h3>
-      <p data-i18n="strategy1-p1">Recently shipped a full production feature — new client/project number handling with edge cases nobody had scoped up front — in meaningfully less time than the "cheapest possible version" would have taken, using Claude Code as implementer, reviewer, and tester in separate, deliberately isolated roles.</p>
-      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy1-tag-review">Review Discipline</span><span class="tag" data-i18n="strategy1-tag-testing">Verification</span></div>
-      <a class="card-link" href="strategies/implementer-reviewer-tester.html" data-i18n="strategy1-link">Read the full writeup →</a>
     </div>
 
     <a class="card-link" href="strategies/" data-i18n="strategies-viewall">View all Agentic Strategies →</a>
@@ -594,76 +599,44 @@
     'fact-3': '300+ Enterprise-Kunden',
     'fact-4': 'Schwerpunkt Agentic Engineering',
     'hero-cta': 'Auf LinkedIn kontaktieren →',
-    'hl-kicker': 'Arbeits-Highlights · 1. August – 7. September 2026',
+    'hl-kicker': 'Arbeits-Highlights · 8. – 23. September 2026',
     'hl-h2': 'Die aktuellsten Arbeiten',
     'hl-p': 'Wird monatlich aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
     'stat-lines': 'Zeilen bearbeitet',
     'stat-builds': 'Agentic-Eng.-Builds',
-    'stats-note': '*Dominiert vom weiterlaufenden Test-Suite-Umbau — handgeschriebene Businesslogik macht davon nur einen kleineren Teil aus.',
+    'stat-merged': 'PRs gemergt',
+    'stats-note': '*Größtenteils der gemergte Test-Suite-Umbau und eine neu erzeugte Datenbank-Baseline. Etwa 46k Zeilen liegen außerhalb von Tests, Fixtures und Schema.',
     'eyebrow-featured': 'Vorzeigeprojekt',
-    'feat11-h3': 'Der Test-Suite-Umbau wuchs über die eigene Schätzung hinaus',
-    'feat11-p1': `Was als drei Phasen über rund zwei Dutzend Module begann, wuchs immer weiter.
-      Der Branch betrifft inzwischen über zweitausend Dateien und führt sechzehntausend Tests
-      sauber aus — und ist weiterhin ein offener Pull Request, kein gemergter, denn eine Änderung
-      dieser Größe, die jede Testdatei betrifft, verdient ein langsames Review, kein schnelles.`,
-    'feat11-step1': `<strong>Zwei Erweiterungen, die kein einziges Mal gelaufen waren.</strong>
-      Beide prüften <code>instanceof</code> gegen einen Klassennamen, der nicht existierte — was
-      PHP still als false auswertet. Den Tippfehler zu beheben brachte sofort 29 Dateien zutage,
-      die Fixture-Daten in den jeweils nächsten Test durchsickern ließen.`,
-    'feat11-step2': `<strong>Fünf Anläufe bei der CI-Topologie, alle in der Historie belassen.</strong>
-      Zurückgerollte Worker-Aufteilungen, ein Rückzug auf sequenziell, ein Zweiphasen-Kompromiss —
-      der eigentliche Blocker war ein geteilter Storage, der Suiten zur Serialisierung zwang,
-      nicht die Worker-Aufteilung selbst.`,
-    'feat11-step3': `<strong>Zehn versteckte Reihenfolge-Abhängigkeiten, erst unter echter
-      Parallelität sichtbar.</strong> Beim Beheben zeigte sich durchgehend ein kontraintuitives
-      Muster: globale Fixes machten die Lage meist schlimmer, Fixes pro Test hielten.`,
-    'feat11-step4': `<strong>Ein Coverage-Trade-off, dokumentiert statt versteckt.</strong>
-      Ein einzelner Test machte bewusst 46 % der Gesamtlaufzeit aus — um einen schnellen Pfad
-      gegen eine langsame Referenz zu beweisen. Der Zuschnitt behielt den wichtigen Vergleich und
-      dokumentierte den Trade-off direkt neben dem Code.`,
-    'feat11-p2': `Der Mainline läuft währenddessen weiter auf der alten Suite, während der
-      Branch auf sein Review wartet — genau der Punkt, den der volle Bericht macht: Etwas dieser
-      Größe überspringt kein Review, nur weil die eigenen Zahlen gut aussehen.`,
-    'feat11-tag-test-infra': 'Test-Infrastruktur',
-    'feat11-link': 'Den vollständigen Text lesen →',
-
-    'feat12-h3': 'Eine End-to-End-Suite kam zur CI dazu — und fand sofort zwei echte Bugs',
-    'feat12-p1': `Eine Playwright-End-to-End-Suite ging in diesem Zeitraum in der CI live. Das
-      Interessante war nicht, sie hinzuzufügen — es war, dass sich ihre beiden anfänglichen,
-      intermittierenden Fehlschläge als echte Frontend-Bugs erwiesen, nicht als Testflakiness.`,
-    'feat12-step1': `<strong>Ein Frontend-Bug im Kostüm eines Testflakes.</strong> Ein
-      Popup-Menü leitete Scroll-Events direkt an einen Handler weiter, der ein Element-Target
-      voraussetzte — Scroll-Events zielen auf das Dokument, das keine solche Methode hat. Ein
-      Type-Cast hatte den Compiler still gehalten.`,
-    'feat12-step2': `<strong>Eine CSS-Klasse, die nicht existiert.</strong> Eine fehlende
-      Icon-Font-Gewichtung verursachte beim ersten Hover eine Ein-Frame-Layoutverschiebung — genug,
-      um gelegentlich einen automatisierten Klick auf das falsche Element treffen zu lassen.`,
-    'feat12-step3': `<strong>Nebenbei eine Diagnoselücke geschlossen.</strong> Bis dahin
-      erzeugte kein e2e-Fehlschlag überhaupt einen serverseitigen Trace, weil der Stack samt
-      Volumes abgebaut wurde, bevor Logs erfasst werden konnten — weshalb die erste Untersuchung
-      auf die harte Tour gemacht werden musste.`,
-    'feat12-p2': `Beide root-caused und an der Quelle behoben, nicht mit einem Retry
-      überklebt.`,
-    'feat12-tag-testing': 'Testing',
-    'feat12-tag-frontend': 'Frontend',
-    'feat12-link': 'Den vollständigen Text lesen →',
-
-    'card13-h3': 'Aufräumarbeit, die einen echten Bug fand und alle anderen PRs entblockte',
-    'card13-p': `Ein verpflichtender Static-Analysis-Check war bei jedem Mainline-Lauf
-      fehlgeschlagen — und blockierte jede offene PR dahinter — weil der gehostete Scanner die
-      Unterstützung für die gebündelte Java-Version fallen ließ. Nachverfolgt und auf eine
-      unterstützte Laufzeit gehoben, statt den Check einfach stummzuschalten. Separat brachte
-      eine Aufräumaktion gegen Log-Rauschen nebenbei einen echten Bug zutage: Zwei API-Modelle
-      waren an die falsche Entität verdrahtet, sodass ein Bankkonten-Read still leer zurückkam
-      und Writes still verworfen wurden — gefunden, weil Rauschen verfolgt wurde, nicht weil
-      danach gesucht wurde, und mit neuen Tests abgedeckt.`,
-    'card13-tag-reliability': 'Zuverlässigkeit',
+    'feat14-h3': `Jeder dritte SSO-Login schlug fehl, und die ersten zwei Diagnosen waren falsch`,
+    'feat14-p1': `Ein Kunde meldete zufällige Fehler beim Single Sign-on. Zwei naheliegende Theorien wurden zuerst geprüft und verworfen: ein falsch konfigurierter Identity Provider, dann ein Race beim Token-Refresh. Die echten Ursachen lagen woanders.`,
+    'feat14-step1': `<strong>Jeder Login nutzte denselben Cookie-Namen.</strong> Zwei gleichzeitige Login-Flows teilten sich ein State-Cookie, also löschte der erste fertige es für den anderen. Hunderte Fehler pro Woche, auf Info-Level geloggt, drei Monate lang unbemerkt.`,
+    'feat14-step2': `<strong>Ein API-Aufruf, den niemand brauchte.</strong> Eine Profilabfrage nach dem Login antwortete bei etwa jedem siebten Login mit 401. Dieselben Daten standen schon im ID-Token. Sie kommen jetzt von dort, validiert, mit dem alten Weg als Fallback, damit kein Kunde schlechter dasteht.`,
+    'feat14-step3': `<strong>Ein echter Identity Provider in der CI.</strong> Der End-to-End-Stack startet jetzt ein echtes Keycloak: sechs Szenarien, darunter fünf gleichzeitige Logins und ein mitten in der Sitzung widerrufenes Token. Schon in den ersten Läufen fand es einen weiteren Fehler, einen doppelt verarbeiteten Login-Callback, der inzwischen ebenfalls behoben ist.`,
+    'feat14-p2': `Jeder Fix wurde mit Mutation-Tests geprüft: Guard entfernen, und ein Test schlägt fehl. Was kein Test beweist, steht als bekannte Grenze drin, nicht als Behauptung.`,
+    'feat14-tag-security': `Sicherheit`,
+    'feat15-h3': `Der Test-Suite-Umbau ist gemergt, und ein grüner Lauf muss jetzt auch still sein`,
+    'feat15-p1': `Im letzten Zyklus war das noch ein offener Pull Request über zweitausend Dateien. Am 21. September wurde er gemergt: über sechzehntausend Tests auf fünf parallelen Workern, jeder mit eigener Datenbank, in etwa siebzig Sekunden.`,
+    'feat15-step1': `<strong>Grün reicht nicht.</strong> Ein Lauf, der eine Warnung, einen Fehler oder übrig gebliebene Testdaten ausgibt, fällt durch, auch wenn jeder Test besteht.`,
+    'feat15-step2': `<strong>Fünf Guards erzwingen die Isolation.</strong> Eine Transaktion pro Test, Cache-Resets, Erkennung von Config-Drift, Erkennung von Log-Rauschen und eine Datenbank-Prüfsumme nach jedem Test.`,
+    'feat15-step3': `<strong>Produktions-Fixes kamen mit, jeder mit eigenem Test.</strong> Ein abgebrochenes Backup hinterlässt kein unlesbares Archiv mehr, Shell-Befehle haben ein hartes Timeout, und eine Profiling-Erweiterung bleibt aus dem Produktions-Image draußen.`,
+    'feat15-p2': `Das Review brachte 26 Punkte: 17 behoben, 6 hielten der Prüfung nicht stand, 3 auf Wunsch eingearbeitet.`,
+    'feat15-tag-test-infra': `Test-Infrastruktur`,
+    'feat15-link': `Den vollständigen Text lesen →`,
+    'card16-h3': `Eine zwanzig Jahre alte PHP-Anwendung aus der Umgebung konfigurieren`,
+    'card16-p': `Die Konfiguration wandert aus dem Laufzeit-Code in die Deployment-Umgebung, damit sich jeder Container gleich verhält. Die <code>ini_set()</code>-Aufrufe zur Laufzeit sind weg, aber nicht blind: Einen davon zu entfernen hätte eine CSV mit drei Datensätzen in eine verstümmelte Zeile verwandelt, also bekam die Zeilenende-Behandlung zuerst ein eigenes Werkzeug. Eine Settings-Klasse liest jeden Wert jetzt aus der Umgebung, dann aus der Config-Datei, dann aus einem Default, ohne über 500 Aufrufstellen zu ändern. PATH-Suchen nach System-Binaries wurden zu konfigurierten Pfaden, die laut fehlschlagen; eine davon hatte ein Upgrade eine SQL-Datei überspringen und trotzdem Erfolg melden lassen. Das Kommandozeilen-Tool zieht auf Symfony Console um, mit bewusst abgeschalteter „Meinten Sie …“-Rückfrage: Sie konnte aus einem Tippfehler einen Datenbank-Reset machen. Der erste Teil ist gemergt, der Rest ist im Review.`,
+    'card16-tag-config': `Konfiguration`,
+    'card16-tag-reliability': `Zuverlässigkeit`,
     'strategies-kicker': 'Agentic Strategies',
     'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
     'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
     'eyebrow-strategy': 'Agentic Strategies',
+    'strategy5-h3': 'Für den Leser schreiben: Was sich änderte, als Agenten meine Tickets schrieben',
+    'strategy5-p1': 'Nichts, was die Agenten schrieben, war falsch. Es war nur zu lang zum Lesen. Eine Form und ein Limit für jede Textart, die eine Gewohnheit hinter dem Großteil der Länge, und warum die Lösung für lange Titel nicht im Titel lag.',
+    'strategy5-tag-writing': 'Schreiben',
+    'strategy5-tag-review': 'Code-Review',
+    'strategy5-link': 'Den vollständigen Text lesen →',
     'strategy4-h3': 'Definition of Done: Warum eine Checkliste entscheidet, wann KI-gestützte Arbeit fertig ist',
     'strategy4-p1': 'Ein Agent meldet Erfolg in dem Moment, in dem er aufhört zu arbeiten — das ist nicht dieselbe Aussage wie fertig. Ein fester Satz an Gates statt der eigenen Einschätzung des Agents, das Betriebsmodell dahinter, und die Codebase-Gewohnheiten, die Agent-Arbeit leichter oder schwerer machen.',
     'strategy4-tag-gates': 'Definition of Done',

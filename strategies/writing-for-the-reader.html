@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing for the Reader: What Changed When Agents Started Writing My Tickets — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Agent-drafted tickets, PR descriptions and commit messages got long. A shape and a limit per kind of text, the one failure that causes most of it, and why the fix for long titles was not in the title.">
+<link rel="canonical" href="https://davidirving.dev/strategies/writing-for-the-reader.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Writing for the Reader: What Changed When Agents Started Writing My Tickets">
+<meta property="og:description" content="Agent-drafted tickets, PR descriptions and commit messages got long. A shape and a limit per kind of text, the one failure that causes most of it, and why the fix for long titles was not in the title.">
+<meta property="og:url" content="https://davidirving.dev/strategies/writing-for-the-reader.html">
+<meta property="article:published_time" content="2026-09-23">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Writing for the Reader: What Changed When Agents Started Writing My Tickets">
+<meta name="twitter:description" content="Agent-drafted tickets, PR descriptions and commit messages got long. A shape and a limit per kind of text, the one failure that causes most of it, and why the fix for long titles was not in the title.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Writing for the Reader: What Changed When Agents Started Writing My Tickets",
+  "description": "Agent-drafted tickets, PR descriptions and commit messages got long. A shape and a limit per kind of text, the one failure that causes most of it, and why the fix for long titles was not in the title.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-09-23",
+  "dateModified": "2026-09-23",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/writing-for-the-reader.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article strong{color:var(--ink)}
+  .article ul{margin:0 0 14px;padding-left:22px}
+  .article li{font-size:15.5px;line-height:1.7;margin:0 0 6px}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Writing for the Reader: What Changed When Agents Started Writing My Tickets</h1>
+    <p class="lede" data-i18n="hero-lede">Nothing the agents wrote was wrong. It was just too long to read. A shape and a limit for each kind of text, the one habit that causes most of the length, and why the fix for long titles was not in the title.</p>
+    <p class="meta-row" data-i18n="meta-date">Published September 2026</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart: median ticket comment 74 words over three months, longest comment 755 words during two weeks of heavy agent use">
+        <text x="20" y="24" font-size="15" fill="var(--sub)" data-i18n="chart-l1">Median comment, 3 months</text>
+        <rect x="20" y="34" width="44" height="30" rx="4" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="76" y="56" font-size="16" font-weight="700" fill="var(--ink)" data-i18n="chart-v1">74 words</text>
+        <text x="20" y="100" font-size="15" fill="var(--sub)" data-i18n="chart-l2">Longest comment, 2 agent-heavy weeks</text>
+        <rect x="20" y="110" width="600" height="30" rx="4" fill="var(--accent)"/>
+        <text x="608" y="131" text-anchor="end" font-size="16" font-weight="700" fill="var(--accent-ink)" data-i18n="chart-v2">755 words</text>
+        <text x="20" y="176" font-size="13" fill="var(--sub)" data-i18n="chart-note">My own ticket comments, measured September 2026. Bars to scale.</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram-caption">The same person, the same tracker. The difference was who drafted the text.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p1">Once agents started drafting my ticket comments, pull request descriptions and commit messages, the text got longer. I measured it. Over three months, my ticket comments had a median of 74 words. In the two weeks of heaviest agent use, single comments reached 755 words, and several were multi-paragraph prose with no bullets at all. Over half of my pull request titles were longer than 70 characters; the longest was 142.</p>
+    <p data-i18n="why-p2">None of it was wrong. It was accurate, polite and complete. It was also too long for the people who had to read it, and most of them read English as a second language. A reviewer's time went into finding the one line that mattered.</p>
+
+    <h3 data-i18n="s1-h3">1. Name the reader first</h3>
+    <p data-i18n="s1-p">The written standard starts with the audience, not the format: a colleague who reads English as a second language, scanning a ticket days later, who was not there when the work happened. Clarity beats completeness. Short sentences, plain words, active voice, a number or an identifier instead of an adjective. No idioms, no scene-setting, no closing sentence that repeats what was just said. Every other rule follows from that reader.</p>
+
+    <h3 data-i18n="s2-h3">2. A shape and a limit for each kind of text</h3>
+    <p data-i18n="s2-p">"Be concise" does not work as an instruction, for people or for agents. A fixed shape does:</p>
+    <ul>
+      <li data-i18n="s2-li1"><strong>Ticket comment:</strong> one line with the conclusion, two to five bullets of evidence, one line naming what is still pending.</li>
+      <li data-i18n="s2-li2"><strong>Ticket description:</strong> issue, cause, what confirmed it, the fix, then a checklist of work still to do.</li>
+      <li data-i18n="s2-li3"><strong>Pull request description:</strong> three to five bullets on what changed and why. About 900 characters; 2,500 is the outer limit.</li>
+      <li data-i18n="s2-li4"><strong>Review comment:</strong> one short bullet per finding. Five findings are five bullets, not five paragraphs.</li>
+      <li data-i18n="s2-li5"><strong>Commit message:</strong> one line, no body, no tool attribution.</li>
+    </ul>
+
+    <h3 data-i18n="s3-h3">3. The main failure: pasting the chat explanation into the ticket</h3>
+    <p data-i18n="s3-p1">Most of the length came from one habit. An agent explains its work in the chat, in order, for someone following along. That explanation is good for its purpose, so it gets reused as the ticket comment. But a ticket comment is read later, out of order, by someone who was not in the session. A chat explanation used as a ticket comment reads like a session summary.</p>
+    <p data-i18n="s3-p2">The rule: draft the ticket text separately, then check it. Count the sentences. If it reads like a findings list with one sentence per item, or like a summary of the session, cut it. Then ask whether a reviewer who has never seen the branch would act differently after reading it. If not, do not post it. And an agent asks before it posts a ticket comment at all.</p>
+
+    <h3 data-i18n="s4-h3">4. Find the real lever: long titles were not a typing problem</h3>
+    <p data-i18n="s4-p1">Long pull request titles matter because a squash merge turns the title into the permanent commit subject. It then appears in every log, every blame and every release note, and cannot be fixed later. But telling agents to write short titles changed nothing, because the title was not ours to set. In the repository in question, a workflow rewrites every new pull request title from the ticket's type, ID and summary seconds after it opens.</p>
+    <p data-i18n="s4-p2">So the limit belongs on the ticket summary. The arithmetic: summary, plus the type prefix, the ticket ID and a separator, plus the pull request number the squash merge appends, must stay within 70. That leaves about 39 characters for the summary. The first limit I wrote down was 55. It was wrong because it forgot the pull request number, and it was caught by recounting real subjects, not by reading the rule again.</p>
+
+    <h3 data-i18n="s5-h3">5. Put the rules where every agent reads them</h3>
+    <p data-i18n="s5-p">The standard lives in two places: the project's own agent guide, which every agent reads at the start of a session, and my personal instruction file, which applies in every repository I work in. It is not a style preference someone has to remember. It is loaded before the first word is written.</p>
+
+    <h2 data-i18n="concl-h2">What this buys</h2>
+    <p data-i18n="concl-p">Shorter text is not the goal. A reviewer's time is. Agents are very good at producing text that is correct and complete, which is exactly why they need a limit: nothing in the text itself signals that it is too long. This page is longer than any ticket comment the standard allows. It is not a ticket comment.</p>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': `← Startseite`,
+    'nav-strategies': `Alle Strategies`,
+    'hero-kicker': `Agentic Strategies`,
+    'hero-h1': `Für den Leser schreiben: Was sich änderte, als Agenten meine Tickets schrieben`,
+    'hero-lede': `Nichts, was die Agenten schrieben, war falsch. Es war nur zu lang zum Lesen. Eine Form und ein Limit für jede Textart, die eine Gewohnheit, die den Großteil der Länge verursacht, und warum die Lösung für lange Titel nicht im Titel lag.`,
+    'meta-date': `Veröffentlicht im September 2026`,
+    'chart-l1': `Median-Kommentar, 3 Monate`,
+    'chart-v1': `74 Wörter`,
+    'chart-l2': `Längster Kommentar, 2 agentenlastige Wochen`,
+    'chart-v2': `755 Wörter`,
+    'chart-note': `Meine eigenen Ticket-Kommentare, gemessen im September 2026. Balken maßstabsgetreu.`,
+    'diagram-caption': `Dieselbe Person, dasselbe Ticket-System. Der Unterschied war, wer den Text entworfen hat.`,
+    'why-h2': `Warum das hier existiert`,
+    'why-p1': `Als Agenten anfingen, meine Ticket-Kommentare, Pull-Request-Beschreibungen und Commit-Messages zu entwerfen, wurden die Texte länger. Ich habe es gemessen. Über drei Monate hatten meine Ticket-Kommentare einen Median von 74 Wörtern. In den zwei Wochen mit der stärksten Agenten-Nutzung erreichten einzelne Kommentare 755 Wörter, und mehrere waren mehrteilige Prosa ganz ohne Aufzählungspunkte. Über die Hälfte meiner Pull-Request-Titel war länger als 70 Zeichen; der längste hatte 142.`,
+    'why-p2': `Nichts davon war falsch. Es war korrekt, höflich und vollständig. Es war auch zu lang für die Menschen, die es lesen mussten, und die meisten von ihnen lesen Englisch als Zweitsprache. Die Zeit eines Reviewers ging dafür drauf, die eine Zeile zu finden, auf die es ankam.`,
+    's1-h3': `1. Zuerst den Leser benennen`,
+    's1-p': `Der schriftliche Standard beginnt mit dem Publikum, nicht mit dem Format: eine Kollegin oder ein Kollege, die Englisch als Zweitsprache lesen, ein Ticket Tage später überfliegen und nicht dabei waren, als die Arbeit passierte. Klarheit schlägt Vollständigkeit. Kurze Sätze, einfache Wörter, Aktiv, eine Zahl oder ein Bezeichner statt eines Adjektivs. Keine Redewendungen, keine Einleitung, kein Schlusssatz, der wiederholt, was gerade gesagt wurde. Jede andere Regel folgt aus diesem Leser.`,
+    's2-h3': `2. Eine Form und ein Limit für jede Textart`,
+    's2-p': `„Fasse dich kurz“ funktioniert als Anweisung nicht, weder für Menschen noch für Agenten. Eine feste Form schon:`,
+    's2-li1': `<strong>Ticket-Kommentar:</strong> eine Zeile mit dem Ergebnis, zwei bis fünf Aufzählungspunkte als Beleg, eine Zeile mit dem, was noch offen ist.`,
+    's2-li2': `<strong>Ticket-Beschreibung:</strong> Problem, Ursache, was es bestätigt hat, die Lösung, dann eine Checkliste der offenen Arbeit.`,
+    's2-li3': `<strong>Pull-Request-Beschreibung:</strong> drei bis fünf Punkte dazu, was sich geändert hat und warum. Etwa 900 Zeichen; 2.500 sind die äußerste Grenze.`,
+    's2-li4': `<strong>Review-Kommentar:</strong> ein kurzer Punkt pro Befund. Fünf Befunde sind fünf Punkte, nicht fünf Absätze.`,
+    's2-li5': `<strong>Commit-Message:</strong> eine Zeile, kein Body, keine Tool-Attribution.`,
+    's3-h3': `3. Der Hauptfehler: die Chat-Erklärung ins Ticket kopieren`,
+    's3-p1': `Der Großteil der Länge kam von einer Gewohnheit. Ein Agent erklärt seine Arbeit im Chat, der Reihe nach, für jemanden, der mitliest. Diese Erklärung ist für ihren Zweck gut, also wird sie als Ticket-Kommentar wiederverwendet. Aber ein Ticket-Kommentar wird später gelesen, außer der Reihe, von jemandem, der nicht in der Sitzung war. Eine Chat-Erklärung als Ticket-Kommentar liest sich wie eine Sitzungszusammenfassung.`,
+    's3-p2': `Die Regel: den Ticket-Text separat entwerfen und dann prüfen. Die Sätze zählen. Wenn es sich wie eine Befundliste mit einem Satz pro Punkt liest, oder wie eine Zusammenfassung der Sitzung, kürzen. Dann fragen, ob ein Reviewer, der den Branch nie gesehen hat, nach dem Lesen anders handeln würde. Wenn nicht, nicht posten. Und ein Agent fragt, bevor er überhaupt einen Ticket-Kommentar postet.`,
+    's4-h3': `4. Den echten Hebel finden: Lange Titel waren kein Tippproblem`,
+    's4-p1': `Lange Pull-Request-Titel sind wichtig, weil ein Squash-Merge den Titel zum dauerhaften Commit-Betreff macht. Er erscheint dann in jedem Log, jedem Blame und jeder Release Note und lässt sich nicht mehr korrigieren. Aber Agenten anzuweisen, kurze Titel zu schreiben, änderte nichts, weil der Titel nicht in unserer Hand lag. Im betreffenden Repository schreibt ein Workflow jeden neuen Pull-Request-Titel Sekunden nach dem Öffnen aus Typ, ID und Zusammenfassung des Tickets neu.`,
+    's4-p2': `Also gehört das Limit auf die Ticket-Zusammenfassung. Die Rechnung: Zusammenfassung, plus Typ-Präfix, Ticket-ID und Trennzeichen, plus die Pull-Request-Nummer, die der Squash-Merge anhängt, muss innerhalb von 70 bleiben. Das lässt etwa 39 Zeichen für die Zusammenfassung. Das erste Limit, das ich aufgeschrieben habe, war 55. Es war falsch, weil es die Pull-Request-Nummer vergaß, und es fiel auf, weil echte Betreffzeilen nachgezählt wurden, nicht weil jemand die Regel noch einmal las.`,
+    's5-h3': `5. Die Regeln dort ablegen, wo jeder Agent sie liest`,
+    's5-p': `Der Standard liegt an zwei Stellen: im Agenten-Leitfaden des Projekts, den jeder Agent zu Beginn einer Sitzung liest, und in meiner persönlichen Instruktionsdatei, die in jedem Repository gilt, in dem ich arbeite. Er ist keine Stilvorliebe, an die sich jemand erinnern muss. Er ist geladen, bevor das erste Wort geschrieben wird.`,
+    'concl-h2': `Was das bringt`,
+    'concl-p': `Kürzerer Text ist nicht das Ziel. Die Zeit eines Reviewers ist es. Agenten sind sehr gut darin, Text zu erzeugen, der korrekt und vollständig ist, und genau deshalb brauchen sie ein Limit: Nichts im Text selbst zeigt an, dass er zu lang ist. Diese Seite ist länger als jeder Ticket-Kommentar, den der Standard erlaubt. Sie ist kein Ticket-Kommentar.`,
+    'footer-copy': `&copy; 2026 David Irving.`,
+    'footer-impressum': `Impressum`,
+    'footer-privacy': `Datenschutz`
+  };
+
+  var META_DESC = {
+    en: 'Agent-drafted tickets, PR descriptions and commit messages got long. A shape and a limit per kind of text, the one failure that causes most of it, and why the fix for long titles was not in the title.',
+    de: 'Von Agenten entworfene Tickets, PR-Beschreibungen und Commit-Messages wurden lang. Eine Form und ein Limit pro Textart, der eine Fehler, der das meiste davon verursacht, und warum die Lösung für lange Titel nicht im Titel lag.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

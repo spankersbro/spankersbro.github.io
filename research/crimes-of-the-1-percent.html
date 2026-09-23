@@ -137,7 +137,7 @@
     <p class="kicker" data-i18n="hero-kicker">Personal AI Research</p>
     <h1 data-i18n="hero-h1">Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy</h1>
     <p class="lede" data-i18n="hero-lede">A database that holds corporate and executive-level financial crime against its actual enforcement outcome — and what it takes to make "sourced" mean something more specific than a link at the bottom of the page.</p>
-    <p class="meta-row" data-i18n="meta-date">July 2026 · Live at <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a></p>
+    <p class="meta-row" data-i18n="meta-date">July – September 2026 · Live at <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a></p>
   </section>
 
   <article class="article">
@@ -178,6 +178,11 @@
     <h3 data-i18n="p4-h3">A Firestore security fix, found the same way twice</h3>
     <p data-i18n="p4-p1">This project shared the exact same class of vulnerability as its sibling OSINT tracker: Firestore rules that allowed open read and write access, with the frontend authenticating against Firestore directly using a necessarily-public client configuration instead of going through the backend for anything. Once that pattern had been found and fixed in the OSINT project, it got checked here deliberately, rather than assumed to be fine because nothing had gone wrong yet — and it was the same bug. Fixed the same way: migrated to the Firebase Admin SDK, closed the rules outright, and moved every real read and write behind the Express API instead of trusting the client.</p>
     <p data-i18n="p4-p2">Real, proactive legal compliance work sits alongside that fix, for the same underlying reason: an Impressum citing the specific Austrian Mediengesetz §25 disclosure that applies to a "große Website," and a privacy policy — both added because the project names real public figures and that carries real obligations, not because anyone asked or a regulator came calling.</p>
+
+    <h3 data-i18n="p5-h3">The crawler that only pretended to crawl</h3>
+    <p data-i18n="p5-p1">The "four times a day" case crawler turned out to be a local template picker: it assembled plausible-looking cases, not found ones. Like its sibling project, it also ran for its first week on an API key that was the literal text "Not found.". In August it was rewritten as a real search-based harvester that fails closed: a new case is published only if its cited URL is one the search actually returned, not one the model typed, and a code-level duplicate check replaced a prompt that merely asked the model not to repeat itself.</p>
+    <p data-i18n="p5-p2">The same citation trap as the OSINT tracker followed: combining search with structured output silently drops the citations, so for five days no real case could pass the gate. Search and extraction are now separate calls. Scheduling moved from an in-process timer, which died whenever the host scaled to zero, to an external scheduler that wakes the service four times a day. The public AI endpoints, each a billed model call, gained the rate limit the crawler trigger already had.</p>
+    <p data-i18n="p5-p3">Every record now carries a visible provenance label, "Seed / curated" or "AI-generated, unreviewed", instead of leaving the difference to be inferred. Two cases were removed as out of scope for a financial-crime database, and one of them turned out to be using another case's photo.</p>
 
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">Getting Gemini to return a clean, schema-constrained structure is close to table stakes now. What actually took real effort was everything around that: keeping "computed from the dataset" visually distinct from "illustrative for scale" instead of letting the two blur together, labeling AI-generated content for what it honestly is instead of what would be more convenient to imply, and treating a security pattern found once as something to go check for deliberately elsewhere — not a one-off fire that got put out and forgotten.</p>
@@ -251,7 +256,7 @@
     'hero-kicker': 'Personal AI Research',
     'hero-h1': 'Crimes of the 1%: Eine sourcierte Datenbank von Finanzverbrechen unter den Superreichen',
     'hero-lede': 'Eine Datenbank, die Finanzverbrechen von Unternehmen und Führungskräften gegen den tatsächlichen Ausgang der Rechtsverfolgung hält — und was es braucht, damit "sourciert" mehr bedeutet als ein Link am Seitenende.',
-    'meta-date': 'Juli 2026 · Live auf <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a>',
+    'meta-date': 'Juli – September 2026 · Live auf <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a>',
 
     'what-h2': 'Was es tut',
     'what-p1': `Die Datenbank katalogisiert Finanzverbrechen von Unternehmen und
@@ -330,6 +335,10 @@
       Projekt real existierende öffentliche Personen nennt und das echte Pflichten mit sich
       bringt, nicht weil jemand danach gefragt oder eine Behörde angerufen hätte.`,
 
+    'p5-h3': `Der Crawler, der nur so tat, als würde er crawlen`,
+    'p5-p1': `Der Fall-Crawler „viermal täglich“ entpuppte sich als lokale Vorlagen-Auswahl: Er setzte plausibel aussehende Fälle zusammen, statt welche zu finden. Wie sein Schwesterprojekt lief er in der ersten Woche außerdem mit einem API-Key, der wörtlich der Text „Not found.“ war. Im August wurde er als echter, suchbasierter Harvester neu geschrieben, der im Zweifel ablehnt: Ein neuer Fall wird nur veröffentlicht, wenn seine zitierte URL eine ist, die die Suche tatsächlich geliefert hat, nicht eine, die das Modell getippt hat. Eine Duplikatprüfung im Code ersetzte einen Prompt, der das Modell lediglich bat, sich nicht zu wiederholen.`,
+    'p5-p2': `Dann folgte dieselbe Zitat-Falle wie beim OSINT-Tracker: Suche plus strukturierte Ausgabe lässt die Zitate still verschwinden, also konnte fünf Tage lang kein echter Fall das Gate passieren. Suche und Extraktion sind jetzt getrennte Aufrufe. Die Zeitsteuerung zog von einem Timer im Prozess, der bei jedem Scale-to-Zero starb, zu einem externen Scheduler um, der den Dienst viermal täglich weckt. Die öffentlichen KI-Endpunkte, jeder ein bezahlter Modellaufruf, bekamen das Rate-Limit, das der Crawler-Trigger schon hatte.`,
+    'p5-p3': `Jeder Datensatz trägt jetzt ein sichtbares Herkunfts-Label, „Seed / kuratiert“ oder „KI-generiert, ungeprüft“, statt den Unterschied erraten zu lassen. Zwei Fälle wurden entfernt, weil sie nicht in eine Datenbank für Finanzkriminalität gehören, und einer davon verwendete das Foto eines anderen Falls.`,
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Gemini dazu zu bringen, eine saubere, schema-eingeschränkte Struktur zu
       liefern, ist inzwischen fast Standard. Was tatsächlich echte Arbeit gekostet hat, war
