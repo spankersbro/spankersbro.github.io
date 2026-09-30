@@ -3,32 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About — David Irving</title>
+<title>Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production — David Irving</title>
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="description" id="metaDesc" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<meta name="description" id="metaDesc" content="Replacing a homegrown schema-migration system with Doctrine Migrations, then guarding the paths where the new tool could have emptied a production database.">
 <link rel="canonical" href="https://davidirving.dev/work/migration-tooling-rebuild.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="David Irving">
-<meta property="og:title" content="Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About">
-<meta property="og:description" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<meta property="og:title" content="Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production">
+<meta property="og:description" content="Replacing a homegrown schema-migration system with Doctrine Migrations, then guarding the paths where the new tool could have emptied a production database.">
 <meta property="og:url" content="https://davidirving.dev/work/migration-tooling-rebuild.html">
 <meta property="article:published_time" content="2026-08-05">
 <meta property="article:section" content="Featured Work">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About">
-<meta name="twitter:description" content="Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.">
+<meta name="twitter:title" content="Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production">
+<meta name="twitter:description" content="Replacing a homegrown schema-migration system with Doctrine Migrations, then guarding the paths where the new tool could have emptied a production database.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About",
-  "description": "Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.",
+  "headline": "Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production",
+  "description": "Replacing a homegrown schema-migration system with Doctrine Migrations, then guarding the paths where the new tool could have emptied a production database.",
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-08-05",
-  "dateModified": "2026-08-05",
+  "dateModified": "2026-09-30",
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/migration-tooling-rebuild.html" }
 }
 </script>
@@ -36,19 +36,19 @@
   :root{
     --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
     --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
-    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); --del-bg:#ffebe9; --del-ink:#a40e26; --add-bg:#e6ffec; --add-ink:#116329;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
            --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
-           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); --del-bg:#3a1418; --del-ink:#ffa198; --add-bg:#0f2818; --add-ink:#7ee2a8; }
   }
   :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
            --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
-           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); --del-bg:#3a1418; --del-ink:#ffa198; --add-bg:#0f2818; --add-ink:#7ee2a8; }
   :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
            --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
-           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); --del-bg:#ffebe9; --del-ink:#a40e26; --add-bg:#e6ffec; --add-ink:#116329; }
 
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -100,12 +100,25 @@
   .article li{margin-bottom:10px}
   .article li:last-child{margin-bottom:0}
   .article strong{color:var(--ink)}
+  .article code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:var(--mono-bg);color:var(--mono-ink);padding:1px 5px;border-radius:5px}
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
 
   .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
   .diagram svg{display:block;width:100%;height:auto}
   .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+  .article .diagram-caption{margin:12px 0 0;color:var(--sub);font-size:13px;line-height:1.5}
+
+  .diff{border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5}
+  .diff .file{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;
+    color:var(--sub);border-bottom:1px solid var(--line);font-weight:600}
+  .diff .file .chip{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--chip);color:var(--chip-ink);font-size:11px;padding:2px 10px;border-radius:20px;letter-spacing:.04em}
+  .diff .row{padding:5px 14px 5px 32px;text-indent:-18px;overflow-wrap:anywhere}
+  .diff .del{background:var(--del-bg);color:var(--del-ink)}
+  .diff .add{background:var(--add-bg);color:var(--add-ink)}
+  .diff .add + .del{border-top:1px solid var(--line)}
 
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
@@ -135,71 +148,55 @@
 
   <section class="hero">
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
-    <h1 data-i18n="hero-h1">Replacing a Bespoke Schema-Migration System with Doctrine — and Finding a CLI Bug Nobody Knew About</h1>
-    <p class="lede" data-i18n="hero-lede">Deleting a homegrown migration system is the easy part to describe. Enforcing its replacement as the only path for schema changes is what actually found the bugs that would have broken a real deployment.</p>
+    <h1 data-i18n="hero-h1">Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production</h1>
+    <p class="lede" data-i18n="hero-lede">Deleting the old schema-migration system was the easy part. Making sure its replacement cannot quietly empty a production database took longer.</p>
     <p class="meta-row" data-i18n="meta-date">June – September 2026 · Three phases · in review</p>
   </section>
 
   <article class="article">
 
     <div class="diagram">
-      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before: three separate, uncoordinated schema-change paths with nothing tying them together. After: one enforced path, which is what caught a real CLI bug.">
-        <text x="320" y="13" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--sub)">Before — three paths, nothing enforces one</text>
-
-        <rect x="20" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
-        <text x="110" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">YAML files</text>
-        <text x="110" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
-
-        <rect x="230" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
-        <text x="320" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Upgrade scripts</text>
-        <text x="320" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
-
-        <rect x="440" y="20" width="180" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
-        <text x="530" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Schema classes</text>
-        <text x="530" y="61" text-anchor="middle" font-size="10.5" fill="var(--sub)">no shared owner</text>
-
-        <text x="320" y="107" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)">After — one path, enforced</text>
-
-        <rect x="230" y="126" width="180" height="56" rx="12" fill="var(--accent)" stroke="var(--accent)"/>
-        <text x="320" y="149" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--accent-ink)">Doctrine Migrations</text>
-        <text x="320" y="167" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">the only path now</text>
-
-        <rect x="440" y="126" width="170" height="56" rx="12" fill="var(--chip)" stroke="var(--line)"/>
-        <text x="525" y="149" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">CLI bug caught here</text>
-        <text x="525" y="167" text-anchor="middle" font-size="10" fill="var(--sub)">long flags never worked</text>
-
-        <path d="M410 154 H440" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow1)"/>
-
-        <defs>
-          <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/>
-          </marker>
-        </defs>
-      </svg>
-      <p class="diagram-caption" data-i18n="diagram1-caption">Deleting the old system was the easy part. Enforcing the new one as the only path is what actually found the bugs.</p>
+      <div class="diff" role="img" aria-label="Four data-loss paths in the new migration tooling, each shown as the old behaviour and the guard that replaced it.">
+        <div class="file"><span>migration-guards.diff</span><span class="chip">IN REVIEW</span></div>
+        <div class="row del">− DROP TABLE IF EXISTS, on any database</div>
+        <div class="row add">+ refuse if a single table already exists</div>
+        <div class="row del">− "which tables exist?" failed → assume none</div>
+        <div class="row add">+ query failed → abort</div>
+        <div class="row del">− init($app, null, true)</div>
+        <div class="row add">+ init($app, useTestDb: true)</div>
+        <div class="row del">− 1 of 286 tables found → "baseline applied"</div>
+        <div class="row add">+ 286 of 286 tables match → baseline applied</div>
+      </div>
+      <p class="diagram-caption" data-i18n="diagram1-caption">Four ways the new tooling could have lost data. Each was reproduced before it was fixed.</p>
     </div>
 
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">TEAMBOX ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never been forced through the specific failure modes that only show up once you stop hand-rolling every schema change and put a real migration tool in charge of it.</p>
+    <p data-i18n="why-p1">TEAMBOX ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never met the failure modes that appear once a real migration tool is in charge.</p>
 
     <h3 data-i18n="p1-h3">Phase one: a replacement, not a patch</h3>
-    <p data-i18n="p1-p1">Built and shipped, solo, a full replacement of the old system with Doctrine Migrations: the entire old schema-definition layer, its YAML fixtures, and the legacy upgrade scripts that went with it are gone outright — a net reduction of thousands of lines across hundreds of files, as one continuous piece of work. A dedicated fixture-management layer, paired with Doctrine Migrations, now owns schema and test-database setup end to end.</p>
-    <p data-i18n="p1-p2">Along the way: the CLI framework's long-flag parsing had never actually worked anywhere in the codebase. It silently fell back to defaults instead of erroring out — an untrimmed-whitespace bug that had gone unnoticed for years behind a short-flag fallback path, exactly the kind of thing any long-lived codebase accumulates. Fixed it and pinned the correct behavior down with a regression test, so it can't silently regress again.</p>
-    <p data-i18n="p1-p3">Also added MySQL reconnect-on-disconnect handling and an advisory lock around the baseline-migration guard — failure modes the old system had simply never defended against, because it had never needed to. And chased an intermittent CI-only authentication failure through several dead ends — retry logic first, then in-process table drops — before landing on the actual fix: reusing a single shared database connection instead of opening a new one per test. Fifteen historical legacy-upgrade directories were deleted, but only once their behavior was confirmed already covered by the replacement — and staging-scenario migrations were deliberately written and reverted before merge, as a test method, not leftover cruft left behind by accident.</p>
+    <p data-i18n="p1-p1">I built and shipped a full replacement of the old system with Doctrine Migrations. The old schema-definition layer, its YAML fixtures and the legacy upgrade scripts are gone: a net reduction of thousands of lines across hundreds of files. A dedicated fixture-management layer, paired with Doctrine Migrations, now owns schema and test-database setup end to end.</p>
+    <p data-i18n="p1-p2">Along the way I found that the CLI framework's long-flag parsing had never worked anywhere in the codebase. An untrimmed-whitespace bug made it fall back to defaults silently instead of failing, and a short-flag path had hidden it for years. It is fixed, with a regression test so it cannot come back.</p>
+    <p data-i18n="p1-p3">I also added reconnect-on-disconnect handling for MySQL and an advisory lock around the baseline-migration guard, two failure modes the old system never defended against. An intermittent CI-only authentication failure went through several dead ends before the real fix: one shared database connection instead of a new one per test. Fifteen legacy upgrade directories were deleted, but only after confirming the replacement already covered their behaviour.</p>
 
     <h3 data-i18n="p2-h3">Phase two: making it the only path</h3>
-    <p data-i18n="p2-p1">Deleting the bespoke system is what made this pipeline fundamentally different from what came before. But enforcing Doctrine Migrations as the single path for schema changes — no more parallel legacy upgrade routes left running alongside it "just in case" — is what actually found the bugs that would have broken a real deployment.</p>
-    <p data-i18n="p2-p2">A CLI flag parser where no long-form flag had ever worked, caught again from a different angle once enforcement made the gap unavoidable. A separate upgrade flag that crashed on every single real execution — not an edge case, the normal path. And a CI database-authentication failure traced to a password-decoding mismatch between the old credential convention and a newer one, the kind of gap that only appears once both conventions exist side by side and something finally has to pick.</p>
-    <p data-i18n="p2-p3">The most serious find: old-system installs couldn't mark the new migration baseline as applied, because the metadata-storage table the new system expected didn't exist yet on those installs. That's a real deployment blocker, and it's the kind that only shows up the first time someone actually runs the migration for real — no test environment that starts from a clean slate would ever hit it. The migration strategy itself now lives as an architecture decision record that gates schema-change review going forward, instead of staying tribal knowledge that only one person actually understood.</p>
+    <p data-i18n="p2-p1">Next, Doctrine Migrations became the only path for schema changes, with no legacy upgrade route left running beside it "just in case". Removing that fallback exposed the next set of bugs.</p>
+    <p data-i18n="p2-p2">An upgrade flag crashed on every real run: the normal path, not an edge case. A CI database-authentication failure came from two password conventions, old and new, that decoded differently.</p>
+    <p data-i18n="p2-p3">The most serious: installs from the old system could not mark the new baseline as applied, because the metadata table the new system expected did not exist on them yet. That blocks a real deployment, and no test environment that starts from a clean database would ever hit it. The migration strategy is now an architecture decision record that schema-change reviews are checked against.</p>
 
-    <h3 data-i18n="p3-h3">Phase three: re-integrating it, and guarding the destructive paths</h3>
-    <p data-i18n="p3-p1">The original branch was built on an infrastructure stack that has not shipped yet, so in September the work was re-integrated directly onto mainline. That meant regenerating the migration baseline from current mainline and proving it by round trip, not inspection: rebuild a database through the migrations, then compare it table by table against a fresh reference. 286 of 286 tables matched, with no definition differing.</p>
-    <p data-i18n="p3-p2">Review found real data-loss paths, and each was fixed only after reproducing it. The baseline script drops every table before creating it, so running the documented migrate command on an existing database would have emptied it; the baseline now refuses if any table exists. A failed "which tables exist?" query read as "no tables", which silenced that guard; it now aborts. One command meant for the test database ran against the live one after a constructor change. And an existing install whose baseline had died halfway could be marked as fully applied on retry, because the check looked at one table out of 286.</p>
-    <p data-i18n="p3-p3">Merging mainline in brought 27 conflicts and three breaks that produced no conflict at all. The worst: two branches disagreed on a function's parameter order, so a positional argument meaning "use the test database" landed in "skip the database", and the whole suite booted without one. Every call site now uses named arguments, so a future reorder cannot flip it silently. The pull request is in review.</p>
+    <h3 data-i18n="p3-h3">Phase three: making sure it can't empty production</h3>
+    <p data-i18n="p3-p1">The original branch was built on an infrastructure stack that has not shipped yet, so in September I re-integrated the work directly onto mainline. That meant regenerating the migration baseline from current mainline and proving it by round trip, not inspection: rebuild a database through the migrations, then compare it table by table against a fresh reference. 286 of 286 tables matched, with no definition differing.</p>
+    <p data-i18n="p3-p2">Before merge, four paths to data loss turned up. Each was reproduced before it was fixed:</p>
+    <ul data-i18n="p3-list">
+      <li>The baseline script starts with <code>DROP TABLE IF EXISTS</code> for every table. On an empty database that is correct. On an existing one, the documented migrate command would have emptied it. The baseline now refuses to run if any table exists.</li>
+      <li>A failed "which tables exist?" query was read as "no tables", which switched that guard off. It now aborts.</li>
+      <li>Merging mainline brought 27 conflicts and three breaks that produced no conflict at all. The worst: two branches disagreed on a function's parameter order, so an argument meaning "use the test database" landed in "skip the database", and the test suite booted without one. Every call site now uses named arguments.</li>
+      <li>A retry after a half-finished baseline checked one table out of 286 and marked the job done. It now checks the full table set and refuses a partial schema.</li>
+    </ul>
+    <p data-i18n="p3-p3">A fifth fix was related: a script runner lost its test-database argument in a constructor change, so a command meant for the test database ran against the live one. The fix was verified by checking which database the command connected to, before and after. The pull request is in review.</p>
 
-    <h2 data-i18n="reflect-h2">What actually mattered</h2>
-    <p data-i18n="reflect-p1">Deleting a bespoke system wholesale and rebuilding it on a real, maintained tool is what made this migration pipeline fundamentally different from what it replaced. But the flag-parsing fix, the table-existence check, and the connection-reuse fix are what made it safe to actually point at production.</p>
-    <p data-i18n="reflect-p2">None of those three were things the original migration work would ever have caught on its own, because none of them were "does the migration run." They were "does the tooling around it hold up under conditions nobody had actually tested" — and the only way to find that out was to take away the fallback path and force everything through the new one.</p>
+    <h2 data-i18n="reflect-h2">What mattered</h2>
+    <p data-i18n="reflect-p1">Replacing the old system with a maintained tool was the visible part of the work. The guards are what make it safe to run against production. The baseline refuses a populated database. A failed check stops instead of passing. The test-database flag cannot land in the wrong parameter. A half-finished upgrade cannot be marked done.</p>
+    <p data-i18n="reflect-p2">None of this is exotic. It is what happens when code that never had to be careful is replaced by code that must be. The answer was the same each time: reproduce the failure first, then fix it, and prove the result by rebuilding rather than reading.</p>
 
     <div class="tags">
       <span class="tag" data-i18n="tag-migrations">Doctrine Migrations</span>
@@ -267,80 +264,67 @@
     'nav-home': '← Startseite',
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',
-    'hero-h1': 'Ein selbstgebautes Schema-Migrationssystem durch Doctrine ersetzt — und einen CLI-Bug gefunden, von dem niemand wusste',
-    'hero-lede': 'Ein selbstgebautes Migrationssystem zu löschen ist der leicht zu erzählende Teil. Seinen Ersatz als einzigen Pfad für Schemaänderungen durchzusetzen ist das, was die Bugs tatsächlich gefunden hat, die ein echtes Deployment gebrochen hätten.',
+    'hero-h1': 'Ein selbstgebautes Migrationssystem ersetzt — und sichergestellt, dass es Produktion nicht leeren kann',
+    'hero-lede': 'Das alte Schema-Migrationssystem zu löschen war der leichte Teil. Sicherzustellen, dass sein Ersatz eine Produktionsdatenbank nicht still leeren kann, hat länger gedauert.',
     'meta-date': 'Juni – September 2026 · Drei Phasen · im Review',
 
-    'diagram1-caption': 'Das alte System zu löschen war der leichte Teil. Das neue als einzigen Pfad durchzusetzen ist das, was die Bugs tatsächlich gefunden hat.',
+    'diagram1-caption': 'Vier Wege, auf denen das neue Tooling Daten hätte verlieren können. Jeder wurde reproduziert, bevor er behoben wurde.',
 
     'why-h2': 'Die Ausgangslage',
     'why-p1': `TEAMBOX führte Schemaänderungen und Upgrades über ein selbstgebautes,
       YAML-gesteuertes System: Hunderte YAML-Schemadateien, eine Reihe von Legacy-Upgrade-Skripten
       und ein paar eigene Schema-Klassen, die alles zusammenhielten. Es funktionierte, in dem Sinn,
-      dass es seit Jahren lief. Es war aber auch nie durch die spezifischen Fehlerfälle
-      gezwungen worden, die erst auftauchen, wenn man aufhört, jede Schemaänderung von Hand zu
-      basteln, und ein echtes Migrationstool das Kommando übernehmen lässt.`,
+      dass es seit Jahren lief. Es war aber nie den Fehlerfällen begegnet, die auftauchen, sobald
+      ein echtes Migrationstool das Kommando hat.`,
 
     'p1-h3': 'Phase eins: ein Ersatz, kein Pflaster',
-    'p1-p1': `Solo gebaut und ausgeliefert: ein vollständiger Ersatz des alten Systems durch
-      Doctrine Migrations. Die komplette alte Schema-Definitionsschicht, ihre YAML-Fixtures und
-      die dazugehörigen Legacy-Upgrade-Skripte sind komplett weg — eine Netto-Reduktion von
-      Tausenden Zeilen über Hunderte Dateien, als ein durchgehendes Stück Arbeit. Eine eigene
+    'p1-p1': `Ich habe das alte System vollständig durch Doctrine Migrations ersetzt und ausgeliefert.
+      Die alte Schema-Definitionsschicht, ihre YAML-Fixtures und die Legacy-Upgrade-Skripte sind weg:
+      eine Netto-Reduktion von Tausenden Zeilen über Hunderte Dateien. Eine eigene
       Fixture-Management-Schicht übernimmt jetzt zusammen mit Doctrine Migrations Schema- und
       Test-Datenbank-Setup end to end.`,
-    'p1-p2': `Auf dem Weg dahin: Das Long-Flag-Parsing des CLI-Frameworks hatte nie irgendwo in
-      der Codebase tatsächlich funktioniert. Es fiel still auf Standardwerte zurück, statt einen
-      Fehler zu werfen — ein Bug durch nicht getrimmten Whitespace, der jahrelang unbemerkt blieb,
-      versteckt hinter einem Short-Flag-Fallback-Pfad, genau die Art von Sache, die sich in jeder
-      langlebigen Codebase ansammelt. Behoben und das korrekte Verhalten mit einem Regressionstest
-      festgenagelt, damit es nicht wieder still zurückfällt.`,
-    'p1-p3': `Außerdem MySQL-Reconnect-on-Disconnect-Handling und einen Advisory-Lock rund um den
-      Baseline-Migrations-Guard ergänzt — Fehlerfälle, gegen die sich das alte System nie
-      abgesichert hatte, weil es das nie musste. Und einen sporadischen, nur in CI auftretenden
-      Auth-Fehler durch mehrere Sackgassen verfolgt — erst Retry-Logik, dann In-Process-Table-Drops
-      — bevor der eigentliche Fix gefunden wurde: eine einzelne geteilte Datenbankverbindung
-      wiederverwenden statt pro Test eine neue zu öffnen. Fünfzehn historische
-      Legacy-Upgrade-Verzeichnisse wurden gelöscht, aber erst, nachdem bestätigt war, dass ihr
-      Verhalten vom Ersatz bereits abgedeckt war — und Staging-Szenario-Migrationen wurden bewusst
-      geschrieben und vor dem Merge zurückgenommen, als Testmethode, nicht als versehentlich
-      übrig gebliebener Code.`,
+    'p1-p2': `Dabei habe ich festgestellt, dass das Long-Flag-Parsing des CLI-Frameworks nie irgendwo
+      in der Codebase funktioniert hatte. Ein Bug durch nicht getrimmten Whitespace ließ es still auf
+      Standardwerte zurückfallen, statt einen Fehler zu werfen, und ein Short-Flag-Pfad hatte das
+      jahrelang verdeckt. Es ist behoben, mit einem Regressionstest, damit es nicht zurückkommt.`,
+    'p1-p3': `Außerdem habe ich Reconnect-on-Disconnect-Handling für MySQL und einen Advisory-Lock
+      rund um den Baseline-Migrations-Guard ergänzt, zwei Fehlerfälle, gegen die sich das alte System
+      nie abgesichert hatte. Ein sporadischer, nur in CI auftretender Auth-Fehler führte durch mehrere
+      Sackgassen, bevor der eigentliche Fix kam: eine geteilte Datenbankverbindung statt einer neuen
+      pro Test. Fünfzehn Legacy-Upgrade-Verzeichnisse wurden gelöscht, aber erst, nachdem bestätigt
+      war, dass der Ersatz ihr Verhalten bereits abdeckte.`,
 
     'p2-h3': 'Phase zwei: zum einzigen Pfad gemacht',
-    'p2-p1': `Das selbstgebaute System zu löschen ist das, was diese Pipeline grundlegend anders
-      gemacht hat als das, was davor war. Aber Doctrine Migrations als einzigen Pfad für
-      Schemaänderungen durchzusetzen — keine parallelen Legacy-Upgrade-Routen mehr, die "nur für
-      den Fall" nebenher weiterliefen — ist das, was die Bugs tatsächlich gefunden hat, die ein
-      echtes Deployment gebrochen hätten.`,
-    'p2-p2': `Ein CLI-Flag-Parser, bei dem nie ein Long-Form-Flag funktioniert hatte, erneut aus
-      einem anderen Winkel gefunden, sobald die Durchsetzung die Lücke unausweichlich machte. Ein
-      separates Upgrade-Flag, das bei jeder einzelnen echten Ausführung abstürzte — kein Randfall,
-      der normale Pfad. Und ein CI-Datenbank-Auth-Fehler, zurückverfolgt auf eine
-      Passwort-Dekodierungs-Inkongruenz zwischen der alten Credential-Konvention und einer neueren
-      — die Art von Lücke, die erst auftaucht, wenn beide Konventionen gleichzeitig existieren und
-      sich endlich jemand entscheiden muss.`,
-    'p2-p3': `Der schwerwiegendste Fund: Installationen des alten Systems konnten die neue
-      Migrations-Baseline nicht als angewendet markieren, weil die Metadaten-Tabelle, die das neue
-      System erwartete, auf diesen Installationen noch nicht existierte. Das ist ein echter
-      Deployment-Blocker, und zwar von der Art, die erst auftaucht, wenn jemand die Migration
-      tatsächlich echt ausführt — keine Testumgebung, die von einem sauberen Stand startet, würde
-      je darauf stoßen. Die Migrationsstrategie selbst lebt jetzt als Architekturentscheidung, die
-      künftig Schemaänderungs-Reviews gate, statt Herrschaftswissen zu bleiben, das nur eine Person
-      wirklich verstand.`,
+    'p2-p1': `Danach wurde Doctrine Migrations der einzige Pfad für Schemaänderungen, ohne
+      Legacy-Upgrade-Route, die „nur für den Fall“ nebenher weiterlief. Diesen Fallback zu entfernen
+      hat die nächsten Bugs sichtbar gemacht.`,
+    'p2-p2': `Ein Upgrade-Flag stürzte bei jeder echten Ausführung ab: der normale Pfad, kein
+      Randfall. Ein CI-Datenbank-Auth-Fehler kam von zwei Passwort-Konventionen, alt und neu, die
+      unterschiedlich dekodiert wurden.`,
+    'p2-p3': `Der schwerwiegendste Fund: Installationen des alten Systems konnten die neue Baseline
+      nicht als angewendet markieren, weil die Metadaten-Tabelle, die das neue System erwartete, dort
+      noch nicht existierte. Das blockiert ein echtes Deployment, und keine Testumgebung, die mit einer
+      leeren Datenbank startet, würde je darauf stoßen. Die Migrationsstrategie ist jetzt eine
+      Architekturentscheidung, gegen die Schemaänderungs-Reviews geprüft werden.`,
 
-    'p3-h3': 'Phase drei: neu integriert, und die destruktiven Pfade abgesichert',
-    'p3-p1': `Der ursprüngliche Branch baute auf einem Infrastruktur-Stack auf, der noch nicht ausgeliefert ist, also wurde die Arbeit im September direkt auf den Mainline neu integriert. Dazu gehörte, die Migrations-Baseline aus dem aktuellen Mainline neu zu erzeugen und per Round Trip zu beweisen statt per Durchsicht: eine Datenbank über die Migrationen neu aufbauen und Tabelle für Tabelle mit einer frischen Referenz vergleichen. 286 von 286 Tabellen stimmten überein, keine Definition wich ab.`,
-    'p3-p2': `Das Review fand echte Datenverlust-Pfade, und jeder wurde erst behoben, nachdem er reproduziert war. Das Baseline-Skript löscht jede Tabelle, bevor es sie anlegt, also hätte der dokumentierte Migrate-Befehl auf einer bestehenden Datenbank sie geleert; die Baseline verweigert jetzt, wenn irgendeine Tabelle existiert. Eine fehlgeschlagene Abfrage „welche Tabellen gibt es?“ wurde als „keine Tabellen“ gelesen und schaltete diesen Guard stumm; sie bricht jetzt ab. Ein Befehl für die Testdatenbank lief nach einer Konstruktor-Änderung gegen die Live-Datenbank. Und eine bestehende Installation, deren Baseline auf halbem Weg abgebrochen war, konnte beim erneuten Versuch als vollständig angewendet markiert werden, weil die Prüfung eine von 286 Tabellen ansah.`,
-    'p3-p3': `Das Einmergen des Mainline brachte 27 Konflikte und drei Brüche, die gar keinen Konflikt erzeugten. Der schlimmste: Zwei Branches waren sich über die Parameter-Reihenfolge einer Funktion uneinig, also landete ein Positionsargument mit der Bedeutung „Testdatenbank verwenden“ in „Datenbank überspringen“, und die ganze Suite startete ohne eine. Jeder Aufruf nutzt jetzt benannte Argumente, damit eine künftige Umsortierung das nicht still umdrehen kann. Der Pull Request ist im Review.`,
-    'reflect-h2': 'Was tatsächlich zählte',
-    'reflect-p1': `Ein selbstgebautes System komplett zu löschen und auf einem echten, gepflegten
-      Tool neu aufzubauen ist das, was diese Migrations-Pipeline grundlegend anders gemacht hat als
-      das, was sie ersetzte. Aber der Flag-Parsing-Fix, die Tabellen-Existenzprüfung und der
-      Connection-Reuse-Fix sind das, was es sicher gemacht hat, wirklich gegen Produktion zu
-      laufen.`,
-    'reflect-p2': `Keiner dieser drei wäre je von der ursprünglichen Migrationsarbeit allein
-      gefunden worden, weil keiner davon "läuft die Migration" war. Es war "hält das Tooling
-      drumherum unter Bedingungen, die vorher niemand getestet hat" — und der einzige Weg, das
-      herauszufinden, war, den Fallback-Pfad wegzunehmen und alles durch den neuen zu zwingen.`,
+    'p3-h3': 'Phase drei: sichergestellt, dass es Produktion nicht leeren kann',
+    'p3-p1': `Der ursprüngliche Branch baute auf einem Infrastruktur-Stack auf, der noch nicht ausgeliefert ist, also habe ich die Arbeit im September direkt auf den Mainline neu integriert. Dazu gehörte, die Migrations-Baseline aus dem aktuellen Mainline neu zu erzeugen und per Round Trip zu beweisen statt per Durchsicht: eine Datenbank über die Migrationen neu aufbauen und Tabelle für Tabelle mit einer frischen Referenz vergleichen. 286 von 286 Tabellen stimmten überein, keine Definition wich ab.`,
+    'p3-p2': 'Vor dem Merge tauchten vier Wege zu Datenverlust auf. Jeder wurde reproduziert, bevor er behoben wurde:',
+    'p3-list': `<li>Das Baseline-Skript beginnt für jede Tabelle mit <code>DROP TABLE IF EXISTS</code>. Auf einer leeren Datenbank ist das richtig. Auf einer bestehenden hätte der dokumentierte Migrate-Befehl sie geleert. Die Baseline verweigert jetzt den Lauf, wenn irgendeine Tabelle existiert.</li>
+      <li>Eine fehlgeschlagene Abfrage „welche Tabellen gibt es?“ wurde als „keine Tabellen“ gelesen und schaltete diesen Guard ab. Sie bricht jetzt ab.</li>
+      <li>Das Einmergen des Mainline brachte 27 Konflikte und drei Brüche ganz ohne Konflikt. Der schlimmste: Zwei Branches waren sich über die Parameter-Reihenfolge einer Funktion uneinig, also landete ein Argument mit der Bedeutung „Testdatenbank verwenden“ in „Datenbank überspringen“, und die Testsuite startete ohne Datenbank. Jeder Aufruf nutzt jetzt benannte Argumente.</li>
+      <li>Ein erneuter Versuch nach einer halb fertigen Baseline prüfte eine von 286 Tabellen und markierte die Arbeit als erledigt. Er prüft jetzt den vollständigen Tabellensatz und verweigert ein unvollständiges Schema.</li>`,
+    'p3-p3': `Ein fünfter Fix gehört dazu: Ein Script-Runner verlor bei einer Konstruktor-Änderung sein Testdatenbank-Argument, also lief ein Befehl für die Testdatenbank gegen die Live-Datenbank. Der Fix wurde geprüft, indem vorher und nachher kontrolliert wurde, mit welcher Datenbank sich der Befehl verbindet. Der Pull Request ist im Review.`,
+    'reflect-h2': 'Was zählte',
+    'reflect-p1': `Das alte System durch ein gepflegtes Tool zu ersetzen war der sichtbare Teil der
+      Arbeit. Die Guards sind das, was den Lauf gegen Produktion sicher macht. Die Baseline verweigert
+      eine befüllte Datenbank. Eine fehlgeschlagene Prüfung stoppt, statt durchzulassen. Das
+      Testdatenbank-Flag kann nicht im falschen Parameter landen. Ein halb fertiges Upgrade kann nicht
+      als erledigt markiert werden.`,
+    'reflect-p2': `Nichts davon ist exotisch. So sieht es aus, wenn Code, der nie vorsichtig sein
+      musste, durch Code ersetzt wird, der es sein muss. Die Antwort war jedes Mal dieselbe: zuerst
+      den Fehler reproduzieren, dann beheben, und das Ergebnis durch Neuaufbau beweisen statt durch
+      Lesen.`,
 
     'tag-migrations': 'Doctrine Migrations',
     'tag-release-eng': 'Release Engineering',
@@ -350,8 +334,8 @@
   };
 
   var META_DESC = {
-    en: 'Replacing a homegrown YAML-driven schema-migration system with Doctrine Migrations, then enforcing it as the only path for schema changes — and the deployment-breaking bugs that enforcement actually found.',
-    de: 'Ein selbstgebautes, YAML-gesteuertes Schema-Migrationssystem durch Doctrine Migrations ersetzt und dann als einzigen Pfad für Schemaänderungen durchgesetzt — und die deployment-brechenden Bugs, die diese Durchsetzung tatsächlich gefunden hat.'
+    en: 'Replacing a homegrown schema-migration system with Doctrine Migrations, then guarding the paths where the new tool could have emptied a production database.',
+    de: 'Ein selbstgebautes Schema-Migrationssystem durch Doctrine Migrations ersetzt und dann die Pfade abgesichert, auf denen das neue Tool eine Produktionsdatenbank hätte leeren können.'
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
