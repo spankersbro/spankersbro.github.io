@@ -452,14 +452,14 @@
     <div class="card" id="projects-wirefront">
       <a class="card-anchor" href="#projects-wirefront" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-projects">Side Project</p>
-      <h3 data-i18n="wirefront-h3">Wirefront — a browser vector-tank shooter with live co-op, built solo</h3>
+      <h3 data-i18n="wirefront-h3">Wirefront — a browser vector-tank shooter with live co-op, built together with Claude</h3>
       <video class="card-video" autoplay loop muted playsinline poster="assets/wirefront/poster.jpg" aria-label="Wirefront gameplay recording">
         <source src="assets/wirefront/wirefront-loop.webm" type="video/webm">
         <source src="assets/wirefront/wirefront-loop.mp4" type="video/mp4">
       </video>
       <p data-i18n="wirefront-p1">A homage to 1980s vector-scope arcade combat games. Drive and fire across a wireframe battlefield against wave-based enemy tanks — the cannon points wherever the hull points, so aiming is driving. No installs, runs straight in the browser, keyboard or touch controls.</p>
       <ol class="steps">
-        <li><span data-i18n="wirefront-step1"><strong>Real hidden-line-removal rendering, not a filter.</strong> Three.js <code>EdgesGeometry</code> plus a void-colored occlusion fill — the actual technique vector monitors used, not a wireframe shader effect.</span></li>
+        <li><span data-i18n="wirefront-step1"><strong>Real hidden-line removal, not a wireframe shader.</strong> Three.js <code>EdgesGeometry</code> plus a void-colored occlusion fill, so solid faces hide whatever sits behind them — the look of a 1980s vector cabinet, done with today's rendering.</span></li>
         <li><span data-i18n="wirefront-step2"><strong>Every sound synthesized, no audio files.</strong> Engine hum, cannon fire, and explosions generated live with the WebAudio API.</span></li>
         <li><span data-i18n="wirefront-step3"><strong>A shared, append-only leaderboard.</strong> Firestore security rules validate the document shape on write and block updates or deletes outright, so a score can be added but never altered.</span></li>
         <li><span data-i18n="wirefront-step4"><strong>Live co-op presence.</strong> Firebase Realtime Database puts everyone with the page open into one shared global room as a real ally tank, with join/leave comms and client-side collision between allies.</span></li>
@@ -747,14 +747,15 @@
     'projects-h2': 'Außerhalb von TEAMBOX, außerhalb der Recherche: aus Spaß gebaut',
     'projects-p': 'Nicht jedes persönliche Projekt ist ein Forschungsprototyp. Manche entstehen einfach aus Freude daran, etwas zu bauen, das funktioniert und Spaß macht.',
     'eyebrow-projects': 'Nebenprojekt',
-    'wirefront-h3': 'Wirefront — ein Browser-Vektor-Panzer-Shooter mit Live-Koop, solo gebaut',
+    'wirefront-h3': 'Wirefront — ein Browser-Vektor-Panzer-Shooter mit Live-Koop, gemeinsam mit Claude gebaut',
     'wirefront-p1': `Eine Hommage an Vektor-Arcade-Kampfspiele der 1980er. Über ein Drahtgitter-Schlachtfeld
       fahren und auf wellenweise anrückende Feindpanzer feuern — der Turm zeigt immer in Fahrtrichtung
       des Rumpfs, Zielen bedeutet also Fahren. Keine Installation nötig, läuft direkt im Browser,
       Tastatur- oder Touch-Steuerung.`,
-    'wirefront-step1': `<strong>Echtes Hidden-Line-Removal, kein Shader-Effekt.</strong> Three.js
-      <code>EdgesGeometry</code> plus eine im Hintergrundton eingefärbte Verdeckungsfläche — die
-      tatsächliche Technik, die Vektor-Monitore damals genutzt haben.`,
+    'wirefront-step1': `<strong>Echtes Hidden-Line-Removal, kein Drahtgitter-Shader.</strong> Three.js
+      <code>EdgesGeometry</code> plus eine im Hintergrundton eingefärbte Verdeckungsfläche, sodass
+      massive Flächen alles dahinter verdecken — der Look eines Vektor-Automaten der 1980er, mit
+      heutigem Rendering umgesetzt.`,
     'wirefront-step2': `<strong>Jeder Sound synthetisiert, keine Audiodateien.</strong> Motorbrummen,
       Kanonenfeuer und Explosionen werden live über die WebAudio-API erzeugt.`,
     'wirefront-step3': `<strong>Eine gemeinsame, nur anhängbare Bestenliste.</strong> Firestore-Regeln
