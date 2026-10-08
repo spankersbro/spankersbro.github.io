@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letting AI Agents Into a Twenty-Year-Old Product, Safely — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Giving AI agents a standard OAuth sign-in, tools that follow the customer’s permissions, and an audit of the API around them, in a twenty-year-old ERP.">
+<link rel="canonical" href="https://davidirving.dev/work/ai-agents-safely.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Letting AI Agents Into a Twenty-Year-Old Product, Safely">
+<meta property="og:description" content="Giving AI agents a standard OAuth sign-in, tools that follow the customer’s permissions, and an audit of the API around them, in a twenty-year-old ERP.">
+<meta property="og:url" content="https://davidirving.dev/work/ai-agents-safely.html">
+<meta property="article:published_time" content="2026-10-08">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Letting AI Agents Into a Twenty-Year-Old Product, Safely">
+<meta name="twitter:description" content="Giving AI agents a standard OAuth sign-in, tools that follow the customer’s permissions, and an audit of the API around them, in a twenty-year-old ERP.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Letting AI Agents Into a Twenty-Year-Old Product, Safely",
+  "description": "Giving AI agents a standard OAuth sign-in, tools that follow the customer’s permissions, and an audit of the API around them, in a twenty-year-old ERP.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-10-08",
+  "dateModified": "2026-10-08",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/ai-agents-safely.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); --del-bg:#ffebe9; --del-ink:#a40e26; --add-bg:#e6ffec; --add-ink:#116329;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); --del-bg:#3a1418; --del-ink:#ffa198; --add-bg:#0f2818; --add-ink:#7ee2a8; }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); --del-bg:#3a1418; --del-ink:#ffa198; --add-bg:#0f2818; --add-ink:#7ee2a8; }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); --del-bg:#ffebe9; --del-ink:#a40e26; --add-bg:#e6ffec; --add-ink:#116329; }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:var(--mono-bg);color:var(--mono-ink);padding:1px 5px;border-radius:5px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+  .article .diagram-caption{margin:12px 0 0;color:var(--sub);font-size:13px;line-height:1.5}
+
+  .diff{border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5}
+  .diff .file{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;
+    color:var(--sub);border-bottom:1px solid var(--line);font-weight:600}
+  .diff .file .chip{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--chip);color:var(--chip-ink);font-size:11px;padding:2px 10px;border-radius:20px;letter-spacing:.04em}
+  .diff .row{padding:5px 14px 5px 32px;text-indent:-18px;overflow-wrap:anywhere}
+  .diff .del{background:var(--del-bg);color:var(--del-ink)}
+  .diff .add{background:var(--add-bg);color:var(--add-ink)}
+  .diff .add + .del{border-top:1px solid var(--line)}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Letting AI Agents Into a Twenty-Year-Old Product, Safely</h1>
+    <p class="lede" data-i18n="hero-lede">Connecting an AI agent to the product used to take a developer and an API token that opened everything. Now it takes a consent screen and a token that opens only the agent tools. Getting there took standard OAuth, a permission model for the tools, and an audit of the API around them.</p>
+    <p class="meta-row" data-i18n="meta-date">September – October 2026 · Six stacked changes · partly in review</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram" id="agent-access-diagram">
+      <div class="diff" role="img" aria-label="How an AI agent connects, before and after: from a pasted API token that opens the whole API, to a standard OAuth sign-in with a short-lived token that opens only the agent tools the customer and user are allowed.">
+        <div class="file"><span>agent-access.diff</span><span class="chip">PARTLY IN REVIEW</span></div>
+        <div class="row del">− personal API token, Node.js bridge, config edited by hand</div>
+        <div class="row add">+ the agent app finds the sign-in and registers itself</div>
+        <div class="row del">− the token opens the whole API</div>
+        <div class="row add">+ the token opens only the agent endpoint</div>
+        <div class="row del">− a long-lived token, revoked by deleting it</div>
+        <div class="row add">+ 15-minute access, rotating refresh, reuse ends the connection</div>
+        <div class="row del">− every tool offered as soon as the server is on</div>
+        <div class="row add">+ each tool follows the customer's modules and permissions</div>
+      </div>
+      <p class="diagram-caption" data-i18n="diagram1-caption">How an agent connects, before and after. Each line on the right is enforced in code and covered by tests.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">The setup</h2>
+    <p data-i18n="why-p1">TEAMBOX has an MCP server: the standard interface AI agents use to call a product’s tools. Until September, connecting an agent meant creating a personal API token, installing a Node.js bridge and editing a JSON config by hand. Customer teams without a developer could not finish that. Worse, the token was the same kind a full API client uses, so an agent connected that way could call the whole API, not just the tools meant for agents.</p>
+
+    <h3 data-i18n="p1-h3">Standard OAuth, built in six stacked steps</h3>
+    <p data-i18n="p1-p1">I made the agent endpoint an OAuth resource server on top of the OAuth library the product already used, and split the work into six branches that build on each other, each reviewed on its own. Agent apps find the sign-in through standard discovery metadata and register themselves as public clients with PKCE, with rules for allowed redirect addresses and a cap on idle registrations. The user approves the agent on a consent screen protected by a one-time token.</p>
+    <p data-i18n="p1-p2">Access tokens last 15 minutes. Refresh tokens last 30 days and rotate on every use, and a refresh token used twice ends the whole connection: only a copied token is ever used twice. Users see and revoke connected agents in their settings, and one switch turns the whole flow on or off. All of it follows published standards (RFC 9728, 8414, 7591, 7009 and the 9700 security guidance), so any MCP client that speaks OAuth can connect without custom code.</p>
+
+    <h3 data-i18n="p2-h3">A token that only works where it should</h3>
+    <p data-i18n="p2-p1">A token issued to an agent names its audience: the agent endpoint. Every other entry point rejects it. The check is built so that the safe answer is the default. The function that validates tokens must be told where it is being called from, and only the agent endpoint says so. A new endpoint added next year that forgets the argument rejects agent tokens instead of quietly accepting them.</p>
+
+    <div class="diagram" id="agent-token-diagram">
+      <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An agent app finds the sign-in, registers itself and asks the user for consent. It receives a 15-minute token that works only on the agent endpoint. The same token is rejected by every other part of the API.">
+        <rect x="16" y="20" width="150" height="54" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="91" y="43" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">AI agent app</text>
+        <text x="91" y="60" text-anchor="middle" font-size="10" fill="var(--sub)">finds sign-in, registers</text>
+        <path d="M166 47 H236" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowA)"/>
+        <rect x="240" y="20" width="160" height="54" rx="12" fill="var(--panel)" stroke="var(--line)"/>
+        <text x="320" y="43" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">Consent screen</text>
+        <text x="320" y="60" text-anchor="middle" font-size="10" fill="var(--sub)">the user says yes</text>
+        <path d="M400 47 H470" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowA)"/>
+        <rect x="474" y="20" width="150" height="54" rx="12" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="549" y="43" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--accent-ink)">Agent token</text>
+        <text x="549" y="60" text-anchor="middle" font-size="10" fill="var(--accent-ink)">15 min · agent use only</text>
+        <path d="M549 74 V110 H190 V140" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowA)"/>
+        <path d="M549 110 V140" stroke="var(--sub)" stroke-width="2" fill="none" marker-end="url(#arrowA)"/>
+        <rect x="70" y="144" width="240" height="70" rx="12" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+        <text x="190" y="170" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">Agent endpoint ✓</text>
+        <text x="190" y="188" text-anchor="middle" font-size="10" fill="var(--sub)">only the tools this customer</text>
+        <text x="190" y="202" text-anchor="middle" font-size="10" fill="var(--sub)">and user are allowed</text>
+        <rect x="400" y="144" width="226" height="70" rx="12" fill="var(--panel)" stroke="var(--line)" stroke-dasharray="5 5"/>
+        <text x="513" y="170" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">Rest of the API ✗</text>
+        <text x="513" y="188" text-anchor="middle" font-size="10" fill="var(--sub)">rejects the token, and a new</text>
+        <text x="513" y="202" text-anchor="middle" font-size="10" fill="var(--sub)">endpoint rejects it by default</text>
+        <defs><marker id="arrowA" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--sub)"/></marker></defs>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram2-caption">The agent token is accepted in one place. Everywhere else rejects it, including endpoints that do not exist yet.</p>
+    </div>
+
+    <h3 data-i18n="p3-h3">Tools that follow the customer’s permissions</h3>
+    <p data-i18n="p3-p1">Every tool used to be offered as soon as the MCP server was on, including tools for modules a customer does not have. Now each tool declares its module, the permission rule of the API route behind it, the settings it needs and whether it writes. A tool that is switched off answers exactly like a tool that does not exist, so an agent learns nothing from it. Tools that touch personal data are off by default.</p>
+    <p data-i18n="p3-p2">The same pass fixed what review had found in the existing tools. One promised all tasks and returned only the user’s own. Several lists stopped silently at 100 rows and now page. One summary loaded up to 10,000 rows into PHP to add them up; it is now a single grouped SQL query with the same row permissions. New tools cover time entries, tasks, budgets and absences. Every change was written test-first: each feature commit follows a commit with a failing test.</p>
+
+    <h3 data-i18n="p4-h3">The audit around it</h3>
+    <p data-i18n="p4-p1">Opening an API to agents is a good moment to check what the API already allows. An inventory listed every operation the interface uses, with who may call it and what it reads or writes, so the audit covered everything instead of a sample. Every permission gap it found was first proved with a failing test, then fixed, and review found more of the same kind, which went through the same loop. The permission tests run to about 700 lines, and each test sets up its own data.</p>
+    <p data-i18n="p4-p2">Two smaller fixes belong to the same theme. The logger now masks credentials before anything reaches central logging. And the repository’s own AI agent commands, for releases, KPIs and reviews, no longer ask anyone to paste a token into the chat: they read secrets from files created outside the agent, refuse files that other users can read, and never print the value.</p>
+
+    <h2 data-i18n="reflect-h2">What mattered</h2>
+    <p data-i18n="reflect-p1">An AI agent is a new kind of client, and the cheapest moment to decide what it may do is before the first one connects. Here that meant three boundaries: who the agent acts for (OAuth and consent), where its token works (one endpoint, closed by default), and what it may touch (the same permissions as the person behind it).</p>
+    <p data-i18n="reflect-p2">Status, plainly: two of the six OAuth steps are merged and the rest are in review, behind one switch. The new tools ship with them. The audit fixes are merged.</p>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-oauth">OAuth2</span>
+      <span class="tag">MCP</span>
+      <span class="tag" data-i18n="tag-security">Security</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': `Featured Work`,
+    'hero-h1': `KI-Agenten sicher in ein zwanzig Jahre altes Produkt lassen`,
+    'hero-lede': `Einen KI-Agenten mit dem Produkt zu verbinden brauchte bisher einen Entwickler und ein API-Token, das alles öffnete. Jetzt braucht es einen Zustimmungsdialog und ein Token, das nur die Agenten-Tools öffnet. Dafür brauchte es Standard-OAuth, ein Berechtigungsmodell für die Tools und ein Audit der API rundherum.`,
+    'meta-date': `September – Oktober 2026 · Sechs aufeinander aufbauende Änderungen · teilweise im Review`,
+    'diagram1-caption': `Wie sich ein Agent verbindet, vorher und nachher. Jede Zeile rechts wird im Code durchgesetzt und ist durch Tests abgedeckt.`,
+    'diagram2-caption': `Das Agenten-Token wird an genau einer Stelle akzeptiert. Überall sonst wird es abgelehnt, auch an Endpunkten, die es noch gar nicht gibt.`,
+    'why-h2': `Die Ausgangslage`,
+    'why-p1': `TEAMBOX hat einen MCP-Server: die Standardschnittstelle, über die KI-Agenten die Tools eines Produkts aufrufen. Bis September hieß einen Agenten zu verbinden: ein persönliches API-Token anlegen, eine Node.js-Brücke installieren und eine JSON-Konfiguration von Hand bearbeiten. Kundenteams ohne Entwickler kamen damit nicht zurecht. Schlimmer noch: Das Token war von derselben Art wie das eines vollwertigen API-Clients, ein so verbundener Agent konnte also die ganze API aufrufen, nicht nur die Tools für Agenten.`,
+    'p1-h3': `Standard-OAuth, in sechs aufeinander aufbauenden Schritten`,
+    'p1-p1': `Ich habe den Agenten-Endpunkt zu einem OAuth-Resource-Server gemacht, aufbauend auf der OAuth-Bibliothek, die das Produkt schon nutzte, und die Arbeit in sechs aufeinander aufbauende Branches geteilt, jeder einzeln reviewt. Agenten-Apps finden die Anmeldung über Standard-Discovery-Metadaten und registrieren sich selbst als öffentliche Clients mit PKCE, mit Regeln für erlaubte Redirect-Adressen und einer Obergrenze für ungenutzte Registrierungen. Der Nutzer bestätigt den Agenten in einem Zustimmungsdialog, der durch ein Einmal-Token geschützt ist.`,
+    'p1-p2': `Access-Tokens gelten 15 Minuten. Refresh-Tokens gelten 30 Tage und rotieren bei jeder Nutzung, und ein zweimal verwendetes Refresh-Token beendet die ganze Verbindung: Zweimal verwendet wird nur ein kopiertes Token. Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen, und ein einziger Schalter schaltet den ganzen Ablauf ein oder aus. Alles folgt veröffentlichten Standards (RFC 9728, 8414, 7591, 7009 und den Sicherheitsempfehlungen aus RFC 9700), damit sich jeder MCP-Client, der OAuth spricht, ohne eigenen Code verbinden kann.`,
+    'p2-h3': `Ein Token, das nur dort gilt, wo es soll`,
+    'p2-p1': `Ein an einen Agenten ausgestelltes Token nennt seine Zielgruppe: den Agenten-Endpunkt. Jeder andere Einstiegspunkt lehnt es ab. Die Prüfung ist so gebaut, dass die sichere Antwort der Standard ist. Die Funktion, die Tokens prüft, muss gesagt bekommen, von wo sie aufgerufen wird, und nur der Agenten-Endpunkt sagt das. Ein neuer Endpunkt, der nächstes Jahr dazukommt und das Argument vergisst, lehnt Agenten-Tokens ab, statt sie stillschweigend anzunehmen.`,
+    'p3-h3': `Tools, die den Berechtigungen des Kunden folgen`,
+    'p3-p1': `Bisher wurde jedes Tool angeboten, sobald der MCP-Server an war, auch Tools für Module, die ein Kunde gar nicht hat. Jetzt gibt jedes Tool sein Modul an, die Berechtigungsregel der API-Route dahinter, die Einstellungen, die es braucht, und ob es schreibt. Ein abgeschaltetes Tool antwortet genau wie ein Tool, das es nicht gibt, ein Agent erfährt also nichts darüber. Tools, die personenbezogene Daten berühren, sind standardmäßig aus.`,
+    'p3-p2': `Derselbe Durchgang hat behoben, was das Review in den bestehenden Tools gefunden hatte. Eines versprach alle Aufgaben und lieferte nur die eigenen des Nutzers. Mehrere Listen hörten stillschweigend bei 100 Zeilen auf und blättern jetzt. Eine Zusammenfassung lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist sie eine einzige gruppierte SQL-Abfrage mit denselben Zeilenberechtigungen. Neue Tools decken Zeiteinträge, Aufgaben, Budgets und Abwesenheiten ab. Jede Änderung wurde test-first geschrieben: Auf jeden Feature-Commit folgt ein Commit mit einem fehlschlagenden Test davor.`,
+    'p4-h3': `Das Audit rundherum`,
+    'p4-p1': `Eine API für Agenten zu öffnen ist ein guter Moment, um zu prüfen, was die API schon erlaubt. Eine Bestandsaufnahme listete jede Operation, die die Oberfläche nutzt, mit ihren Berechtigten und dem, was sie liest oder schreibt, damit das Audit alles abdeckte statt einer Stichprobe. Jede gefundene Berechtigungslücke wurde zuerst mit einem fehlschlagenden Test belegt und dann behoben, und das Review fand weitere Fälle derselben Art, die durch dieselbe Schleife liefen. Die Berechtigungstests umfassen etwa 700 Zeilen, und jeder Test legt seine eigenen Daten an.`,
+    'p4-p2': `Zwei kleinere Fixes gehören zum selben Thema. Der Logger maskiert Zugangsdaten jetzt, bevor irgendetwas ins zentrale Logging gelangt. Und die eigenen KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews bitten niemanden mehr, ein Token in den Chat einzufügen: Sie lesen Geheimnisse aus Dateien, die außerhalb des Agenten angelegt werden, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
+    'reflect-h2': `Was zählte`,
+    'reflect-p1': `Ein KI-Agent ist eine neue Art von Client, und der billigste Moment, um zu entscheiden, was er darf, ist bevor sich der erste verbindet. Hier hieß das drei Grenzen: für wen der Agent handelt (OAuth und Zustimmung), wo sein Token gilt (ein Endpunkt, standardmäßig geschlossen) und was er anfassen darf (dieselben Berechtigungen wie die Person dahinter).`,
+    'reflect-p2': `Der Stand, ohne Beschönigung: Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter. Die neuen Tools kommen mit ihnen. Die Audit-Fixes sind gemergt.`,
+    'tag-oauth': `OAuth2`,
+    'tag-security': `Sicherheit`,
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Giving AI agents a standard OAuth sign-in, tools that follow the customer’s permissions, and an audit of the API around them, in a twenty-year-old ERP.',
+    de: 'KI-Agenten bekommen eine Standard-OAuth-Anmeldung, Tools, die den Berechtigungen des Kunden folgen, und ein Audit der API rundherum, in einem zwanzig Jahre alten ERP.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>

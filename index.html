@@ -331,17 +331,18 @@
       </ol>
       <p data-i18n="feat17-p2">Users see and revoke connected agents in their settings. Two of the six OAuth steps are merged; the rest are in review, behind one switch.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">OAuth2</span><span class="tag">MCP</span><span class="tag" data-i18n="feat17-tag-security">Security</span></div>
+      <a class="card-link" href="work/ai-agents-safely.html" data-i18n="feat17-link">Read the full writeup →</a>
     </div>
 
     <div class="card featured" id="feat18">
       <a class="card-anchor" href="#feat18" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat18-h3">A permission audit of the GraphQL API, one failing test per gap</h3>
-      <p data-i18n="feat18-p1">An inventory of API endpoints found GraphQL operations the interface uses that checked no permissions at all. Each gap was proved with a failing test before it was fixed.</p>
+      <h3 data-i18n="feat18-h3">An audit of the API's permission checks, one failing test per gap</h3>
+      <p data-i18n="feat18-p1">An inventory of the API's endpoints looked at every operation the interface uses, not just the ones that looked risky. Every permission gap it found was first proved with a failing test, then fixed.</p>
       <ol class="steps">
-        <li><span data-i18n="feat18-step1"><strong>A method call on any class name.</strong> One operation called a method on whatever class name the client sent. It now accepts only the one family of classes it exists for.</span></li>
-        <li><span data-i18n="feat18-step2"><strong>Reads and writes without checks.</strong> Invoices, tasks, contact creation and other employees' attendance days. Review found more of the same kind in dunning and invoice processing.</span></li>
-        <li><span data-i18n="feat18-step3"><strong>A save that wrote too much.</strong> Setting a reminder on a calendar event saved the whole event and overwrote other users' changes. It now writes only the reminder.</span></li>
+        <li><span data-i18n="feat18-step1"><strong>Inventory first.</strong> Each operation is listed with who may call it and what it reads or writes, so the audit covers everything instead of a sample.</span></li>
+        <li><span data-i18n="feat18-step2"><strong>A failing test before every fix.</strong> Each gap became a test that fails on the old code and passes on the new. Review found more cases of the same kind, and they went through the same loop.</span></li>
+        <li><span data-i18n="feat18-step3"><strong>Writes only what they exist for.</strong> Where an operation saved more than it needed to, it now writes only its own field.</span></li>
       </ol>
       <p data-i18n="feat18-p2">The permission tests run to about 700 lines, and every test seeds its own data, so none of these gaps can quietly come back.</p>
       <div class="tags"><span class="tag" data-i18n="feat18-tag-security">Security</span><span class="tag">GraphQL</span><span class="tag" data-i18n="feat18-tag-permissions">Permissions</span></div>
@@ -349,8 +350,8 @@
 
     <div class="card" id="card19">
       <a class="card-anchor" href="#card19" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card19-h3">Secrets out of the logs, and out of AI chat transcripts</h3>
-      <p data-i18n="card19-p">When PHP failed to read a session, its warning included the cache connection string with its password, and central logging stored it. The logger now masks credentials in messages and exceptions before writing them. Separately, the repository's AI agent commands for releases, KPIs and reviews asked people to paste API tokens into the chat, which puts secrets into transcripts. They now read secrets from files people create outside the agent, refuse files other users can read, and never print the value.</p>
+      <h3 data-i18n="card19-h3">Keeping secrets out of logs and AI chat transcripts</h3>
+      <p data-i18n="card19-p">A review of what reaches central logging, and what reaches AI chat transcripts, found places where credentials could end up. The logger now masks credentials in messages and exceptions before writing them. The repository's AI agent commands for releases, KPIs and reviews no longer ask anyone to paste a token into the chat: they read secrets from files created outside the agent, refuse files other users can read, and never print the value.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card19-tag-security">Security</span><span class="tag">Logging</span></div>
     </div>
   </section>
@@ -592,6 +593,7 @@
 
   I18N.de = {
     'stat-tickets': 'Tickets',
+    'feat17-link': 'Den vollständigen Text lesen →',
     'feat17-h3': `KI-Agenten melden sich per OAuth an statt mit einem eingefügten API-Token`,
     'feat17-p1': `Einen KI-Agenten mit unserem MCP-Server zu verbinden hieß bisher: ein persönliches API-Token, eine Node.js-Brücke und eine von Hand bearbeitete Konfigurationsdatei. Teams ohne Entwickler kamen damit nicht zurecht, und das Token öffnete die ganze API, nicht nur die Agenten-Tools.`,
     'feat17-step1': `<strong>Standard-OAuth, in sechs aufeinander aufbauenden Schritten.</strong> Discovery-Metadaten, Selbstregistrierung für Agenten-Apps, ein Zustimmungsdialog, 15-Minuten-Access-Tokens und rotierende Refresh-Tokens. Ein wiederverwendetes Refresh-Token beendet die ganze Verbindung.`,
@@ -599,16 +601,16 @@
     'feat17-step3': `<strong>Die Tools richten sich nach den Modulen des Kunden.</strong> Jedes Tool gibt an, welches Modul, welche Berechtigung und welche Einstellungen es braucht. Ein abgeschaltetes Tool antwortet genau wie eines, das es nicht gibt. Ein Zusammenfassungs-Tool lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist es eine einzige SQL-Abfrage.`,
     'feat17-p2': `Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen. Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter.`,
     'feat17-tag-security': 'Sicherheit',
-    'feat18-h3': `Ein Berechtigungs-Audit der GraphQL-API, ein fehlschlagender Test pro Lücke`,
-    'feat18-p1': `Eine Bestandsaufnahme der API-Endpunkte fand GraphQL-Operationen, die die Oberfläche nutzt und die überhaupt keine Berechtigung prüften. Jede Lücke wurde mit einem fehlschlagenden Test belegt, bevor sie behoben wurde.`,
-    'feat18-step1': `<strong>Ein Methodenaufruf auf beliebige Klassennamen.</strong> Eine Operation rief eine Methode auf jedem Klassennamen auf, den der Client schickte. Jetzt akzeptiert sie nur die eine Klassenfamilie, für die sie gedacht ist.`,
-    'feat18-step2': `<strong>Lesen und Schreiben ohne Prüfung.</strong> Rechnungen, Aufgaben, das Anlegen von Kontakten und die Anwesenheitstage anderer Mitarbeiter. Das Review fand weitere Fälle derselben Art im Mahnwesen und in der Rechnungsverarbeitung.`,
-    'feat18-step3': `<strong>Ein Speichern, das zu viel schrieb.</strong> Eine Erinnerung an einem Kalendertermin zu setzen speicherte den ganzen Termin und überschrieb die Änderungen anderer Nutzer. Jetzt wird nur die Erinnerung geschrieben.`,
+    'feat18-h3': `Ein Audit der Berechtigungsprüfungen der API, ein fehlschlagender Test pro Lücke`,
+    'feat18-p1': `Eine Bestandsaufnahme der API-Endpunkte sah sich jede Operation an, die die Oberfläche nutzt, nicht nur die, die riskant wirkten. Jede gefundene Berechtigungslücke wurde zuerst mit einem fehlschlagenden Test belegt und dann behoben.`,
+    'feat18-step1': `<strong>Zuerst die Bestandsaufnahme.</strong> Jede Operation ist mit ihren Berechtigten und dem, was sie liest oder schreibt, erfasst, damit das Audit alles abdeckt statt einer Stichprobe.`,
+    'feat18-step2': `<strong>Ein fehlschlagender Test vor jedem Fix.</strong> Jede Lücke wurde zu einem Test, der mit dem alten Code fehlschlägt und mit dem neuen besteht. Das Review fand weitere Fälle derselben Art, und sie liefen durch dieselbe Schleife.`,
+    'feat18-step3': `<strong>Schreiben nur, wofür sie da sind.</strong> Wo eine Operation mehr speicherte als nötig, schreibt sie jetzt nur noch ihr eigenes Feld.`,
     'feat18-p2': `Die Berechtigungstests umfassen etwa 700 Zeilen, und jeder Test legt seine eigenen Daten an, damit keine dieser Lücken unbemerkt zurückkommt.`,
     'feat18-tag-security': 'Sicherheit',
     'feat18-tag-permissions': 'Berechtigungen',
-    'card19-h3': `Geheimnisse raus aus den Logs und raus aus KI-Chatverläufen`,
-    'card19-p': `Wenn PHP eine Session nicht lesen konnte, enthielt die Warnung den Cache-Verbindungsstring samt Passwort, und das zentrale Logging speicherte ihn. Der Logger maskiert Zugangsdaten jetzt in Meldungen und Exceptions, bevor er sie schreibt. Unabhängig davon baten die KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews darum, API-Tokens in den Chat einzufügen, wodurch Geheimnisse in Chatverläufen landen. Jetzt lesen sie Geheimnisse aus Dateien, die man außerhalb des Agenten anlegt, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
+    'card19-h3': `Geheimnisse aus Logs und KI-Chatverläufen heraushalten`,
+    'card19-p': `Eine Prüfung dessen, was ins zentrale Logging und in KI-Chatverläufe gelangt, fand Stellen, an denen Zugangsdaten landen konnten. Der Logger maskiert Zugangsdaten jetzt in Meldungen und Exceptions, bevor er sie schreibt. Die KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews bitten niemanden mehr, ein Token in den Chat einzufügen: Sie lesen Geheimnisse aus Dateien, die außerhalb des Agenten angelegt werden, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
     'card19-tag-security': 'Sicherheit',
     'nav-research': 'Recherche',
     'nav-archive': 'Archiv',
