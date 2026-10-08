@@ -106,6 +106,7 @@
   .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
   .diagram svg{display:block;width:100%;height:auto}
   .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+  .shot{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 
   footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
   footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
@@ -137,7 +138,7 @@
     <p class="kicker" data-i18n="hero-kicker">Personal AI Research</p>
     <h1 data-i18n="hero-h1">Crimes of the 1%: A Sourced Database of Financial Crime Among the Ultra-Wealthy</h1>
     <p class="lede" data-i18n="hero-lede">A database that holds corporate and executive-level financial crime against its actual enforcement outcome — and what it takes to make "sourced" mean something more specific than a link at the bottom of the page.</p>
-    <p class="meta-row" data-i18n="meta-date">July – September 2026 · Live at <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a></p>
+    <p class="meta-row" data-i18n="meta-date">July – October 2026 · Live at <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a></p>
   </section>
 
   <article class="article">
@@ -183,6 +184,16 @@
     <p data-i18n="p5-p1">The "four times a day" case crawler turned out to be a local template picker: it assembled plausible-looking cases, not found ones. Like its sibling project, it also ran for its first week on an API key that was the literal text "Not found.". In August it was rewritten as a real search-based harvester that fails closed: a new case is published only if its cited URL is one the search actually returned, not one the model typed, and a code-level duplicate check replaced a prompt that merely asked the model not to repeat itself.</p>
     <p data-i18n="p5-p2">The same citation trap as the OSINT tracker followed: combining search with structured output silently drops the citations, so for five days no real case could pass the gate. Search and extraction are now separate calls. Scheduling moved from an in-process timer, which died whenever the host scaled to zero, to an external scheduler that wakes the service four times a day. The public AI endpoints, each a billed model call, gained the rate limit the crawler trigger already had.</p>
     <p data-i18n="p5-p3">Every record now carries a visible provenance label, "Seed / curated" or "AI-generated, unreviewed", instead of leaving the difference to be inferred. Two cases were removed as out of scope for a financial-crime database, and one of them turned out to be using another case's photo.</p>
+
+    <h3 data-i18n="p6-h3">October: no invented amounts, sources that last, and deep time</h3>
+    <p data-i18n="p6-p1">A case found by the AI now shows a penalty only when its source text states one, exactly as written. The stored value is read from that text, never from the model's separate number, which had disagreed with its own text. If the source page can be read, the figure must also appear on it. A case without a stated amount says "Not disclosed".</p>
+    <p data-i18n="p6-p2">The source check became stricter and fairer at the same time. Government sites refuse requests from cloud servers, so the old check rejected almost every real case: in two weeks, 5 of 62 searches published anything. A readable source must now name the company or person in its main text, and a page that refuses the check counts only on an official site whose address names them. The search citations were Google redirect links that expire within days, which had left 35 published cases with a dead source. 17 were found again and passed the same checks; the other 18 now say plainly that the link no longer works.</p>
+    <p data-i18n="p6-p3">Every model call now counts against a monthly budget spread across the month, and only the scheduler can start a case search. The inequality dashboard also gained a deep-time view: how far back a worker on the site's illustrative $10,000 a year would have had to start working, without a break, to earn a case's recorded amount.</p>
+
+    <div class="diagram">
+      <img class="shot" src="../assets/crimes/deep-time-payroll.jpg" width="1184" height="804" loading="lazy" alt="The Deep-Time Payroll panel: Meta's $17.1 billion settlement would take a worker on $10,000 a year 1.7 million years, so they would have had to clock in before the earliest evidence of controlled fire. A timeline runs from 100 million years ago on the left to today on the right, above a leaderboard of the deepest-time cases.">
+      <p class="diagram-caption" data-i18n="shot-caption">Deep-Time Payroll: Meta's $17.1 billion settlement equals 1.7 million years of non-stop work, so the worker clocks in before the earliest evidence of controlled fire.</p>
+    </div>
 
     <h2 data-i18n="reflect-h2">What actually mattered</h2>
     <p data-i18n="reflect-p1">Getting Gemini to return a clean, schema-constrained structure is close to table stakes now. What actually took real effort was everything around that: keeping "computed from the dataset" visually distinct from "illustrative for scale" instead of letting the two blur together, labeling AI-generated content for what it honestly is instead of what would be more convenient to imply, and treating a security pattern found once as something to go check for deliberately elsewhere — not a one-off fire that got put out and forgotten.</p>
@@ -256,7 +267,7 @@
     'hero-kicker': 'Personal AI Research',
     'hero-h1': 'Crimes of the 1%: Eine sourcierte Datenbank von Finanzverbrechen unter den Superreichen',
     'hero-lede': 'Eine Datenbank, die Finanzverbrechen von Unternehmen und Führungskräften gegen den tatsächlichen Ausgang der Rechtsverfolgung hält — und was es braucht, damit "sourciert" mehr bedeutet als ein Link am Seitenende.',
-    'meta-date': 'Juli – September 2026 · Live auf <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a>',
+    'meta-date': 'Juli – Oktober 2026 · Live auf <a href="https://crimes.davidirving.dev/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">crimes.davidirving.dev</a>',
 
     'what-h2': 'Was es tut',
     'what-p1': `Die Datenbank katalogisiert Finanzverbrechen von Unternehmen und
@@ -339,6 +350,11 @@
     'p5-p1': `Der Fall-Crawler „viermal täglich“ entpuppte sich als lokale Vorlagen-Auswahl: Er setzte plausibel aussehende Fälle zusammen, statt welche zu finden. Wie sein Schwesterprojekt lief er in der ersten Woche außerdem mit einem API-Key, der wörtlich der Text „Not found.“ war. Im August wurde er als echter, suchbasierter Harvester neu geschrieben, der im Zweifel ablehnt: Ein neuer Fall wird nur veröffentlicht, wenn seine zitierte URL eine ist, die die Suche tatsächlich geliefert hat, nicht eine, die das Modell getippt hat. Eine Duplikatprüfung im Code ersetzte einen Prompt, der das Modell lediglich bat, sich nicht zu wiederholen.`,
     'p5-p2': `Dann folgte dieselbe Zitat-Falle wie beim OSINT-Tracker: Suche plus strukturierte Ausgabe lässt die Zitate still verschwinden, also konnte fünf Tage lang kein echter Fall das Gate passieren. Suche und Extraktion sind jetzt getrennte Aufrufe. Die Zeitsteuerung zog von einem Timer im Prozess, der bei jedem Scale-to-Zero starb, zu einem externen Scheduler um, der den Dienst viermal täglich weckt. Die öffentlichen KI-Endpunkte, jeder ein bezahlter Modellaufruf, bekamen das Rate-Limit, das der Crawler-Trigger schon hatte.`,
     'p5-p3': `Jeder Datensatz trägt jetzt ein sichtbares Herkunfts-Label, „Seed / kuratiert“ oder „KI-generiert, ungeprüft“, statt den Unterschied erraten zu lassen. Zwei Fälle wurden entfernt, weil sie nicht in eine Datenbank für Finanzkriminalität gehören, und einer davon verwendete das Foto eines anderen Falls.`,
+    'p6-h3': 'Oktober: keine erfundenen Beträge, Quellen, die halten, und Tiefenzeit',
+    'p6-p1': `Ein von der KI gefundener Fall zeigt eine Strafe jetzt nur, wenn sein Quelltext eine nennt, und zwar genau so, wie sie dort steht. Der gespeicherte Wert wird aus diesem Text gelesen, nie aus der separaten Zahl des Modells, die seinem eigenen Text widersprochen hatte. Lässt sich die Quellseite lesen, muss der Betrag auch dort stehen. Ein Fall ohne genannten Betrag zeigt „Nicht offengelegt“.`,
+    'p6-p2': `Die Quellenprüfung wurde gleichzeitig strenger und fairer. Behördenseiten verweigern Anfragen von Cloud-Servern, deshalb verwarf die alte Prüfung fast jeden echten Fall: In zwei Wochen veröffentlichten 5 von 62 Suchen überhaupt etwas. Eine lesbare Quelle muss jetzt das Unternehmen oder die Person im Haupttext nennen, und eine Seite, die die Prüfung verweigert, zählt nur auf einer offiziellen Website, deren Adresse sie nennt. Die Suchzitate waren Google-Weiterleitungen, die nach wenigen Tagen ablaufen; dadurch hatten 35 veröffentlichte Fälle eine tote Quelle. 17 wurden wiedergefunden und bestanden dieselben Prüfungen; die übrigen 18 sagen jetzt klar, dass der Link nicht mehr funktioniert.`,
+    'p6-p3': `Jeder Modellaufruf zählt jetzt gegen ein Monatsbudget, das über den Monat verteilt wird, und nur der Scheduler kann eine Fallsuche starten. Das Ungleichheits-Dashboard hat außerdem eine Tiefenzeit-Ansicht bekommen: wie weit zurück eine Arbeitskraft mit dem illustrativen Lohn der Website von 10.000 $ im Jahr hätte anfangen müssen, ohne Pause zu arbeiten, um den erfassten Betrag eines Falls zu verdienen.`,
+    'shot-caption': 'Deep-Time Payroll: Metas Vergleich über 17,1 Mrd. $ entspricht 1,7 Millionen Jahren Arbeit ohne Pause, die Arbeitskraft stempelt also vor den frühesten Belegen für kontrolliertes Feuer ein.',
     'reflect-h2': 'Was tatsächlich zählte',
     'reflect-p1': `Gemini dazu zu bringen, eine saubere, schema-eingeschränkte Struktur zu
       liefern, ist inzwischen fast Standard. Was tatsächlich echte Arbeit gekostet hat, war
