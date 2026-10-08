@@ -86,6 +86,11 @@
     'feat11': 'archive.html#c4-feat11',
     'feat12': 'archive.html#c4-feat12',
     'card13': 'archive.html#c4-card13',
+    // Retired 2026-10-08 when the Sep 24 - Oct 8 cycle replaced the Sep 8 - 23 one.
+    // Next cycle's live ids must start at 20 (highest ever used is c6-card19).
+    'feat14': 'archive.html#c5-feat14',
+    'feat15': 'archive.html#c5-feat15',
+    'card16': 'archive.html#c5-card16',
     // Dropped from the homepage strategies teaser (cap 4); the full page is unchanged.
     'strategy-implementer-reviewer-tester': 'strategies/implementer-reviewer-tester.html',
   };
@@ -193,6 +198,7 @@
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   .tag{background:var(--chip);color:var(--chip-ink);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
   .card-video{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line);background:#000;margin:4px 0 14px;box-shadow:var(--ring)}
+  .card-shot{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line);margin:4px 0 14px;box-shadow:var(--ring)}
 
   /* per-card permalink, for grabbing a direct link to one highlight */
   .card-anchor{position:absolute;top:16px;right:16px;width:26px;height:26px;display:flex;align-items:center;
@@ -301,53 +307,51 @@
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker" data-i18n="hl-kicker">Work Highlights · September 8 – 23, 2026</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · September 24 – October 8, 2026</p>
       <h2 data-i18n="hl-h2">The latest work</h2>
       <p data-i18n="hl-p">Updated monthly, straight from the actual work — not a highlight reel.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">242</div><div class="l" data-i18n="stat-commits">commits</div></div>
-      <div class="stat"><div class="n">8</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
-      <div class="stat"><div class="n">~236k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
-      <div class="stat"><div class="n">13</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
+      <div class="stat"><div class="n">290</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">35</div><div class="l" data-i18n="stat-tickets">tickets</div></div>
+      <div class="stat"><div class="n">~30k</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">23</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
     </div>
-    <p class="stats-note" data-i18n="stats-note">*Mostly the merged test-suite rewrite and a regenerated database baseline. About 46k lines are outside tests, fixtures and schema.</p>
 
-    <div class="card featured" id="feat14">
-      <a class="card-anchor" href="#feat14" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat17">
+      <a class="card-anchor" href="#feat17" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat14-h3">One SSO login in three failed, and the first two diagnoses were wrong</h3>
-      <p data-i18n="feat14-p1">A customer reported single sign-on failing at random. Two reasonable theories were checked and ruled out first: a misconfigured identity provider, then a token-refresh race. The real causes were elsewhere.</p>
+      <h3 data-i18n="feat17-h3">AI agents sign in over OAuth instead of a pasted API token</h3>
+      <p data-i18n="feat17-p1">Connecting an AI agent to our MCP server used to mean a personal API token, a Node.js bridge and a hand-edited config file. Teams without a developer could not finish that, and the token opened the whole API, not just the agent tools.</p>
       <ol class="steps">
-        <li><span data-i18n="feat14-step1"><strong>Every login used the same cookie name.</strong> Two login flows running at once shared one state cookie, so the first to finish deleted it for the other. Hundreds of failures a week, logged at info level, unseen for three months.</span></li>
-        <li><span data-i18n="feat14-step2"><strong>An API call nobody needed.</strong> A profile lookup after login returned 401 on about one login in seven. The same data was already in the ID token. It now comes from there, validated, with the old path kept as a fallback so no customer regresses.</span></li>
-        <li><span data-i18n="feat14-step3"><strong>A real identity provider in CI.</strong> The end-to-end stack now runs a real Keycloak: six scenarios, including five simultaneous logins and a token revoked mid-session. It found one more defect on its first runs, a login callback processed twice, which is now fixed too.</span></li>
+        <li><span data-i18n="feat17-step1"><strong>Standard OAuth, built in six stacked steps.</strong> Discovery metadata, self-registration for agent apps, a consent screen, 15-minute access tokens and rotating refresh tokens. A reused refresh token ends the whole connection.</span></li>
+        <li><span data-i18n="feat17-step2"><strong>Agent tokens work only on the agent endpoint.</strong> The token names its audience, and every other entry point rejects it. A new endpoint that forgets the check fails closed.</span></li>
+        <li><span data-i18n="feat17-step3"><strong>Tools follow the customer's modules.</strong> Each tool declares the module, permission and settings it needs. A switched-off tool answers exactly like one that does not exist. One summary tool loaded up to 10,000 rows into PHP to add them up; it is now one SQL query.</span></li>
       </ol>
-      <p data-i18n="feat14-p2">Every fix was mutation-tested: remove the guard and a test fails. What no test proves is listed as a known limit, not claimed.</p>
-      <div class="tags"><span class="tag" data-i18n="feat14-tag-security">Security</span><span class="tag">OAuth2 / OIDC</span><span class="tag">Keycloak</span><span class="tag">CI/CD</span></div>
+      <p data-i18n="feat17-p2">Users see and revoke connected agents in their settings. Two of the six OAuth steps are merged; the rest are in review, behind one switch.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">OAuth2</span><span class="tag">MCP</span><span class="tag" data-i18n="feat17-tag-security">Security</span></div>
     </div>
 
-    <div class="card featured" id="feat15">
-      <a class="card-anchor" href="#feat15" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat18">
+      <a class="card-anchor" href="#feat18" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat15-h3">The test-suite rewrite merged, and a passing run now has to be silent</h3>
-      <p data-i18n="feat15-p1">Last cycle this was an open pull request touching two thousand files. It merged on September 21: over sixteen thousand tests on five parallel workers, each with its own database, in about seventy seconds.</p>
+      <h3 data-i18n="feat18-h3">A permission audit of the GraphQL API, one failing test per gap</h3>
+      <p data-i18n="feat18-p1">An inventory of API endpoints found GraphQL operations the interface uses that checked no permissions at all. Each gap was proved with a failing test before it was fixed.</p>
       <ol class="steps">
-        <li><span data-i18n="feat15-step1"><strong>Green is not enough.</strong> A run that prints a warning, an error or leftover test data fails the gate, even when every test passes.</span></li>
-        <li><span data-i18n="feat15-step2"><strong>Five guards enforce isolation.</strong> A transaction per test, cache resets, config-drift detection, log-noise detection and a database checksum after each test.</span></li>
-        <li><span data-i18n="feat15-step3"><strong>Production fixes rode along, each with a test.</strong> A timed-out backup no longer leaves an unreadable archive, shell commands get a hard timeout, and a profiling extension stays out of the production image.</span></li>
+        <li><span data-i18n="feat18-step1"><strong>A method call on any class name.</strong> One operation called a method on whatever class name the client sent. It now accepts only the one family of classes it exists for.</span></li>
+        <li><span data-i18n="feat18-step2"><strong>Reads and writes without checks.</strong> Invoices, tasks, contact creation and other employees' attendance days. Review found more of the same kind in dunning and invoice processing.</span></li>
+        <li><span data-i18n="feat18-step3"><strong>A save that wrote too much.</strong> Setting a reminder on a calendar event saved the whole event and overwrote other users' changes. It now writes only the reminder.</span></li>
       </ol>
-      <p data-i18n="feat15-p2">Review raised 26 items: 17 fixed, 6 did not survive checking, 3 folded in on request.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="feat15-tag-test-infra">Test Infrastructure</span><span class="tag">Pest</span><span class="tag">CI/CD</span></div>
-      <a class="card-link" href="work/test-suite-migration.html" data-i18n="feat15-link">Read the full writeup →</a>
+      <p data-i18n="feat18-p2">The permission tests run to about 700 lines, and every test seeds its own data, so none of these gaps can quietly come back.</p>
+      <div class="tags"><span class="tag" data-i18n="feat18-tag-security">Security</span><span class="tag">GraphQL</span><span class="tag" data-i18n="feat18-tag-permissions">Permissions</span></div>
     </div>
 
-    <div class="card" id="card16">
-      <a class="card-anchor" href="#card16" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card16-h3">Configuring a twenty-year-old PHP app from the environment</h3>
-      <p data-i18n="card16-p">Configuration is moving out of runtime code and into the deployment environment, so every container behaves the same way. Runtime <code>ini_set()</code> calls are gone, but not blindly: removing one would have turned a three-record CSV into one garbled row, so line-ending handling got its own utility first. A settings class now reads each value from the environment, then the config file, then a default, without changing over 500 call sites. PATH lookups for system binaries became configured paths that fail loudly; one of them had let an upgrade skip a SQL file and still report success. The command-line tool is moving to Symfony Console, with its "did you mean" prompt switched off on purpose: it could turn a typo into a database reset. The first part has merged; the rest is in review.</p>
-      <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="card16-tag-config">Configuration</span><span class="tag" data-i18n="card16-tag-reliability">Reliability</span></div>
+    <div class="card" id="card19">
+      <a class="card-anchor" href="#card19" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="card19-h3">Secrets out of the logs, and out of AI chat transcripts</h3>
+      <p data-i18n="card19-p">When PHP failed to read a session, its warning included the cache connection string with its password, and central logging stored it. The logger now masks credentials in messages and exceptions before writing them. Separately, the repository's AI agent commands for releases, KPIs and reviews asked people to paste API tokens into the chat, which puts secrets into transcripts. They now read secrets from files people create outside the agent, refuse files other users can read, and never print the value.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card19-tag-security">Security</span><span class="tag">Logging</span></div>
     </div>
   </section>
 
@@ -399,7 +403,7 @@
 
   <section class="block" id="research">
     <div class="block-head">
-      <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July 2026</p>
+      <p class="kicker" data-i18n="research-kicker">Personal AI Research · Proof of Concept, July – October 2026</p>
       <h2 data-i18n="research-h2">Outside TEAMBOX: independent AI research builds</h2>
       <p data-i18n="research-p">A way to stress-test what Gemini can actually do on real, messy problems instead of toy demos — built independently of TEAMBOX, in Google AI Studio. Keeping both of these consistent with each other, and with the rest of this site, runs on the practice covered in <a href="strategies/instructions-style-memory.html">Agentic Strategies →</a>.</p>
     </div>
@@ -409,14 +413,16 @@
       <p class="eyebrow" data-i18n="eyebrow-research">Personal AI Research</p>
       <h3 data-i18n="research-h3">OSINT Real-Time Tracker — multilingual conflict monitoring, built solo with Gemini</h3>
       <p data-i18n="research-p1">A maps-based dashboard that monitors global conflict events close to real time. It takes open-source reports — social posts, wire dispatches, radio transcripts — in whatever language they were written, and turns them into structured, geolocated, credibility-scored events a researcher can actually use.</p>
+      <img class="card-shot" src="assets/osint/public-map-desktop.jpg" width="1440" height="860" loading="lazy" alt="The public OSINT live map: an event feed with time, region and category filters beside a map of Sudan and the Red Sea, and an event card asking visitors to log in for the full analysis.">
       <ol class="steps">
-        <li><span data-i18n="research-step1"><strong>Multilingual intake, no separate translation step.</strong> Paste raw source text in Ukrainian, Arabic, French, Hebrew, or English and Gemini handles extraction directly — entities, location, and language nuance in one pass, not a translate-then-analyze pipeline.</span></li>
+        <li><span data-i18n="research-step1"><strong>Multilingual intake, no separate translation step.</strong> Signed-in users paste raw source text in Ukrainian, Arabic, French, Hebrew, or English and Gemini handles extraction directly — entities, location, and language nuance in one pass, not a translate-then-analyze pipeline.</span></li>
         <li><span data-i18n="research-step2"><strong>NLP-based geolocation.</strong> Gemini resolves place names and context clues into exact coordinates, with the reasoning behind each resolution shown, not just a pin dropped on a map.</span></li>
         <li><span data-i18n="research-step3"><strong>Sentiment and tension scoring beyond positive/negative.</strong> Each report gets a sentiment score, a 1–10 tension score, a dominant emotion, and a read on native-language slang and nuance that keyword-based tools miss entirely.</span></li>
         <li><span data-i18n="research-step4"><strong>A transparent, five-parameter credibility grade.</strong> Every event is scored 0–100 across source reputation, cross-referencing, evidence level, contextual plausibility, and freshness — with the reasoning shown, not a black-box trust score.</span></li>
-        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> A background scheduler runs the same search-grounded pipeline once an hour, unattended, aimed at a fixed set of named authoritative sources — ISW for Ukraine frontline reporting, UKMTO for Red Sea maritime alerts, IAEA for nuclear-safety monitoring at Zaporizhzhia, CISA and Mandiant for cyber incidents — rather than an open-ended crawl, with every harvest and its full audit trail persisted to Firestore.</span></li>
+        <li><span data-i18n="research-step5"><strong>An autonomous harvester, not just a manual tool.</strong> An external scheduler runs the same search-grounded pipeline every three hours, unattended. An event is kept only if its source is a real article from GDELT or ReliefWeb, or one of Google's own search citations, stored as the publisher's address. Every harvest and its audit trail are saved to Firestore.</span></li>
+        <li><span data-i18n="research-step6"><strong>A public live map, with the analysis behind a login.</strong> Anyone can browse recent events by time, region and category. The summary, credibility score, sentiment and satellite check are for registered users.</span></li>
       </ol>
-      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product — the live feed uses Gemini search grounding against open sources, with a documented offline fallback dataset for when that harvest fails. Built end-to-end (React, Express, Gemini API, Firestore) in Google AI Studio and deployed to Cloud Run.</p>
+      <p data-i18n="research-p2">This is a personal research prototype, not a production intelligence product. When the model is unavailable, the app shows the data it already has and invents nothing. Built end-to-end (React, Express, Gemini API, Firestore), deployed to Cloud Run, with a monthly spending cap on every model call.</p>
       <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="research-tag-nlp">NLP / Geolocation</span><span class="tag" data-i18n="research-tag-automation">Automated Harvesting</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
       <a class="card-link" href="https://osint.davidirving.dev/" target="_blank" rel="noopener" data-i18n="research-link">View live app →</a>
       <a class="card-link" href="research/osint-real-time-tracker.html" data-i18n="research-writeup-link">Read the full writeup →</a>
@@ -429,9 +435,10 @@
       <p data-i18n="crimes-p1">A database that catalogs corporate and executive-level financial crime — fraud, market manipulation, tax evasion, state capture — against the actual enforcement outcome on record: criminal conviction, settlement, deferred prosecution, or litigation still in progress. Built the same way as the OSINT tracker: solo, in Google AI Studio, testing whether an LLM can hold a large, sourced, structured dataset together instead of just summarizing text.</p>
       <ol class="steps">
         <li><span data-i18n="crimes-step1"><strong>Sourced by design, not by afterthought.</strong> Every case record carries one or more citations classified by document type — DOJ filing, SEC order, court judgment, EPA record, ICIJ archive — instead of a single unlabeled link.</span></li>
-        <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and a "worker-wage-equivalent" figure — how many years of an average worker's pay the penalty represents — and a companion inequality dashboard turns the dataset into charts by sector and crime type.</span></li>
+        <li><span data-i18n="crimes-step2"><strong>Beyond a dollar figure.</strong> Each entry converts a financial penalty into a systemic-impact score and the years a worker on an illustrative $10,000 a year would need to earn it. A companion inequality dashboard turns the dataset into charts by sector and crime type, plus a deep-time view of how far back in Earth's history that worker would have had to start.</span></li>
         <li><span data-i18n="crimes-step3"><strong>Two Gemini-powered lenses on the same data.</strong> An AI Fact-Finder modal answers ad-hoc questions against the dataset, and an AI Patterns modal surfaces cross-case trends — which sectors recur, which enforcement types are most common — the same "structured reasoning over messy real data" test as the OSINT build.</span></li>
         <li><span data-i18n="crimes-step4"><strong>A submission path, not a closed dataset.</strong> A case-submission form lets anyone add a new entry directly — published immediately with an "AI-generated, unreviewed" disclosure badge, so the dataset isn't limited to whatever I find on my own research pass.</span></li>
+        <li><span data-i18n="crimes-step5"><strong>Amounts and sources that hold up.</strong> An AI-found case shows a penalty only when its source states one, and its source must name the company or person. A source that has gone dead says so instead of linking nowhere.</span></li>
       </ol>
       <p data-i18n="crimes-p2">Early-stage research build — React, TypeScript and Firebase/Firestore, seeded with an initial dataset rather than a continuously fact-checked ledger. Treat individual case entries as a starting point for your own verification, not a settled record.</p>
       <div class="tags"><span class="tag">Personal AI Research</span><span class="tag">Gemini API</span><span class="tag" data-i18n="crimes-tag-firestore">Firestore</span><span class="tag" data-i18n="research-tag-poc">Proof of Concept</span></div>
@@ -584,6 +591,25 @@
   });
 
   I18N.de = {
+    'stat-tickets': 'Tickets',
+    'feat17-h3': `KI-Agenten melden sich per OAuth an statt mit einem eingefügten API-Token`,
+    'feat17-p1': `Einen KI-Agenten mit unserem MCP-Server zu verbinden hieß bisher: ein persönliches API-Token, eine Node.js-Brücke und eine von Hand bearbeitete Konfigurationsdatei. Teams ohne Entwickler kamen damit nicht zurecht, und das Token öffnete die ganze API, nicht nur die Agenten-Tools.`,
+    'feat17-step1': `<strong>Standard-OAuth, in sechs aufeinander aufbauenden Schritten.</strong> Discovery-Metadaten, Selbstregistrierung für Agenten-Apps, ein Zustimmungsdialog, 15-Minuten-Access-Tokens und rotierende Refresh-Tokens. Ein wiederverwendetes Refresh-Token beendet die ganze Verbindung.`,
+    'feat17-step2': `<strong>Agenten-Tokens gelten nur am Agenten-Endpunkt.</strong> Das Token nennt seine Zielgruppe, und jeder andere Einstiegspunkt lehnt es ab. Ein neuer Endpunkt, der die Prüfung vergisst, schlägt geschlossen fehl.`,
+    'feat17-step3': `<strong>Die Tools richten sich nach den Modulen des Kunden.</strong> Jedes Tool gibt an, welches Modul, welche Berechtigung und welche Einstellungen es braucht. Ein abgeschaltetes Tool antwortet genau wie eines, das es nicht gibt. Ein Zusammenfassungs-Tool lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist es eine einzige SQL-Abfrage.`,
+    'feat17-p2': `Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen. Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter.`,
+    'feat17-tag-security': 'Sicherheit',
+    'feat18-h3': `Ein Berechtigungs-Audit der GraphQL-API, ein fehlschlagender Test pro Lücke`,
+    'feat18-p1': `Eine Bestandsaufnahme der API-Endpunkte fand GraphQL-Operationen, die die Oberfläche nutzt und die überhaupt keine Berechtigung prüften. Jede Lücke wurde mit einem fehlschlagenden Test belegt, bevor sie behoben wurde.`,
+    'feat18-step1': `<strong>Ein Methodenaufruf auf beliebige Klassennamen.</strong> Eine Operation rief eine Methode auf jedem Klassennamen auf, den der Client schickte. Jetzt akzeptiert sie nur die eine Klassenfamilie, für die sie gedacht ist.`,
+    'feat18-step2': `<strong>Lesen und Schreiben ohne Prüfung.</strong> Rechnungen, Aufgaben, das Anlegen von Kontakten und die Anwesenheitstage anderer Mitarbeiter. Das Review fand weitere Fälle derselben Art im Mahnwesen und in der Rechnungsverarbeitung.`,
+    'feat18-step3': `<strong>Ein Speichern, das zu viel schrieb.</strong> Eine Erinnerung an einem Kalendertermin zu setzen speicherte den ganzen Termin und überschrieb die Änderungen anderer Nutzer. Jetzt wird nur die Erinnerung geschrieben.`,
+    'feat18-p2': `Die Berechtigungstests umfassen etwa 700 Zeilen, und jeder Test legt seine eigenen Daten an, damit keine dieser Lücken unbemerkt zurückkommt.`,
+    'feat18-tag-security': 'Sicherheit',
+    'feat18-tag-permissions': 'Berechtigungen',
+    'card19-h3': `Geheimnisse raus aus den Logs und raus aus KI-Chatverläufen`,
+    'card19-p': `Wenn PHP eine Session nicht lesen konnte, enthielt die Warnung den Cache-Verbindungsstring samt Passwort, und das zentrale Logging speicherte ihn. Der Logger maskiert Zugangsdaten jetzt in Meldungen und Exceptions, bevor er sie schreibt. Unabhängig davon baten die KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews darum, API-Tokens in den Chat einzufügen, wodurch Geheimnisse in Chatverläufen landen. Jetzt lesen sie Geheimnisse aus Dateien, die man außerhalb des Agenten anlegt, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
+    'card19-tag-security': 'Sicherheit',
     'nav-research': 'Recherche',
     'nav-archive': 'Archiv',
     'nav-featured-work': 'Featured Work',
@@ -599,7 +625,7 @@
     'fact-3': '300+ Enterprise-Kunden',
     'fact-4': 'Schwerpunkt Agentic Engineering',
     'hero-cta': 'Auf LinkedIn kontaktieren →',
-    'hl-kicker': 'Arbeits-Highlights · 8. – 23. September 2026',
+    'hl-kicker': 'Arbeits-Highlights · 24. September – 8. Oktober 2026',
     'hl-h2': 'Die aktuellsten Arbeiten',
     'hl-p': 'Wird monatlich aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
     'stat-commits': 'Commits',
@@ -607,27 +633,7 @@
     'stat-lines': 'Zeilen bearbeitet',
     'stat-builds': 'Agentic-Eng.-Builds',
     'stat-merged': 'PRs gemergt',
-    'stats-note': '*Größtenteils der gemergte Test-Suite-Umbau und eine neu erzeugte Datenbank-Baseline. Etwa 46k Zeilen liegen außerhalb von Tests, Fixtures und Schema.',
     'eyebrow-featured': 'Vorzeigeprojekt',
-    'feat14-h3': `Jeder dritte SSO-Login schlug fehl, und die ersten zwei Diagnosen waren falsch`,
-    'feat14-p1': `Ein Kunde meldete zufällige Fehler beim Single Sign-on. Zwei naheliegende Theorien wurden zuerst geprüft und verworfen: ein falsch konfigurierter Identity Provider, dann ein Race beim Token-Refresh. Die echten Ursachen lagen woanders.`,
-    'feat14-step1': `<strong>Jeder Login nutzte denselben Cookie-Namen.</strong> Zwei gleichzeitige Login-Flows teilten sich ein State-Cookie, also löschte der erste fertige es für den anderen. Hunderte Fehler pro Woche, auf Info-Level geloggt, drei Monate lang unbemerkt.`,
-    'feat14-step2': `<strong>Ein API-Aufruf, den niemand brauchte.</strong> Eine Profilabfrage nach dem Login antwortete bei etwa jedem siebten Login mit 401. Dieselben Daten standen schon im ID-Token. Sie kommen jetzt von dort, validiert, mit dem alten Weg als Fallback, damit kein Kunde schlechter dasteht.`,
-    'feat14-step3': `<strong>Ein echter Identity Provider in der CI.</strong> Der End-to-End-Stack startet jetzt ein echtes Keycloak: sechs Szenarien, darunter fünf gleichzeitige Logins und ein mitten in der Sitzung widerrufenes Token. Schon in den ersten Läufen fand es einen weiteren Fehler, einen doppelt verarbeiteten Login-Callback, der inzwischen ebenfalls behoben ist.`,
-    'feat14-p2': `Jeder Fix wurde mit Mutation-Tests geprüft: Guard entfernen, und ein Test schlägt fehl. Was kein Test beweist, steht als bekannte Grenze drin, nicht als Behauptung.`,
-    'feat14-tag-security': `Sicherheit`,
-    'feat15-h3': `Der Test-Suite-Umbau ist gemergt, und ein grüner Lauf muss jetzt auch still sein`,
-    'feat15-p1': `Im letzten Zyklus war das noch ein offener Pull Request über zweitausend Dateien. Am 21. September wurde er gemergt: über sechzehntausend Tests auf fünf parallelen Workern, jeder mit eigener Datenbank, in etwa siebzig Sekunden.`,
-    'feat15-step1': `<strong>Grün reicht nicht.</strong> Ein Lauf, der eine Warnung, einen Fehler oder übrig gebliebene Testdaten ausgibt, fällt durch, auch wenn jeder Test besteht.`,
-    'feat15-step2': `<strong>Fünf Guards erzwingen die Isolation.</strong> Eine Transaktion pro Test, Cache-Resets, Erkennung von Config-Drift, Erkennung von Log-Rauschen und eine Datenbank-Prüfsumme nach jedem Test.`,
-    'feat15-step3': `<strong>Produktions-Fixes kamen mit, jeder mit eigenem Test.</strong> Ein abgebrochenes Backup hinterlässt kein unlesbares Archiv mehr, Shell-Befehle haben ein hartes Timeout, und eine Profiling-Erweiterung bleibt aus dem Produktions-Image draußen.`,
-    'feat15-p2': `Das Review brachte 26 Punkte: 17 behoben, 6 hielten der Prüfung nicht stand, 3 auf Wunsch eingearbeitet.`,
-    'feat15-tag-test-infra': `Test-Infrastruktur`,
-    'feat15-link': `Den vollständigen Text lesen →`,
-    'card16-h3': `Eine zwanzig Jahre alte PHP-Anwendung aus der Umgebung konfigurieren`,
-    'card16-p': `Die Konfiguration wandert aus dem Laufzeit-Code in die Deployment-Umgebung, damit sich jeder Container gleich verhält. Die <code>ini_set()</code>-Aufrufe zur Laufzeit sind weg, aber nicht blind: Einen davon zu entfernen hätte eine CSV mit drei Datensätzen in eine verstümmelte Zeile verwandelt, also bekam die Zeilenende-Behandlung zuerst ein eigenes Werkzeug. Eine Settings-Klasse liest jeden Wert jetzt aus der Umgebung, dann aus der Config-Datei, dann aus einem Default, ohne über 500 Aufrufstellen zu ändern. PATH-Suchen nach System-Binaries wurden zu konfigurierten Pfaden, die laut fehlschlagen; eine davon hatte ein Upgrade eine SQL-Datei überspringen und trotzdem Erfolg melden lassen. Das Kommandozeilen-Tool zieht auf Symfony Console um, mit bewusst abgeschalteter „Meinten Sie …“-Rückfrage: Sie konnte aus einem Tippfehler einen Datenbank-Reset machen. Der erste Teil ist gemergt, der Rest ist im Review.`,
-    'card16-tag-config': `Konfiguration`,
-    'card16-tag-reliability': `Zuverlässigkeit`,
     'strategies-kicker': 'Agentic Strategies',
     'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
     'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
@@ -670,7 +676,7 @@
     'strategy3-link': 'Den vollständigen Text lesen →',
     'nav-strategies': 'Agentic Strategies',
     'strategies-viewall': 'Alle Agentic Strategies ansehen →',
-    'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli 2026',
+    'research-kicker': 'Persönliche KI-Recherche · Proof of Concept, Juli – Oktober 2026',
     'research-h2': 'Außerhalb von TEAMBOX: unabhängige KI-Recherche-Projekte',
     'research-p': 'Ein Weg zu testen, was Gemini an echten, unübersichtlichen Problemen tatsächlich leisten kann, statt an Spielzeug-Demos — unabhängig von TEAMBOX entstanden, in Google AI Studio. Beide konsistent zueinander und zum Rest dieser Website zu halten läuft nach der Praxis, die unter <a href="strategies/instructions-style-memory.html">Agentic Strategies →</a> beschrieben ist.',
     'eyebrow-research': 'Persönliche KI-Recherche',
@@ -681,7 +687,7 @@
       geolokalisierte, glaubwürdigkeitsbewertete Ereignisse, mit denen Forschende tatsächlich
       arbeiten können.`,
     'research-step1': `<strong>Mehrsprachige Aufnahme, ganz ohne separaten Übersetzungsschritt.</strong>
-      Rohtext auf Ukrainisch, Arabisch, Französisch, Hebräisch oder Englisch einfügen — Gemini
+      Angemeldete Nutzer fügen Rohtext auf Ukrainisch, Arabisch, Französisch, Hebräisch oder Englisch ein — Gemini
       übernimmt die Extraktion direkt: Entitäten, Ort und Sprachnuancen in einem Durchgang, keine
       Pipeline aus Übersetzen und anschließendem Analysieren.`,
     'research-step2': `<strong>NLP-basierte Geolokalisierung.</strong> Gemini löst Ortsnamen und
@@ -696,17 +702,17 @@
       kontextuelle Plausibilität und Aktualität — mit sichtbarer Begründung statt einer
       Black-Box-Vertrauensangabe.`,
     'research-p2': `Das ist ein persönliches Forschungsprojekt, kein produktionsreifes
-      Intelligence-Produkt — der Live-Feed nutzt Gemini Search Grounding gegen offene Quellen,
-      mit einem dokumentierten Offline-Fallback-Datensatz, falls diese Ernte fehlschlägt.
-      Komplett (React, Express, Gemini API, Firestore) in Google AI Studio gebaut und auf
-      Cloud Run deployed.`,
+      Intelligence-Produkt. Ist das Modell nicht verfügbar, zeigt die App die Daten, die sie schon
+      hat, und erfindet nichts. Komplett gebaut (React, Express, Gemini API, Firestore), auf Cloud
+      Run deployed, mit einem monatlichen Kostenlimit für jeden Modellaufruf.`,
     'research-step5': `<strong>Ein autonomer Harvester, kein reines manuelles Tool.</strong>
-      Ein Hintergrund-Scheduler führt dieselbe suchgestützte Pipeline einmal pro Stunde
-      unbeaufsichtigt aus und zielt auf eine feste Liste maßgeblicher Quellen — ISW für
-      Frontberichte aus der Ukraine, UKMTO für Seefahrtswarnungen im Roten Meer, IAEA für die
-      nukleare Sicherheitsüberwachung in Saporischschja, CISA und Mandiant für Cyber-Vorfälle — statt
-      eines offenen Crawls, wobei jede Ernte samt vollständigem Audit-Trail in Firestore
-      gespeichert wird.`,
+      Ein externer Scheduler führt dieselbe suchgestützte Pipeline alle drei Stunden unbeaufsichtigt
+      aus. Ein Ereignis bleibt nur, wenn seine Quelle ein echter Artikel aus GDELT oder ReliefWeb
+      oder eines von Googles eigenen Suchzitaten ist, gespeichert mit der Adresse des Herausgebers.
+      Jede Ernte samt Audit-Trail wird in Firestore gespeichert.`,
+    'research-step6': `<strong>Eine öffentliche Live-Karte, die Analyse hinter einer Anmeldung.</strong>
+      Jeder kann aktuelle Ereignisse nach Zeitraum, Region und Kategorie durchsehen. Zusammenfassung,
+      Glaubwürdigkeitsbewertung, Stimmung und Satellitenabgleich sind registrierten Nutzern vorbehalten.`,
     'research-tag-nlp': 'NLP / Geolokalisierung',
     'research-tag-automation': 'Automatisierte Ernte',
     'research-tag-poc': 'Proof of Concept',
@@ -722,9 +728,10 @@
       oder mehrere Quellenangaben, klassifiziert nach Dokumenttyp — DOJ-Unterlage, SEC-Anordnung,
       Gerichtsurteil, EPA-Akte, ICIJ-Archiv — statt eines einzelnen, unbeschrifteten Links.`,
     'crimes-step2': `<strong>Mehr als eine Dollarsumme.</strong> Jeder Eintrag rechnet eine Geldstrafe
-      in einen systemischen Wirkungswert und eine „Arbeiter-Lohn-Äquivalent"-Kennzahl um — wie viele
-      Jahre eines durchschnittlichen Arbeiterlohns die Strafe entspricht —, ein begleitendes
-      Ungleichheits-Dashboard macht aus dem Datensatz Diagramme nach Branche und Deliktart.`,
+      in einen systemischen Wirkungswert um und in die Jahre, die eine Arbeitskraft mit illustrativen
+      10.000 $ im Jahr bräuchte, um sie zu verdienen. Ein begleitendes Ungleichheits-Dashboard macht
+      aus dem Datensatz Diagramme nach Branche und Deliktart, dazu eine Tiefenzeit-Ansicht, wie weit
+      zurück in der Erdgeschichte diese Arbeitskraft hätte anfangen müssen.`,
     'crimes-step3': `<strong>Zwei Gemini-gestützte Sichten auf dieselben Daten.</strong> Ein
       KI-Fact-Finder-Modal beantwortet Ad-hoc-Fragen zum Datensatz, ein KI-Muster-Modal zeigt
       fallübergreifende Trends — welche Branchen sich wiederholen, welche Sanktionsarten am
@@ -734,6 +741,9 @@
       Formular zur Fall-Einreichung erlaubt es, direkt einen neuen Eintrag hinzuzufügen — sofort
       veröffentlicht mit einem "KI-generiert, ungeprüft"-Hinweis, damit der Datensatz nicht auf
       das beschränkt ist, was ich selbst recherchiere.`,
+    'crimes-step5': `<strong>Beträge und Quellen, die halten.</strong> Ein von der KI gefundener Fall
+      zeigt eine Strafe nur, wenn seine Quelle eine nennt, und die Quelle muss das Unternehmen oder die
+      Person nennen. Eine nicht mehr erreichbare Quelle sagt das, statt ins Leere zu verlinken.`,
     'crimes-p2': `Frühes Forschungsprojekt — React, TypeScript und Firebase/Firestore, mit einem
       initialen Datensatz befüllt statt einem laufend faktengeprüften Register. Einzelne
       Falleinträge als Ausgangspunkt für die eigene Verifikation verstehen, nicht als

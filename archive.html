@@ -257,11 +257,61 @@
     </div>
   </section>
 
+  <section class="block" id="cycle-20260924">
+    <div class="block-head">
+      <p class="kicker" data-i18n="c6-kicker">September 24 – October 8, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <h2 data-i18n="c6-h2">290 commits, 35 tickets</h2>
+      <p data-i18n="c6-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">290</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">35</div><div class="l" data-i18n="stat-tickets">tickets</div></div>
+      <div class="stat"><div class="n">~30k</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">23</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
+    </div>
+
+    <div class="card featured" id="c6-feat17">
+      <a class="card-anchor" href="#c6-feat17" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c6-feat17-h3">AI agents sign in over OAuth instead of a pasted API token</h3>
+      <p data-i18n="c6-feat17-p1">Connecting an AI agent to our MCP server used to mean a personal API token, a Node.js bridge and a hand-edited config file. Teams without a developer could not finish that, and the token opened the whole API, not just the agent tools.</p>
+      <ol class="steps">
+        <li><span data-i18n="c6-feat17-step1"><strong>Standard OAuth, built in six stacked steps.</strong> Discovery metadata, self-registration for agent apps, a consent screen, 15-minute access tokens and rotating refresh tokens. A reused refresh token ends the whole connection.</span></li>
+        <li><span data-i18n="c6-feat17-step2"><strong>Agent tokens work only on the agent endpoint.</strong> The token names its audience, and every other entry point rejects it. A new endpoint that forgets the check fails closed.</span></li>
+        <li><span data-i18n="c6-feat17-step3"><strong>Tools follow the customer's modules.</strong> Each tool declares the module, permission and settings it needs. A switched-off tool answers exactly like one that does not exist. One summary tool loaded up to 10,000 rows into PHP to add them up; it is now one SQL query.</span></li>
+      </ol>
+      <p data-i18n="c6-feat17-p2">Users see and revoke connected agents in their settings. Two of the six OAuth steps are merged; the rest are in review, behind one switch.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">OAuth2</span><span class="tag">MCP</span><span class="tag" data-i18n="c6-feat17-tag-security">Security</span></div>
+    </div>
+
+    <div class="card featured" id="c6-feat18">
+      <a class="card-anchor" href="#c6-feat18" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c6-feat18-h3">A permission audit of the GraphQL API, one failing test per gap</h3>
+      <p data-i18n="c6-feat18-p1">An inventory of API endpoints found GraphQL operations the interface uses that checked no permissions at all. Each gap was proved with a failing test before it was fixed.</p>
+      <ol class="steps">
+        <li><span data-i18n="c6-feat18-step1"><strong>A method call on any class name.</strong> One operation called a method on whatever class name the client sent. It now accepts only the one family of classes it exists for.</span></li>
+        <li><span data-i18n="c6-feat18-step2"><strong>Reads and writes without checks.</strong> Invoices, tasks, contact creation and other employees' attendance days. Review found more of the same kind in dunning and invoice processing.</span></li>
+        <li><span data-i18n="c6-feat18-step3"><strong>A save that wrote too much.</strong> Setting a reminder on a calendar event saved the whole event and overwrote other users' changes. It now writes only the reminder.</span></li>
+      </ol>
+      <p data-i18n="c6-feat18-p2">The permission tests run to about 700 lines, and every test seeds its own data, so none of these gaps can quietly come back.</p>
+      <div class="tags"><span class="tag" data-i18n="c6-feat18-tag-security">Security</span><span class="tag">GraphQL</span><span class="tag" data-i18n="c6-feat18-tag-permissions">Permissions</span></div>
+    </div>
+
+    <div class="card" id="c6-card19">
+      <a class="card-anchor" href="#c6-card19" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="c6-card19-h3">Secrets out of the logs, and out of AI chat transcripts</h3>
+      <p data-i18n="c6-card19-p">When PHP failed to read a session, its warning included the cache connection string with its password, and central logging stored it. The logger now masks credentials in messages and exceptions before writing them. Separately, the repository's AI agent commands for releases, KPIs and reviews asked people to paste API tokens into the chat, which puts secrets into transcripts. They now read secrets from files people create outside the agent, refuse files other users can read, and never print the value.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="c6-card19-tag-security">Security</span><span class="tag">Logging</span></div>
+    </div>
+  </section>
+
   <section class="block" id="cycle-20260908">
     <div class="block-head">
-      <p class="kicker" data-i18n="c5-kicker">September 8 – 23, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <p class="kicker" data-i18n="c5-kicker">September 8 – 23, 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Superseded</span></p>
       <h2 data-i18n="c5-h2">242 commits, 8 workstreams</h2>
-      <p data-i18n="c5-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+      <p data-i18n="c5-p">Replaced on the homepage by the September 24 – October 8 cycle — kept here in full.</p>
     </div>
 
     <div class="stats">
@@ -614,6 +664,28 @@
   });
 
   I18N.de = {
+    'stat-tickets': 'Tickets',
+    'c6-kicker': '24. September – 8. Oktober 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c6-h2': '290 Commits, 35 Tickets',
+    'c6-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c6-feat17-h3': `KI-Agenten melden sich per OAuth an statt mit einem eingefügten API-Token`,
+    'c6-feat17-p1': `Einen KI-Agenten mit unserem MCP-Server zu verbinden hieß bisher: ein persönliches API-Token, eine Node.js-Brücke und eine von Hand bearbeitete Konfigurationsdatei. Teams ohne Entwickler kamen damit nicht zurecht, und das Token öffnete die ganze API, nicht nur die Agenten-Tools.`,
+    'c6-feat17-step1': `<strong>Standard-OAuth, in sechs aufeinander aufbauenden Schritten.</strong> Discovery-Metadaten, Selbstregistrierung für Agenten-Apps, ein Zustimmungsdialog, 15-Minuten-Access-Tokens und rotierende Refresh-Tokens. Ein wiederverwendetes Refresh-Token beendet die ganze Verbindung.`,
+    'c6-feat17-step2': `<strong>Agenten-Tokens gelten nur am Agenten-Endpunkt.</strong> Das Token nennt seine Zielgruppe, und jeder andere Einstiegspunkt lehnt es ab. Ein neuer Endpunkt, der die Prüfung vergisst, schlägt geschlossen fehl.`,
+    'c6-feat17-step3': `<strong>Die Tools richten sich nach den Modulen des Kunden.</strong> Jedes Tool gibt an, welches Modul, welche Berechtigung und welche Einstellungen es braucht. Ein abgeschaltetes Tool antwortet genau wie eines, das es nicht gibt. Ein Zusammenfassungs-Tool lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist es eine einzige SQL-Abfrage.`,
+    'c6-feat17-p2': `Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen. Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter.`,
+    'c6-feat17-tag-security': 'Sicherheit',
+    'c6-feat18-h3': `Ein Berechtigungs-Audit der GraphQL-API, ein fehlschlagender Test pro Lücke`,
+    'c6-feat18-p1': `Eine Bestandsaufnahme der API-Endpunkte fand GraphQL-Operationen, die die Oberfläche nutzt und die überhaupt keine Berechtigung prüften. Jede Lücke wurde mit einem fehlschlagenden Test belegt, bevor sie behoben wurde.`,
+    'c6-feat18-step1': `<strong>Ein Methodenaufruf auf beliebige Klassennamen.</strong> Eine Operation rief eine Methode auf jedem Klassennamen auf, den der Client schickte. Jetzt akzeptiert sie nur die eine Klassenfamilie, für die sie gedacht ist.`,
+    'c6-feat18-step2': `<strong>Lesen und Schreiben ohne Prüfung.</strong> Rechnungen, Aufgaben, das Anlegen von Kontakten und die Anwesenheitstage anderer Mitarbeiter. Das Review fand weitere Fälle derselben Art im Mahnwesen und in der Rechnungsverarbeitung.`,
+    'c6-feat18-step3': `<strong>Ein Speichern, das zu viel schrieb.</strong> Eine Erinnerung an einem Kalendertermin zu setzen speicherte den ganzen Termin und überschrieb die Änderungen anderer Nutzer. Jetzt wird nur die Erinnerung geschrieben.`,
+    'c6-feat18-p2': `Die Berechtigungstests umfassen etwa 700 Zeilen, und jeder Test legt seine eigenen Daten an, damit keine dieser Lücken unbemerkt zurückkommt.`,
+    'c6-feat18-tag-security': 'Sicherheit',
+    'c6-feat18-tag-permissions': 'Berechtigungen',
+    'c6-card19-h3': `Geheimnisse raus aus den Logs und raus aus KI-Chatverläufen`,
+    'c6-card19-p': `Wenn PHP eine Session nicht lesen konnte, enthielt die Warnung den Cache-Verbindungsstring samt Passwort, und das zentrale Logging speicherte ihn. Der Logger maskiert Zugangsdaten jetzt in Meldungen und Exceptions, bevor er sie schreibt. Unabhängig davon baten die KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews darum, API-Tokens in den Chat einzufügen, wodurch Geheimnisse in Chatverläufen landen. Jetzt lesen sie Geheimnisse aus Dateien, die man außerhalb des Agenten anlegt, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
+    'c6-card19-tag-security': 'Sicherheit',
     'nav-home': '← Startseite',
     'ae-kicker': 'Agentic Engineering Archiv',
     'ae-h2': 'Von der Startseite abgelöste Einträge dieser Standing-Section',
@@ -769,9 +841,9 @@
     'c3-card10-tag-techdebt': 'Technische Schulden',
     'c3-card10-tag-config': 'Konfiguration',
 
-    'c5-kicker': '8. – 23. September 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c5-kicker': '8. – 23. September 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c5-h2': '242 Commits, 8 Workstreams',
-    'c5-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c5-p': 'Auf der Startseite durch den Zyklus 24. September – 8. Oktober ersetzt — hier vollständig aufbewahrt.',
     'c5-stats-note': '*Größtenteils der gemergte Test-Suite-Umbau und eine neu erzeugte Datenbank-Baseline. Etwa 46k Zeilen liegen außerhalb von Tests, Fixtures und Schema.',
     'c5-feat14-h3': `Jeder dritte SSO-Login schlug fehl, und die ersten zwei Diagnosen waren falsch`,
     'c5-feat14-p1': `Ein Kunde meldete zufällige Fehler beim Single Sign-on. Zwei naheliegende Theorien wurden zuerst geprüft und verworfen: ein falsch konfigurierter Identity Provider, dann ein Race beim Token-Refresh. Die echten Ursachen lagen woanders.`,
