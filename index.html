@@ -329,7 +329,7 @@
         <li><span data-i18n="feat17-step2"><strong>Agent tokens work only on the agent endpoint.</strong> The token names its audience, and every other entry point rejects it. A new endpoint that forgets the check fails closed.</span></li>
         <li><span data-i18n="feat17-step3"><strong>Tools follow the customer's modules.</strong> Each tool declares the module, permission and settings it needs. A switched-off tool answers exactly like one that does not exist. One summary tool loaded up to 10,000 rows into PHP to add them up; it is now one SQL query.</span></li>
       </ol>
-      <p data-i18n="feat17-p2">Users see and revoke connected agents in their settings. Two of the six OAuth steps are merged; the rest are in review, behind one switch.</p>
+      <p data-i18n="feat17-p2">Users see and revoke connected agents in their settings. The OAuth steps and 13 new tools (30 in all) now land as one change, in final review and QA on staging.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">OAuth2</span><span class="tag">MCP</span><span class="tag" data-i18n="feat17-tag-security">Security</span></div>
       <a class="card-link" href="work/ai-agents-safely.html" data-i18n="feat17-link">Read the full writeup →</a>
     </div>
@@ -599,7 +599,7 @@
     'feat17-step1': `<strong>Standard-OAuth, in sechs aufeinander aufbauenden Schritten.</strong> Discovery-Metadaten, Selbstregistrierung für Agenten-Apps, ein Zustimmungsdialog, 15-Minuten-Access-Tokens und rotierende Refresh-Tokens. Ein wiederverwendetes Refresh-Token beendet die ganze Verbindung.`,
     'feat17-step2': `<strong>Agenten-Tokens gelten nur am Agenten-Endpunkt.</strong> Das Token nennt seine Zielgruppe, und jeder andere Einstiegspunkt lehnt es ab. Ein neuer Endpunkt, der die Prüfung vergisst, schlägt geschlossen fehl.`,
     'feat17-step3': `<strong>Die Tools richten sich nach den Modulen des Kunden.</strong> Jedes Tool gibt an, welches Modul, welche Berechtigung und welche Einstellungen es braucht. Ein abgeschaltetes Tool antwortet genau wie eines, das es nicht gibt. Ein Zusammenfassungs-Tool lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist es eine einzige SQL-Abfrage.`,
-    'feat17-p2': `Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen. Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter.`,
+    'feat17-p2': `Nutzer sehen verbundene Agenten in ihren Einstellungen und können sie widerrufen. Die OAuth-Schritte und 13 neue Tools (insgesamt 30) kommen jetzt als eine Änderung; sie ist im letzten Review und im QA auf Staging.`,
     'feat17-tag-security': 'Sicherheit',
     'feat18-h3': `Ein Audit der Berechtigungsprüfungen der API, ein fehlschlagender Test pro Lücke`,
     'feat18-p1': `Eine Bestandsaufnahme der API-Endpunkte sah sich jede Operation an, die die Oberfläche nutzt, nicht nur die, die riskant wirkten. Jede gefundene Berechtigungslücke wurde zuerst mit einem fehlschlagenden Test belegt und dann behoben.`,

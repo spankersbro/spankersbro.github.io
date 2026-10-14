@@ -28,7 +28,7 @@
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-10-08",
-  "dateModified": "2026-10-08",
+  "dateModified": "2026-10-14",
   "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/ai-agents-safely.html" }
 }
 </script>
@@ -210,7 +210,7 @@
 
     <h3 data-i18n="p3-h3">Tools that follow the customer’s permissions</h3>
     <p data-i18n="p3-p1">Every tool used to be offered as soon as the MCP server was on, including tools for modules a customer does not have. Now each tool declares its module, the permission rule of the API route behind it, the settings it needs and whether it writes. A tool that is switched off answers exactly like a tool that does not exist, so an agent learns nothing from it. Tools that touch personal data are off by default.</p>
-    <p data-i18n="p3-p2">The same pass fixed what review had found in the existing tools. One promised all tasks and returned only the user’s own. Several lists stopped silently at 100 rows and now page. One summary loaded up to 10,000 rows into PHP to add them up; it is now a single grouped SQL query with the same row permissions. New tools cover time entries, tasks, budgets and absences. Every change was written test-first: each feature commit follows a commit with a failing test.</p>
+    <p data-i18n="p3-p2">The same pass fixed what review had found in the existing tools. One promised all tasks and returned only the user’s own. Several lists stopped silently at 100 rows and now page. One summary loaded up to 10,000 rows into PHP to add them up; it is now a single grouped SQL query with the same row permissions. New tools cover time entries, tasks, budgets, comments, people and absences, which takes the server from 17 tools to 30. Five of them change data, such as logging time or finishing a task, and they stay off until the customer switches them on. Every change was written test-first: each feature commit follows a commit with a failing test.</p>
 
     <h3 data-i18n="p4-h3">The audit around it</h3>
     <p data-i18n="p4-p1">Opening an API to agents is a good moment to check what the API already allows. An inventory listed every operation the interface uses, with who may call it and what it reads or writes, so the audit covered everything instead of a sample. Every permission gap it found was first proved with a failing test, then fixed, and review found more of the same kind, which went through the same loop. The permission tests run to about 700 lines, and each test sets up its own data.</p>
@@ -218,7 +218,7 @@
 
     <h2 data-i18n="reflect-h2">What mattered</h2>
     <p data-i18n="reflect-p1">An AI agent is a new kind of client, and the cheapest moment to decide what it may do is before the first one connects. Here that meant three boundaries: who the agent acts for (OAuth and consent), where its token works (one endpoint, closed by default), and what it may touch (the same permissions as the person behind it).</p>
-    <p data-i18n="reflect-p2">Status, plainly: two of the six OAuth steps are merged and the rest are in review, behind one switch. The new tools ship with them. The audit fixes are merged.</p>
+    <p data-i18n="reflect-p2">Status, plainly: the six OAuth steps and the new tools now land together as one change, behind one switch. It is in final review and QA on staging. The audit fixes are merged.</p>
 
     <div class="tags">
       <span class="tag">Agentic Engineering</span>
@@ -300,13 +300,13 @@
     'p2-p1': `Ein an einen Agenten ausgestelltes Token nennt seine Zielgruppe: den Agenten-Endpunkt. Jeder andere Einstiegspunkt lehnt es ab. Die Prüfung ist so gebaut, dass die sichere Antwort der Standard ist. Die Funktion, die Tokens prüft, muss gesagt bekommen, von wo sie aufgerufen wird, und nur der Agenten-Endpunkt sagt das. Ein neuer Endpunkt, der nächstes Jahr dazukommt und das Argument vergisst, lehnt Agenten-Tokens ab, statt sie stillschweigend anzunehmen.`,
     'p3-h3': `Tools, die den Berechtigungen des Kunden folgen`,
     'p3-p1': `Bisher wurde jedes Tool angeboten, sobald der MCP-Server an war, auch Tools für Module, die ein Kunde gar nicht hat. Jetzt gibt jedes Tool sein Modul an, die Berechtigungsregel der API-Route dahinter, die Einstellungen, die es braucht, und ob es schreibt. Ein abgeschaltetes Tool antwortet genau wie ein Tool, das es nicht gibt, ein Agent erfährt also nichts darüber. Tools, die personenbezogene Daten berühren, sind standardmäßig aus.`,
-    'p3-p2': `Derselbe Durchgang hat behoben, was das Review in den bestehenden Tools gefunden hatte. Eines versprach alle Aufgaben und lieferte nur die eigenen des Nutzers. Mehrere Listen hörten stillschweigend bei 100 Zeilen auf und blättern jetzt. Eine Zusammenfassung lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist sie eine einzige gruppierte SQL-Abfrage mit denselben Zeilenberechtigungen. Neue Tools decken Zeiteinträge, Aufgaben, Budgets und Abwesenheiten ab. Jede Änderung wurde test-first geschrieben: Auf jeden Feature-Commit folgt ein Commit mit einem fehlschlagenden Test davor.`,
+    'p3-p2': `Derselbe Durchgang hat behoben, was das Review in den bestehenden Tools gefunden hatte. Eines versprach alle Aufgaben und lieferte nur die eigenen des Nutzers. Mehrere Listen hörten stillschweigend bei 100 Zeilen auf und blättern jetzt. Eine Zusammenfassung lud bis zu 10.000 Zeilen in PHP, um sie zu addieren; jetzt ist sie eine einzige gruppierte SQL-Abfrage mit denselben Zeilenberechtigungen. Neue Tools decken Zeiteinträge, Aufgaben, Budgets, Kommentare, Personen und Abwesenheiten ab; damit wächst der Server von 17 auf 30 Tools. Fünf davon ändern Daten, etwa Zeit erfassen oder eine Aufgabe abschließen, und bleiben aus, bis der Kunde sie einschaltet. Jede Änderung wurde test-first geschrieben: Auf jeden Feature-Commit folgt ein Commit mit einem fehlschlagenden Test davor.`,
     'p4-h3': `Das Audit rundherum`,
     'p4-p1': `Eine API für Agenten zu öffnen ist ein guter Moment, um zu prüfen, was die API schon erlaubt. Eine Bestandsaufnahme listete jede Operation, die die Oberfläche nutzt, mit ihren Berechtigten und dem, was sie liest oder schreibt, damit das Audit alles abdeckte statt einer Stichprobe. Jede gefundene Berechtigungslücke wurde zuerst mit einem fehlschlagenden Test belegt und dann behoben, und das Review fand weitere Fälle derselben Art, die durch dieselbe Schleife liefen. Die Berechtigungstests umfassen etwa 700 Zeilen, und jeder Test legt seine eigenen Daten an.`,
     'p4-p2': `Zwei kleinere Fixes gehören zum selben Thema. Der Logger maskiert Zugangsdaten jetzt, bevor irgendetwas ins zentrale Logging gelangt. Und die eigenen KI-Agenten-Befehle des Repositorys für Releases, KPIs und Reviews bitten niemanden mehr, ein Token in den Chat einzufügen: Sie lesen Geheimnisse aus Dateien, die außerhalb des Agenten angelegt werden, lehnen Dateien ab, die andere Nutzer lesen können, und geben den Wert nie aus.`,
     'reflect-h2': `Was zählte`,
     'reflect-p1': `Ein KI-Agent ist eine neue Art von Client, und der billigste Moment, um zu entscheiden, was er darf, ist bevor sich der erste verbindet. Hier hieß das drei Grenzen: für wen der Agent handelt (OAuth und Zustimmung), wo sein Token gilt (ein Endpunkt, standardmäßig geschlossen) und was er anfassen darf (dieselben Berechtigungen wie die Person dahinter).`,
-    'reflect-p2': `Der Stand, ohne Beschönigung: Zwei der sechs OAuth-Schritte sind gemergt, der Rest ist im Review, hinter einem einzigen Schalter. Die neuen Tools kommen mit ihnen. Die Audit-Fixes sind gemergt.`,
+    'reflect-p2': `Der Stand, ohne Beschönigung: Die sechs OAuth-Schritte und die neuen Tools kommen jetzt gemeinsam als eine Änderung, hinter einem einzigen Schalter. Sie ist im letzten Review und im QA auf Staging. Die Audit-Fixes sind gemergt.`,
     'tag-oauth': `OAuth2`,
     'tag-security': `Sicherheit`,
     'footer-copy': '&copy; 2026 David Irving.',
