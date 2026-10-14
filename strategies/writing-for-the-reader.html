@@ -38,6 +38,23 @@
     --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
     --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
   }
+  .readers-fig{margin:0 0 32px}
+  .readers-fig .diagram-caption{margin-top:14px}
+  .rf-ticket{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring);overflow:hidden}
+  .rf-head{padding:10px 18px;border-bottom:1px solid var(--line);font:600 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--sub)}
+  .rf-part{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 18px;align-items:start}
+  .rf-part + .rf-part{border-top:1px dashed var(--line)}
+  .rf-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+  .rf-txt{margin:0;font-size:15px;line-height:1.45;color:var(--ink)}
+  .rf-concl .rf-txt{font-weight:700}
+  ul.rf-txt{list-style:none;padding:0}
+  ul.rf-txt li{padding-left:18px;position:relative;margin:0}
+  ul.rf-txt li::before{content:"";position:absolute;left:3px;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .rf-readers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .rf-reader{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:14px 16px;box-shadow:var(--ring)}
+  .rf-who{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-weight:700;font-size:15px;color:var(--ink)}
+  .rf-reader p.rf-desc{margin:0;font-size:14px;line-height:1.45;color:var(--sub)}
+  @media (max-width:560px){ .rf-readers{grid-template-columns:1fr} .rf-part{grid-template-columns:1fr;gap:4px} }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
            --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
@@ -158,6 +175,25 @@
     <h3 data-i18n="s1-h3">1. Name the reader first</h3>
     <p data-i18n="s1-p">The written standard starts with the audience, not the format: a colleague who reads English as a second language, scanning a ticket days later, who was not there when the work happened. Clarity beats completeness. Short sentences, plain words, active voice, a number or an identifier instead of an adjective. No idioms, no scene-setting, no closing sentence that repeats what was just said. Every other rule follows from that reader.</p>
     <p data-i18n="s1-p2">There is a second reader: the next agent. Before an agent starts on a ticket, it reads the issue and every comment on it. A padded comment costs it what it costs a person: it has to read past the story to find where the work stands. A comment that opens with the conclusion and ends with what is still open is the best starting point a new session can get.</p>
+    <figure class="readers-fig">
+      <div class="rf-ticket">
+        <div class="rf-head" data-i18n="rf-head">ticket comment · the fixed shape</div>
+        <div class="rf-part rf-concl"><span class="rf-lbl" data-i18n="rf-l1">Conclusion</span><p class="rf-txt" data-i18n="rf-t1">Fixed: archived projects are in the export again.</p></div>
+        <div class="rf-part"><span class="rf-lbl" data-i18n="rf-l2">Evidence</span>
+          <ul class="rf-txt">
+            <li data-i18n="rf-b1">Cause: a filter ran before the archive flag was read.</li>
+            <li data-i18n="rf-b2">A failing test proved it; it passes now.</li>
+            <li data-i18n="rf-b3">Checked on staging with three archived projects.</li>
+          </ul>
+        </div>
+        <div class="rf-part"><span class="rf-lbl" data-i18n="rf-l3">Still open</span><p class="rf-txt" data-i18n="rf-t3">Release note for the next version.</p></div>
+      </div>
+      <div class="rf-readers">
+        <div class="rf-reader"><p class="rf-who"><svg width="20" height="20" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="11" r="7" fill="none" stroke="var(--accent)" stroke-width="3"/><path d="M4 32c1-8 6-12 13-12s12 4 13 12" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg><span data-i18n="rf-r1">A colleague</span></p><p class="rf-desc" data-i18n="rf-r1d">Days later, between other work, often in their second language. Finds what to do next in the first line.</p></div>
+        <div class="rf-reader"><p class="rf-who"><svg width="20" height="20" viewBox="0 0 34 34" aria-hidden="true"><rect x="5" y="9" width="24" height="20" rx="5" fill="none" stroke="var(--accent)" stroke-width="3"/><circle cx="13" cy="19" r="2.4" fill="var(--accent)"/><circle cx="21" cy="19" r="2.4" fill="var(--accent)"/><path d="M17 9V3" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg><span data-i18n="rf-r2">The next agent</span></p><p class="rf-desc" data-i18n="rf-r2d">Reads the issue and every comment before it starts. Starts from the conclusion, not from last week's story.</p></div>
+      </div>
+      <p class="diagram-caption" data-i18n="rf-caption">Every ticket comment has two readers. The example is made up; the shape is the standard.</p>
+    </figure>
 
     <h3 data-i18n="s2-h3">2. A shape and a limit for each kind of text</h3>
     <p data-i18n="s2-p">"Be concise" does not work as an instruction, for people or for agents. A fixed shape does:</p>
@@ -257,6 +293,20 @@
     's1-h3': `1. Zuerst den Leser benennen`,
     's1-p': `Der schriftliche Standard beginnt mit dem Publikum, nicht mit dem Format: eine Kollegin oder ein Kollege, die Englisch als Zweitsprache lesen, ein Ticket Tage später überfliegen und nicht dabei waren, als die Arbeit passierte. Klarheit schlägt Vollständigkeit. Kurze Sätze, einfache Wörter, Aktiv, eine Zahl oder ein Bezeichner statt eines Adjektivs. Keine Redewendungen, keine Einleitung, kein Schlusssatz, der wiederholt, was gerade gesagt wurde. Jede andere Regel folgt aus diesem Leser.`,
     's1-p2': `Es gibt einen zweiten Leser: den nächsten Agenten. Bevor ein Agent mit einem Ticket beginnt, liest er das Issue und jeden Kommentar dazu. Ein aufgeblähter Kommentar kostet ihn dasselbe wie einen Menschen: Er muss sich durch die Geschichte lesen, um herauszufinden, wo die Arbeit steht. Ein Kommentar, der mit dem Ergebnis beginnt und mit dem offenen Punkt endet, ist der beste Startpunkt, den eine neue Sitzung bekommen kann.`,
+    'rf-head': `Ticket-Kommentar · die feste Form`,
+    'rf-l1': `Ergebnis`,
+    'rf-t1': `Behoben: Archivierte Projekte sind wieder im Export.`,
+    'rf-l2': `Belege`,
+    'rf-b1': `Ursache: Ein Filter lief, bevor das Archiv-Kennzeichen gelesen wurde.`,
+    'rf-b2': `Ein fehlschlagender Test hat es bewiesen; jetzt läuft er durch.`,
+    'rf-b3': `Auf Staging mit drei archivierten Projekten geprüft.`,
+    'rf-l3': `Noch offen`,
+    'rf-t3': `Release Note für die nächste Version.`,
+    'rf-r1': `Eine Kollegin, ein Kollege`,
+    'rf-r1d': `Tage später, zwischen anderer Arbeit, oft in der Zweitsprache. Findet in der ersten Zeile, was als Nächstes zu tun ist.`,
+    'rf-r2': `Der nächste Agent`,
+    'rf-r2d': `Liest das Issue und jeden Kommentar, bevor er beginnt. Startet beim Ergebnis, nicht bei der Geschichte von letzter Woche.`,
+    'rf-caption': `Jeder Ticket-Kommentar hat zwei Leser. Das Beispiel ist erfunden, die Form ist der Standard.`,
     's2-h3': `2. Eine Form und ein Limit für jede Textart`,
     's2-p': `„Fasse dich kurz“ funktioniert als Anweisung nicht, weder für Menschen noch für Agenten. Eine feste Form schon:`,
     's2-li1': `<strong>Ticket-Kommentar:</strong> eine Zeile mit dem Ergebnis, zwei bis fünf Aufzählungspunkte als Beleg, eine Zeile mit dem, was noch offen ist.`,
