@@ -93,6 +93,7 @@
     'card16': 'archive.html#c5-card16',
     // Dropped from the homepage strategies teaser (cap 4); the full page is unchanged.
     'strategy-implementer-reviewer-tester': 'strategies/implementer-reviewer-tester.html',
+    'strategy-instructions-style-memory': 'strategies/instructions-style-memory.html',
   };
   (function () {
     var id = location.hash.slice(1);
@@ -363,6 +364,15 @@
       <p data-i18n="strategies-p">Long-form writeups on the methodology — scoping, review discipline, verification, documentation architecture — for anyone doing this kind of work themselves, not just a list of what got built.</p>
     </div>
 
+    <div class="card" id="strategy-review-history-as-checks">
+      <a class="card-anchor" href="#strategy-review-history-as-checks" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
+      <h3 data-i18n="strategy6-h3">Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back</h3>
+      <p data-i18n="strategy6-p1">About 300 review comments, sorted by what they were really about. Each kind became a question an AI agent must answer, with evidence, before a person looks at its work. Why questions work where rules did not, and how the list stays current.</p>
+      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy5-tag-review">Code Review</span><span class="tag" data-i18n="strategy4-tag-gates">Definition of Done</span></div>
+      <a class="card-link" href="strategies/review-history-as-checks.html" data-i18n="strategy6-link">Read the full writeup →</a>
+    </div>
+
     <div class="card" id="strategy-writing-for-the-reader">
       <a class="card-anchor" href="#strategy-writing-for-the-reader" aria-label="Copy link to this entry" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
@@ -388,15 +398,6 @@
       <p data-i18n="strategy3-p1">Every fresh AI agent session on a legacy codebase faces the same choice: re-analyze everything from the code alone, or read what's already been decided. One canonical guide, read consistently by three different AI tools, and a strict split between what's being asked for, what's been decided and why, and how a specific piece of work is scoped.</p>
       <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy3-tag-docs">Documentation Architecture</span><span class="tag" data-i18n="strategy3-tag-onboarding">Agent Onboarding</span></div>
       <a class="card-link" href="strategies/context-decisions-guardrails.html" data-i18n="strategy3-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="strategy-instructions-style-memory">
-      <a class="card-anchor" href="#strategy-instructions-style-memory" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <p class="eyebrow" data-i18n="eyebrow-strategy">Agentic Strategies</p>
-      <h3 data-i18n="strategy2-h3">Instructions, Style, and Memory: How I Keep Several AI-Assisted Projects Consistent</h3>
-      <p data-i18n="strategy2-p1">Running several AI-assisted projects at once creates a specific failure mode: each one drifts its own way, and every session re-explains context the last one already worked out. Persistent per-project instructions, one shared style guide, and a memory system that carries lessons across sessions — the scaffolding that stops it.</p>
-      <div class="tags"><span class="tag">Agentic Strategies</span><span class="tag" data-i18n="strategy2-tag-consistency">Consistency</span><span class="tag" data-i18n="strategy2-tag-memory">Memory Systems</span></div>
-      <a class="card-link" href="strategies/instructions-style-memory.html" data-i18n="strategy2-link">Read the full writeup →</a>
     </div>
 
     <a class="card-link" href="strategies/" data-i18n="strategies-viewall">View all Agentic Strategies →</a>
@@ -640,6 +641,9 @@
     'strategies-h2': 'Wie ich tatsächlich mit KI-Agenten baue und arbeite',
     'strategies-p': 'Ausführliche Texte über die Methodik — Scoping, Review-Disziplin, Verifikation, Dokumentationsarchitektur — für alle, die diese Art von Arbeit selbst machen, nicht nur eine Liste von Ergebnissen.',
     'eyebrow-strategy': 'Agentic Strategies',
+    'strategy6-h3': 'Review-Historie als Checkliste: Einem Agenten beibringen, was das Review immer wieder zurückschickt',
+    'strategy6-p1': 'Rund 300 Review-Kommentare, danach sortiert, worum es eigentlich ging. Aus jeder Art wurde eine Frage, die ein KI-Agent mit Beleg beantworten muss, bevor ein Mensch seine Arbeit ansieht. Warum Fragen wirken, wo Regeln es nicht taten, und wie die Liste aktuell bleibt.',
+    'strategy6-link': 'Den vollständigen Text lesen →',
     'strategy5-h3': 'Für den Leser schreiben: Was sich änderte, als Agenten meine Tickets schrieben',
     'strategy5-p1': 'Nichts, was die Agenten schrieben, war falsch. Es war nur zu lang zum Lesen. Eine Form und ein Limit für jede Textart, die eine Gewohnheit hinter dem Großteil der Länge, und warum die Lösung für lange Titel nicht im Titel lag.',
     'strategy5-tag-writing': 'Schreiben',
