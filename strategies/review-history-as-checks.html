@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="About 300 review comments, sorted by what they were really about and turned into questions an AI agent must answer before a person reviews its work. What the checks are, why they are questions, and how the list stays current.">
+<link rel="canonical" href="https://davidirving.dev/strategies/review-history-as-checks.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back">
+<meta property="og:description" content="About 300 review comments, sorted by what they were really about and turned into questions an AI agent must answer before a person reviews its work. What the checks are, why they are questions, and how the list stays current.">
+<meta property="og:url" content="https://davidirving.dev/strategies/review-history-as-checks.html">
+<meta property="article:published_time" content="2026-10-28">
+<meta property="article:section" content="Agentic Strategies">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back">
+<meta name="twitter:description" content="About 300 review comments, sorted by what they were really about and turned into questions an AI agent must answer before a person reviews its work. What the checks are, why they are questions, and how the list stays current.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back",
+  "description": "About 300 review comments, sorted by what they were really about and turned into questions an AI agent must answer before a person reviews its work. What the checks are, why they are questions, and how the list stays current.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-10-28",
+  "dateModified": "2026-10-28",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/strategies/review-history-as-checks.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+    --now:#2f6fd6; --todo:#eef3f0;
+  }
+  .stages{margin:0 0 32px}
+  .st-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring);padding:16px 18px}
+  .st-bar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .st-seg{height:10px;border-radius:3px;background:var(--todo);border:1px solid var(--line)}
+  .st-seg.done{background:var(--accent);border-color:var(--accent)}
+  .st-seg.now{background:var(--now);border-color:var(--now)}
+  .st-lbls{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:8px}
+  .st-lbls span{font-size:12px;color:var(--sub);overflow-wrap:anywhere}
+  .st-lbls span.now{color:var(--now);font-weight:700}
+  .article .st-meta{margin:12px 0 0;font:600 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--sub)}
+  .stages .diagram-caption{margin-top:14px}
+  .qlist{margin:0 0 32px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring);overflow:hidden}
+  .ql-head{padding:10px 18px;border-bottom:1px solid var(--line);font:600 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--sub)}
+  .ql-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:11px 18px;align-items:start}
+  .ql-row + .ql-row{border-top:1px dashed var(--line)}
+  .article .ql-q{margin:0;font-size:15px;line-height:1.45}
+  .ql-ev{display:block;margin-top:3px;font-size:13px;color:var(--sub)}
+  .ql-a{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--chip-ink);background:var(--chip);padding:3px 9px;border-radius:6px;margin-top:2px}
+  .qlist + .diagram-caption{margin:-22px 0 32px}
+  @media (max-width:560px){ .st-lbls span{font-size:10.5px} }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3);
+           --now:#5b9bff; --todo:#20232c; }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3);
+           --now:#5b9bff; --todo:#20232c; }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+           --now:#2f6fd6; --todo:#eef3f0; }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article strong{color:var(--ink)}
+  .article ul{margin:0 0 14px;padding-left:22px}
+  .article li{font-size:15.5px;line-height:1.7;margin:0 0 6px}
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-strategies" href="index.html">All Strategies</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Agentic Strategies</p>
+    <h1 data-i18n="hero-h1">Review History as a Checklist: Teaching an Agent What Review Keeps Sending Back</h1>
+    <p class="lede" data-i18n="hero-lede">Good reviewers know which mistakes come back again and again. I counted those mistakes in seven weeks of reviews and turned each kind into a question an AI agent must answer before a person looks at its work.</p>
+    <p class="meta-row" data-i18n="meta-date">Published October 2026</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart of the largest kinds of review finding: edge cases about 22, accessibility about 22, permission checks about 17, tests that pass with the bug about 17, error handling and log level about 15">
+        <text x="20" y="22" font-size="14" fill="var(--sub)" data-i18n="chart-l1">Edge case nobody tried</text>
+        <rect x="20" y="30" width="560" height="18" rx="4" fill="var(--accent)"/>
+        <text x="590" y="44" font-size="14" font-weight="700" fill="var(--ink)">~22</text>
+        <text x="20" y="72" font-size="14" fill="var(--sub)" data-i18n="chart-l2">Accessibility</text>
+        <rect x="20" y="80" width="560" height="18" rx="4" fill="var(--accent)"/>
+        <text x="590" y="94" font-size="14" font-weight="700" fill="var(--ink)">~22</text>
+        <text x="20" y="122" font-size="14" fill="var(--sub)" data-i18n="chart-l3">Permission check missing, or different from the UI</text>
+        <rect x="20" y="130" width="433" height="18" rx="4" fill="var(--accent)"/>
+        <text x="463" y="144" font-size="14" font-weight="700" fill="var(--ink)">~17</text>
+        <text x="20" y="172" font-size="14" fill="var(--sub)" data-i18n="chart-l4">Test missing, or the test passes with the bug</text>
+        <rect x="20" y="180" width="433" height="18" rx="4" fill="var(--accent)"/>
+        <text x="463" y="194" font-size="14" font-weight="700" fill="var(--ink)">~17</text>
+        <text x="20" y="222" font-size="14" fill="var(--sub)" data-i18n="chart-l5">Error handling and log level</text>
+        <rect x="20" y="230" width="382" height="18" rx="4" fill="var(--accent)"/>
+        <text x="412" y="244" font-size="14" font-weight="700" fill="var(--ink)">~15</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram-caption">The five largest of 26 kinds of finding, from about 300 review comments, September 7 to October 22, 2026. Counted by hand: about right, not exact.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why this exists</h2>
+    <p data-i18n="why-p1">Every team has reviewers who know things that are not written down anywhere. Which edge cases always get missed. Which permission check the API forgets. Which test still passes with the bug in place. They write the same review comment again and again, and each time a ticket goes back to the developer, it costs a day.</p>
+    <p data-i18n="why-p2">AI agents make this worse before they make it better. An agent writes code fast, and it makes the same mistakes a new developer makes, every time, because it does not remember last week's review. I wanted it to arrive at review with those questions already answered.</p>
+
+    <h3 data-i18n="s1-h3">1. Count what review actually sends back</h3>
+    <p data-i18n="s1-p1">I went through seven weeks of reviews in one product team: 207 pull requests, about 300 review comments by people other than the author, and 22 times a ticket was sent back from review. Bots and the author's own replies were left out. Then I sorted every comment by what it was really about. They fell into 26 kinds.</p>
+    <p data-i18n="s1-p2">The result was not what I expected. The largest kinds were not exotic. Edge cases nobody tried: empty values, zero, an unsaved record, a failed network request. Accessibility: controls that do not work with a keyboard. Permission checks that are missing, or that differ from what the screen allows. And tests that exist but still pass when the bug is put back.</p>
+
+    <h3 data-i18n="s2-h3">2. Turn each kind into a question, not a rule</h3>
+    <p data-i18n="s2-p1">The team's rules were already written down. The agent had read them, and still made these mistakes. A rule says what is right. A question makes the agent look at its own change. So each kind of finding became one or more questions, and the agent answers every question that applies to the change with yes, no or N/A, plus one line of evidence.</p>
+    <div class="qlist">
+      <div class="ql-head" data-i18n="ql-head">before review · questions from past findings</div>
+      <div class="ql-row"><p class="ql-q"><span data-i18n="ql-q1">For each changed branch, did I test empty, zero, an unsaved record, and the request failing?</span><span class="ql-ev" data-i18n="ql-e1">Evidence: the test names, one per case.</span></p><span class="ql-a">yes</span></div>
+      <div class="ql-row"><p class="ql-q"><span data-i18n="ql-q2">Next to each refused case, is there a test where a user with the right is allowed?</span><span class="ql-ev" data-i18n="ql-e2">A refuse-only test still passes when the rule blocks everyone.</span></p><span class="ql-a">yes</span></div>
+      <div class="ql-row"><p class="ql-q"><span data-i18n="ql-q3">For each test, did I break the code it guards and see this exact test fail?</span><span class="ql-ev" data-i18n="ql-e3">Evidence: the failure output, quoted.</span></p><span class="ql-a">yes</span></div>
+      <div class="ql-row"><p class="ql-q"><span data-i18n="ql-q4">Does the change do anything for a customer that the ticket does not state in words?</span><span class="ql-ev" data-i18n="ql-e4">If yes: a product owner's answer in the ticket.</span></p><span class="ql-a">no</span></div>
+    </div>
+    <p class="diagram-caption" data-i18n="ql-caption">Four of the questions, shortened. The answers here are examples.</p>
+    <p data-i18n="s2-p2">Some questions came straight from a single painful review. A permission test that only checks the refused user passes even when the rule is forced on everyone, so the question asks for the allowed user too. A rule stricter than the screen is also a bug, so there is a question for a user who can do this in the screen today.</p>
+
+    <h3 data-i18n="s3-h3">3. A fixed path from ticket to human review</h3>
+    <p data-i18n="s3-p1">The questions sit inside a larger path. The agent takes a ticket through seven stages, and it may only call the work done when 33 checks each have evidence: the command, an excerpt of its output, the commit. A check without evidence did not run.</p>
+    <figure class="stages">
+      <div class="st-card">
+        <div class="st-bar"><div class="st-seg done"></div><div class="st-seg done"></div><div class="st-seg done"></div><div class="st-seg now"></div><div class="st-seg"></div><div class="st-seg"></div><div class="st-seg"></div></div>
+        <div class="st-lbls"><span data-i18n="st-1">Pick</span><span data-i18n="st-2">Setup</span><span data-i18n="st-3">Build</span><span class="now" data-i18n="st-4">Verify</span><span data-i18n="st-5">Review</span><span data-i18n="st-6">PR + CI</span><span data-i18n="st-7">Hand-over</span></div>
+        <p class="st-meta" data-i18n="st-meta">4/7 Verify · checks 14/33 · ETA 45–70 min</p>
+      </div>
+      <p class="diagram-caption" data-i18n="st-caption">The agent shows this line at the start of every message. The ETA is corrected after each stage, by how long the last one really took.</p>
+    </figure>
+    <ul>
+      <li data-i18n="s3-li1"><strong>Pick:</strong> reviews for colleagues come first, because a waiting review blocks someone else. Then the agent checks whether the problem already has a ticket, and whether a more urgent ticket is open.</li>
+      <li data-i18n="s3-li2"><strong>Build:</strong> a failing test first, so the bug is proven before it is fixed. Then the fix.</li>
+      <li data-i18n="s3-li3"><strong>Verify:</strong> the full suite of about 18,000 tests, the way CI runs it. Then again after merging the main branch.</li>
+      <li data-i18n="s3-li4"><strong>Review:</strong> a second agent with no context from the session, using the strongest model, gets the diff and the review questions. Every finding is fixed or answered, and the review runs again, as many rounds as it takes.</li>
+      <li data-i18n="s3-li5"><strong>PR + CI and hand-over:</strong> CI green on the exact commit, every review thread answered, and a report with the evidence for each check.</li>
+    </ul>
+
+    <h3 data-i18n="s4-h3">4. The person decides</h3>
+    <p data-i18n="s4-p">The agent asks before every action other people can see: every comment, every push, every pull request, every change to a ticket's state or assignee. It drafts first and shows the draft. A yes for one ticket does not cover the next one. This is slower than letting it run. It also means nobody on the team finds a comment or a ticket move they did not expect, and that is what makes people willing to use it.</p>
+
+    <h3 data-i18n="s5-h3">5. Keep the list alive</h3>
+    <p data-i18n="s5-p">A checklist that does not change becomes a ritual. So every time review still sends a ticket back, the reason goes into the list, with the pull request it came from. The list was last updated from tickets sent back the week after it was written. Some lessons came from the skill's own use: a push after hand-over now moves the ticket back to in progress, because once a build went red while the ticket still waited for review.</p>
+
+    <h3 data-i18n="s6-h3">6. What it has done so far</h3>
+    <ul>
+      <li data-i18n="s6-li1">On one day, October 22, six tickets reached colleague review.</li>
+      <li data-i18n="s6-li2">A failed PDF upload went from analysis to hand-off in 95 minutes, all tests included.</li>
+      <li data-i18n="s6-li3">On another ticket, the second agent reviewed five rounds before a person saw the change.</li>
+      <li data-i18n="s6-li4">Four people on the team use it.</li>
+    </ul>
+
+    <h2 data-i18n="concl-h2">What this buys</h2>
+    <p data-i18n="concl-p">It does not replace the reviewers. It takes away the part of review that repeats, so reviewers stop writing the same comment for the tenth time and spend their time on what needs a person: design, product decisions, the problem nobody saw before. And what they taught the team stays written down, in a place every agent and every new developer reads before they start.</p>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': `← Startseite`,
+    'nav-strategies': `Alle Strategies`,
+    'hero-kicker': `Agentic Strategies`,
+    'hero-h1': `Review-Historie als Checkliste: Einem Agenten beibringen, was das Review immer wieder zurückschickt`,
+    'hero-lede': `Gute Reviewer wissen, welche Fehler immer wiederkommen. Ich habe diese Fehler in sieben Wochen Reviews gezählt und jede Art in eine Frage verwandelt, die ein KI-Agent beantworten muss, bevor ein Mensch seine Arbeit ansieht.`,
+    'meta-date': `Veröffentlicht im Oktober 2026`,
+    'chart-l1': `Grenzfall, den niemand probiert hat`,
+    'chart-l2': `Barrierefreiheit`,
+    'chart-l3': `Berechtigungsprüfung fehlt oder weicht von der Oberfläche ab`,
+    'chart-l4': `Test fehlt, oder der Test läuft auch mit dem Fehler durch`,
+    'chart-l5': `Fehlerbehandlung und Log-Level`,
+    'diagram-caption': `Die fünf größten von 26 Arten von Befunden, aus rund 300 Review-Kommentaren, 7. September bis 22. Oktober 2026. Von Hand gezählt: ungefähr richtig, nicht exakt.`,
+    'why-h2': `Warum das hier existiert`,
+    'why-p1': `Jedes Team hat Reviewer, die Dinge wissen, die nirgends aufgeschrieben sind. Welche Grenzfälle immer übersehen werden. Welche Berechtigungsprüfung die API vergisst. Welcher Test auch mit dem Fehler noch durchläuft. Sie schreiben denselben Review-Kommentar immer wieder, und jedes Mal, wenn ein Ticket zurück zum Entwickler geht, kostet das einen Tag.`,
+    'why-p2': `KI-Agenten machen das zuerst schlimmer, bevor sie es besser machen. Ein Agent schreibt Code schnell, und er macht dieselben Fehler wie ein neuer Entwickler, jedes Mal, weil er sich nicht an das Review von letzter Woche erinnert. Ich wollte, dass er mit diesen Fragen schon beantwortet ins Review kommt.`,
+    's1-h3': `1. Zählen, was das Review wirklich zurückschickt`,
+    's1-p1': `Ich bin sieben Wochen Reviews in einem Produktteam durchgegangen: 207 Pull Requests, rund 300 Review-Kommentare von anderen Personen als dem Autor, und 22 Mal ging ein Ticket aus dem Review zurück. Bots und die eigenen Antworten des Autors habe ich weggelassen. Dann habe ich jeden Kommentar danach sortiert, worum es eigentlich ging. Es waren 26 Arten.`,
+    's1-p2': `Das Ergebnis war nicht, was ich erwartet hatte. Die größten Arten waren nicht exotisch. Grenzfälle, die niemand probiert hat: leere Werte, null, ein ungespeicherter Datensatz, eine fehlgeschlagene Netzwerkanfrage. Barrierefreiheit: Bedienelemente, die mit der Tastatur nicht funktionieren. Berechtigungsprüfungen, die fehlen oder von dem abweichen, was die Oberfläche erlaubt. Und Tests, die es gibt, die aber noch durchlaufen, wenn man den Fehler wieder einbaut.`,
+    's2-h3': `2. Aus jeder Art eine Frage machen, keine Regel`,
+    's2-p1': `Die Regeln des Teams waren schon aufgeschrieben. Der Agent hatte sie gelesen und machte diese Fehler trotzdem. Eine Regel sagt, was richtig ist. Eine Frage bringt den Agenten dazu, seine eigene Änderung anzusehen. Also wurde jede Art von Befund zu einer oder mehreren Fragen, und der Agent beantwortet jede Frage, die auf die Änderung zutrifft, mit ja, nein oder N/A, plus einer Zeile Beleg.`,
+    'ql-head': `vor dem Review · Fragen aus früheren Befunden`,
+    'ql-q1': `Habe ich für jeden geänderten Zweig leer, null, einen ungespeicherten Datensatz und eine fehlgeschlagene Anfrage getestet?`,
+    'ql-e1': `Beleg: die Testnamen, einer pro Fall.`,
+    'ql-q2': `Gibt es neben jedem abgelehnten Fall einen Test, in dem ein Benutzer mit dem Recht zugelassen wird?`,
+    'ql-e2': `Ein Test, der nur Ablehnung prüft, läuft auch durch, wenn die Regel alle blockiert.`,
+    'ql-q3': `Habe ich für jeden Test den Code, den er schützt, kaputt gemacht und genau diesen Test fehlschlagen sehen?`,
+    'ql-e3': `Beleg: die Fehlerausgabe, zitiert.`,
+    'ql-q4': `Tut die Änderung für einen Kunden etwas, das nicht wörtlich im Ticket steht?`,
+    'ql-e4': `Wenn ja: eine Antwort des Product Owners im Ticket.`,
+    'ql-caption': `Vier der Fragen, gekürzt. Die Antworten hier sind Beispiele.`,
+    's2-p2': `Manche Fragen kamen direkt aus einem einzigen schmerzhaften Review. Ein Berechtigungstest, der nur den abgelehnten Benutzer prüft, läuft auch dann durch, wenn die Regel für alle gilt, also fragt die Frage auch nach dem zugelassenen Benutzer. Eine Regel, die strenger ist als die Oberfläche, ist auch ein Fehler, also gibt es eine Frage nach einem Benutzer, der das heute in der Oberfläche darf.`,
+    's3-h3': `3. Ein fester Weg vom Ticket bis zum menschlichen Review`,
+    's3-p1': `Die Fragen sind Teil eines größeren Wegs. Der Agent führt ein Ticket durch sieben Etappen, und er darf die Arbeit erst fertig nennen, wenn 33 Prüfpunkte jeweils einen Beleg haben: den Befehl, einen Auszug seiner Ausgabe, den Commit. Ein Prüfpunkt ohne Beleg ist nicht gelaufen.`,
+    'st-1': `Auswahl`,
+    'st-2': `Setup`,
+    'st-3': `Bauen`,
+    'st-4': `Prüfen`,
+    'st-5': `Review`,
+    'st-6': `PR + CI`,
+    'st-7': `Übergabe`,
+    'st-meta': `4/7 Prüfen · Prüfpunkte 14/33 · ETA 45–70 min`,
+    'st-caption': `Der Agent zeigt diese Zeile am Anfang jeder Nachricht. Die ETA wird nach jeder Etappe korrigiert, je nachdem, wie lange die letzte wirklich gedauert hat.`,
+    's3-li1': `<strong>Auswahl:</strong> Reviews für Kollegen kommen zuerst, weil ein wartendes Review jemand anderen blockiert. Dann prüft der Agent, ob es das Problem schon als Ticket gibt und ob ein dringenderes Ticket offen ist.`,
+    's3-li2': `<strong>Bauen:</strong> zuerst ein fehlschlagender Test, damit der Fehler bewiesen ist, bevor er behoben wird. Dann die Lösung.`,
+    's3-li3': `<strong>Prüfen:</strong> die volle Suite von rund 18.000 Tests, so wie CI sie ausführt. Dann noch einmal nach dem Merge des Hauptzweigs.`,
+    's3-li4': `<strong>Review:</strong> ein zweiter Agent ohne Kontext aus der Sitzung, mit dem stärksten Modell, bekommt den Diff und die Review-Fragen. Jeder Befund wird behoben oder beantwortet, und das Review läuft erneut, so viele Runden wie nötig.`,
+    's3-li5': `<strong>PR + CI und Übergabe:</strong> CI grün auf genau diesem Commit, jeder Review-Thread beantwortet, und ein Bericht mit dem Beleg für jeden Prüfpunkt.`,
+    's4-h3': `4. Der Mensch entscheidet`,
+    's4-p': `Der Agent fragt vor jeder Aktion, die andere sehen können: jeder Kommentar, jeder Push, jeder Pull Request, jede Änderung an Status oder Zuständigkeit eines Tickets. Er entwirft zuerst und zeigt den Entwurf. Ein Ja für ein Ticket gilt nicht für das nächste. Das ist langsamer, als ihn laufen zu lassen. Es bedeutet aber auch, dass niemand im Team einen Kommentar oder eine Ticket-Änderung findet, die er nicht erwartet hat, und genau deshalb sind die Leute bereit, ihn zu nutzen.`,
+    's5-h3': `5. Die Liste lebendig halten`,
+    's5-p': `Eine Checkliste, die sich nicht ändert, wird zum Ritual. Also kommt jedes Mal, wenn das Review ein Ticket trotzdem zurückschickt, der Grund auf die Liste, mit dem Pull Request, aus dem er stammt. Zuletzt wurde die Liste aus Tickets aktualisiert, die in der Woche nach ihrem Entstehen zurückkamen. Manche Lektionen kamen aus der eigenen Nutzung: Ein Push nach der Übergabe setzt das Ticket jetzt zurück auf In Arbeit, weil einmal ein Build rot wurde, während das Ticket noch auf das Review wartete.`,
+    's6-h3': `6. Was es bisher gebracht hat`,
+    's6-li1': `An einem Tag, dem 22. Oktober, gingen sechs Tickets ins Review durch Kollegen.`,
+    's6-li2': `Ein fehlgeschlagener PDF-Upload ging in 95 Minuten von der Analyse bis zur Übergabe, alle Tests inklusive.`,
+    's6-li3': `Bei einem anderen Ticket hat der zweite Agent fünf Runden lang geprüft, bevor ein Mensch die Änderung sah.`,
+    's6-li4': `Vier Leute im Team nutzen es.`,
+    'concl-h2': `Was das bringt`,
+    'concl-p': `Es ersetzt die Reviewer nicht. Es nimmt den Teil des Reviews weg, der sich wiederholt, damit Reviewer nicht zum zehnten Mal denselben Kommentar schreiben und ihre Zeit dort verbringen, wo es einen Menschen braucht: Design, Produktentscheidungen, das Problem, das vorher niemand gesehen hat. Und was sie dem Team beigebracht haben, bleibt aufgeschrieben, an einem Ort, den jeder Agent und jeder neue Entwickler liest, bevor er anfängt.`,
+    'footer-copy': `&copy; 2026 David Irving.`,
+    'footer-impressum': `Impressum`,
+    'footer-privacy': `Datenschutz`
+  };
+
+  var META_DESC = {
+    en: 'About 300 review comments, sorted by what they were really about and turned into questions an AI agent must answer before a person reviews its work. What the checks are, why they are questions, and how the list stays current.',
+    de: 'Rund 300 Review-Kommentare, danach sortiert, worum es eigentlich ging, und in Fragen verwandelt, die ein KI-Agent beantworten muss, bevor ein Mensch seine Arbeit prüft. Was die Prüfpunkte sind, warum es Fragen sind und wie die Liste aktuell bleibt.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
