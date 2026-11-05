@@ -7,24 +7,24 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<meta name="description" id="metaDesc" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<meta name="description" id="metaDesc" content="Reworking a product's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
 <link rel="canonical" href="https://davidirving.dev/work/client-numbering-rework.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="David Irving">
 <meta property="og:title" content="Reworking Client Numbering to Support Alphanumeric IDs, End to End">
-<meta property="og:description" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<meta property="og:description" content="Reworking a product's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
 <meta property="og:url" content="https://davidirving.dev/work/client-numbering-rework.html">
 <meta property="article:published_time" content="2026-08-05">
 <meta property="article:section" content="Featured Work">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Reworking Client Numbering to Support Alphanumeric IDs, End to End">
-<meta name="twitter:description" content="Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
+<meta name="twitter:description" content="Reworking a product's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Reworking Client Numbering to Support Alphanumeric IDs, End to End",
-  "description": "Reworking TEAMBOX's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.",
+  "description": "Reworking a product's client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.",
   "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
   "publisher": { "@type": "Person", "name": "David Irving" },
   "datePublished": "2026-08-05",
@@ -136,7 +136,7 @@
   <section class="hero">
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
     <h1 data-i18n="hero-h1">Reworking Client Numbering to Support Alphanumeric IDs, End to End</h1>
-    <p class="lede" data-i18n="hero-lede">An enterprise client running SAP alongside TEAMBOX needed matching client codes in both systems — a change that touches nearly everything client numbering ever touches, including an architecture correction made mid-build.</p>
+    <p class="lede" data-i18n="hero-lede">An enterprise client running SAP alongside our product needed matching client codes in both systems — a change that touches nearly everything client numbering ever touches, including an architecture correction made mid-build.</p>
     <p class="meta-row" data-i18n="meta-date">July–August 2026 · In progress · ~96 commits</p>
   </section>
 
@@ -171,18 +171,18 @@
     </div>
 
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">An enterprise client running SAP alongside TEAMBOX needed to use the same alphanumeric client codes in both systems. That sounds small until you realize TEAMBOX's client numbering had always quietly assumed a purely numeric ID — an assumption baked in years ago that had simply never been tested against a real alphanumeric requirement, because nobody had needed one, until now.</p>
+    <p data-i18n="why-p1">An enterprise client running SAP alongside our product needed to use the same alphanumeric client codes in both systems. That sounds small until you realize the product's client numbering had always quietly assumed a purely numeric ID — an assumption baked in years ago that had simply never been tested against a real alphanumeric requirement, because nobody had needed one, until now.</p>
 
     <h3 data-i18n="p1-h3">An architecture correction made mid-build, not before it</h3>
     <p data-i18n="p1-p1">The new external-ID field started life on the Company record — the natural-seeming place for an identifier tied to a client relationship. Partway through the build, the domain model made it clear that was the wrong home: numbering is fundamentally a client-level concern, and a single company can have more than one client relationship under it. Moved the field from Company to Client mid-build rather than shipping the wrong owner and fixing it later — the kind of correction that's cheap while only one piece of code depends on where a field lives, and considerably more expensive once several do.</p>
 
     <h3 data-i18n="p2-h3">Decoupling numbering from payment references</h3>
-    <p data-i18n="p2-p1">TEAMBOX's project numbering and its ESR/QR/DATEV/ABACUS payment references had always assumed the same underlying numeric format. Decoupling them meant building a per-client job-number pattern engine that generates project numbers independently of whatever format the new external ID happens to take — so a client's payment references keep working exactly as they did before, regardless of what their client code looks like now.</p>
+    <p data-i18n="p2-p1">The product's project numbering and its ESR/QR/DATEV/ABACUS payment references had always assumed the same underlying numeric format. Decoupling them meant building a per-client job-number pattern engine that generates project numbers independently of whatever format the new external ID happens to take — so a client's payment references keep working exactly as they did before, regardless of what their client code looks like now.</p>
     <p data-i18n="p2-p2">The external ID itself is immutable once set, to guarantee uniqueness. Once assigned, it can't drift — which matters considerably more once a second system, the client's own SAP instance, is relying on it staying exactly matched.</p>
     <p data-i18n="p2-p3">The pattern engine itself turned out to be the harder problem: making a fixed-width numbering format accept a new variable-length segment without breaking any number already generated under the old format, or any payment reference built on the same assumption. Each client resolves its own pattern through a small factory, and changing a client's code now triggers a re-render across every existing project number under it — tested to make sure one client's re-render never touches another's.</p>
 
     <h3 data-i18n="p3-h3">Threading it through two frontends, and catching its own regressions</h3>
-    <p data-i18n="p3-p1">The new field touches search, filtering, and column display across five separate UI surfaces spanning both TEAMBOX's legacy ExtJS frontend and its newer Angular one — each shipped behind a feature flag, with REST API exposure and a permanent Playwright end-to-end suite covering the new behavior.</p>
+    <p data-i18n="p3-p1">The new field touches search, filtering, and column display across five separate UI surfaces spanning both the product's legacy ExtJS frontend and its newer Angular one — each shipped behind a feature flag, with REST API exposure and a permanent Playwright end-to-end suite covering the new behavior.</p>
     <p data-i18n="p3-p2">Two regressions surfaced and got fixed in review before they reached anyone else. A literal external ID of <code>"0"</code> was being silently treated as unset — the classic falsy-string trap in a language that doesn't automatically distinguish "empty" from "the string zero" at every layer it needs to. And client search broke outright the moment IDs stopped being purely numeric, because parts of the existing search implementation had quietly assumed a numeric-only field the whole time, with nothing ever having tested that assumption until it was no longer true.</p>
 
     <h2 data-i18n="status-h2">Where it stands</h2>
@@ -255,15 +255,15 @@
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',
     'hero-h1': 'Kundennummerierung für alphanumerische IDs überarbeitet, end to end',
-    'hero-lede': 'Ein Enterprise-Kunde, der SAP parallel zu TEAMBOX betreibt, brauchte dieselben Kundencodes in beiden Systemen — eine Änderung, die fast alles berührt, was Kundennummerierung je berührt hat, inklusive einer Architekturkorrektur mitten im Bau.',
+    'hero-lede': 'Ein Enterprise-Kunde, der SAP parallel zu unserem Produkt betreibt, brauchte dieselben Kundencodes in beiden Systemen — eine Änderung, die fast alles berührt, was Kundennummerierung je berührt hat, inklusive einer Architekturkorrektur mitten im Bau.',
     'meta-date': 'Juli–August 2026 · In Arbeit · ~96 Commits',
 
     'diagram1-caption': 'Begann am Company-Datensatz, mitten im Bau. Zum Client verschoben, sobald das Domänenmodell die tatsächliche Form der Beziehung klar machte.',
 
     'why-h2': 'Die Ausgangslage',
-    'why-p1': `Ein Enterprise-Kunde, der SAP parallel zu TEAMBOX betreibt, brauchte dieselben
+    'why-p1': `Ein Enterprise-Kunde, der SAP parallel zu unserem Produkt betreibt, brauchte dieselben
       alphanumerischen Kundencodes in beiden Systemen. Das klingt klein, bis einem klar wird, dass
-      TEAMBOX' Kundennummerierung schon immer still eine rein numerische ID voraussetzte — eine
+      die Kundennummerierung des Produkts schon immer still eine rein numerische ID voraussetzte — eine
       Annahme, die vor Jahren einbetoniert wurde und nie gegen eine echte alphanumerische
       Anforderung getestet worden war, weil niemand bis jetzt eine brauchte.`,
 
@@ -278,7 +278,7 @@
       teurer, sobald es mehrere tun.`,
 
     'p2-h3': 'Nummerierung von Zahlungsreferenzen entkoppelt',
-    'p2-p1': `TEAMBOX' Projektnummerierung und seine ESR/QR/DATEV/ABACUS-Zahlungsreferenzen
+    'p2-p1': `Die Projektnummerierung des Produkts und seine ESR/QR/DATEV/ABACUS-Zahlungsreferenzen
       hatten schon immer dasselbe zugrunde liegende numerische Format vorausgesetzt. Sie zu
       entkoppeln bedeutete, eine Pattern-Engine pro Kunde für Auftragsnummern zu bauen, die
       Projektnummern unabhängig von dem Format generiert, das die neue External ID zufällig hat —
@@ -297,7 +297,7 @@
 
     'p3-h3': 'Durch zwei Frontends gefädelt, eigene Regressionen selbst gefangen',
     'p3-p1': `Das neue Feld berührt Suche, Filterung und Spaltenanzeige über fünf separate
-      UI-Oberflächen, die sowohl TEAMBOX' Legacy-ExtJS-Frontend als auch das neuere
+      UI-Oberflächen, die sowohl das Legacy-ExtJS-Frontend des Produkts als auch das neuere
       Angular-Frontend umspannen — jede hinter einem Feature-Flag ausgeliefert, mit
       REST-API-Exposure und einer dauerhaften Playwright-End-to-End-Suite für das neue Verhalten.`,
     'p3-p2': `Zwei Regressionen tauchten auf und wurden im Review gefixt, bevor sie irgendjemand
@@ -324,8 +324,8 @@
   };
 
   var META_DESC = {
-    en: 'Reworking TEAMBOX\'s client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.',
-    de: 'TEAMBOX\' Kundennummerierung für alphanumerische IDs überarbeitet, für einen Kunden mit SAP parallel im Einsatz — eine Architekturkorrektur mitten im Bau, eine entkoppelte Zahlungsreferenz-Engine, und zwei selbst gefangene Regressionen.'
+    en: 'Reworking a product\'s client numbering to support alphanumeric IDs for a client running SAP alongside it — an architecture correction made mid-build, a decoupled payment-reference engine, and two self-caught regressions.',
+    de: 'Kundennummerierung eines Produkts für alphanumerische IDs überarbeitet, für einen Kunden mit SAP parallel im Einsatz — eine Architekturkorrektur mitten im Bau, eine entkoppelte Zahlungsreferenz-Engine, und zwei selbst gefangene Regressionen.'
   };
   var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
   var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
