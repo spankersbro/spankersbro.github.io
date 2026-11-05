@@ -209,7 +209,7 @@
       <a class="card-anchor" href="#c3-feat6" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="c3-feat6-h3">Reworked client numbering end-to-end to support alphanumeric IDs — while it was still moving underneath</h3>
-      <p data-i18n="c3-feat6-p1">An enterprise client running SAP alongside TEAMBOX needed the same alphanumeric client codes in both systems — a change that touches nearly everything client-numbering ever touches: two frontend stacks, a decades-old payment-reference format, and the assumption, baked in for years, that a client ID is just a number.</p>
+      <p data-i18n="c3-feat6-p1">An enterprise client running SAP alongside our product needed the same alphanumeric client codes in both systems — a change that touches nearly everything client-numbering ever touches: two frontend stacks, a decades-old payment-reference format, and the assumption, baked in for years, that a client ID is just a number.</p>
       <ol class="steps">
         <li><span data-i18n="c3-feat6-step1"><strong>Moved the field once the domain model demanded it.</strong> The new external-ID field started on the company record, then moved to the client record mid-build once that became the obviously correct owner — the kind of correction that's cheap early and expensive if you wait.</span></li>
         <li><span data-i18n="c3-feat6-step2"><strong>Decoupled the parts that used to be tangled together.</strong> A new per-client job-number pattern engine separates project numbering and payment references from the new external-ID format, instead of leaving them implicitly coupled to "the client number is numeric."</span></li>
@@ -769,7 +769,7 @@
     'c3-feat5-tag-test-infra': 'Test-Infrastruktur',
     'c3-feat5-tag-techdebt': 'Technische Schulden',
     'c3-feat6-h3': 'Kundennummerierung Ende-zu-Ende umgebaut, um alphanumerische IDs zu unterstützen — während sich der Boden noch bewegte',
-    'c3-feat6-p1': `Ein Enterprise-Kunde, der parallel zu TEAMBOX SAP einsetzt, brauchte in
+    'c3-feat6-p1': `Ein Enterprise-Kunde, der parallel zu unserem Produkt SAP einsetzt, brauchte in
       beiden Systemen dieselben alphanumerischen Kundencodes — eine Änderung, die fast alles
       berührt, was Kundennummerierung je berührt: zwei Frontend-Stacks, ein jahrzehntealtes
       Zahlungsreferenzformat und die seit Jahren einbetonierte Annahme, dass eine Kundennummer

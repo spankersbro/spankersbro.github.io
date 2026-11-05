@@ -187,7 +187,7 @@
     </div>
 
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">TEAMBOX's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
+    <p data-i18n="why-p1">The product's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
     <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split into three phases, and each one mattered more than the last.</p>
 
     <h3 data-i18n="p1-h3">Phase one: one test format, not two</h3>
@@ -345,7 +345,7 @@
     'diagram2-caption': 'Jede Sackgasse blieb in der Commit-Historie — der Fix kam davon, den geteilten Storage statt der Worker-Aufteilung als Ursache zu erkennen.',
 
     'why-h2': 'Die Ausgangslage',
-    'why-p1': `TEAMBOX' PHP-Testsuite war über rund zwei Dutzend Module verteilt — Finance,
+    'why-p1': `Die PHP-Testsuite des Produkts war über rund zwei Dutzend Module verteilt — Finance,
       Framework, Sync, Staff, Projektmanagement, File Storage und mehr — und jedes davon
       hatte ein selbstgebautes Dual-Runner-Setup: eine "Live"-Testklasse und eine separate
       Non-Live-Testklasse pro Feature, jede von einer von zwei eigenen Basisklassen

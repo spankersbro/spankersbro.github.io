@@ -171,7 +171,7 @@
     </div>
 
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">TEAMBOX ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never met the failure modes that appear once a real migration tool is in charge.</p>
+    <p data-i18n="why-p1">The product ran schema changes and upgrades through a homegrown, YAML-driven system: hundreds of YAML schema files, a set of legacy upgrade scripts, and a handful of custom schema classes to tie it together. It worked, in the sense that it had been running for years. It had also never met the failure modes that appear once a real migration tool is in charge.</p>
 
     <h3 data-i18n="p1-h3">Phase one: a replacement, not a patch</h3>
     <p data-i18n="p1-p1">I built and shipped a full replacement of the old system with Doctrine Migrations. The old schema-definition layer, its YAML fixtures and the legacy upgrade scripts are gone: a net reduction of thousands of lines across hundreds of files. A dedicated fixture-management layer, paired with Doctrine Migrations, now owns schema and test-database setup end to end.</p>
@@ -271,7 +271,7 @@
     'diagram1-caption': 'Vier Wege, auf denen das neue Tooling Daten hätte verlieren können. Jeder wurde reproduziert, bevor er behoben wurde.',
 
     'why-h2': 'Die Ausgangslage',
-    'why-p1': `TEAMBOX führte Schemaänderungen und Upgrades über ein selbstgebautes,
+    'why-p1': `Das Produkt führte Schemaänderungen und Upgrades über ein selbstgebautes,
       YAML-gesteuertes System: Hunderte YAML-Schemadateien, eine Reihe von Legacy-Upgrade-Skripten
       und ein paar eigene Schema-Klassen, die alles zusammenhielten. Es funktionierte, in dem Sinn,
       dass es seit Jahren lief. Es war aber nie den Fehlerfällen begegnet, die auftauchen, sobald
