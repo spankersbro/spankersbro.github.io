@@ -182,7 +182,7 @@
     </div>
 
     <h2 data-i18n="why-h2">The setup</h2>
-    <p data-i18n="why-p1">Evaluating a third-party agentic-engineering platform for the team meant trialing it against TEAMBOX's actual CI and security requirements, not a sandboxed walkthrough. That's the difference between "does this look good in a fifteen-minute demo" and "does this survive contact with a real, twenty-year-old codebase's actual constraints" — and it's the second question that determines whether a platform decision holds up six months later.</p>
+    <p data-i18n="why-p1">Evaluating a third-party agentic-engineering platform for the team meant trialing it against the product's actual CI and security requirements, not a sandboxed walkthrough. That's the difference between "does this look good in a fifteen-minute demo" and "does this survive contact with a real, twenty-year-old codebase's actual constraints" — and it's the second question that determines whether a platform decision holds up six months later.</p>
 
     <h3 data-i18n="p1-h3">Phase one: what a real evaluation actually finds</h3>
     <p data-i18n="p1-p1">Four concrete gaps came out of actually running the platform against real work, each specific enough to act on rather than a vague thumbs-down: an undocumented Node.js runner requirement that appeared nowhere in the platform's own documentation; a stop-gate that false-positived five separate times in one session on a commit that was pure formatting, with no logic change at all; no adapter for the team's internal ticketing system, meaning a core piece of the actual workflow had no path into the tool whatsoever; and global settings pollution on onboarding — the installer writing into a shared configuration location it had no business touching. None of these show up in a short demo. They show up when you actually point the thing at your own repository, your own CI, your own ticketing system, and watch what it does.</p>
@@ -270,7 +270,7 @@
 
     'why-h2': 'Die Ausgangslage',
     'why-p1': `Eine KI-Entwicklungsplattform eines Drittanbieters für das Team zu evaluieren
-      bedeutete, sie gegen TEAMBOX' tatsächliche CI- und Sicherheitsanforderungen zu testen, nicht
+      bedeutete, sie gegen die tatsächlichen CI- und Sicherheitsanforderungen des Produkts zu testen, nicht
       gegen eine abgeschottete Führung. Das ist der Unterschied zwischen "sieht in einer
       Fünfzehn-Minuten-Demo gut aus" und "hält dem Kontakt mit den echten Zwängen einer
       zwanzig Jahre alten Codebase stand" — und die zweite Frage ist es, die entscheidet, ob eine
