@@ -257,11 +257,63 @@
     </div>
   </section>
 
+  <section class="block" id="cycle-20261009">
+    <div class="block-head">
+      <p class="kicker" data-i18n="c7-kicker">October 9 – November 11, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <h2 data-i18n="c7-h2">805 commits, 16 workstreams</h2>
+      <p data-i18n="c7-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">805</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">16</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~39k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">53</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
+    </div>
+    <p class="stats-note" data-i18n="c7-stats-note">*Not counting about 12k lines of existing test specs moved between repositories, and an 8k-line prototype.</p>
+
+    <div class="card featured" id="c7-feat20">
+      <a class="card-anchor" href="#c7-feat20" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c7-feat20-h3">The app and its end-to-end tests in one repository, and a suite that runs in 5 minutes</h3>
+      <p data-i18n="c7-feat20-p1">The Playwright specs lived in a separate repository, so a feature and its test could never change in one commit. In October I built a workaround that pinned each branch to a spec version. It broke the main branch three times.</p>
+      <ol class="steps">
+        <li><span data-i18n="c7-feat20-step1"><strong>Delete the workaround instead of patching it again.</strong> I hardened the pin once, then moved the specs into the application repository in one cutover. The 390 lines of pin-checking code went with it.</span></li>
+        <li><span data-i18n="c7-feat20-step2"><strong>Open work moves with a tool, not by hand.</strong> A script and an agent skill carry an open spec pull request across to the new layout. Ten of them moved that way.</span></li>
+        <li><span data-i18n="c7-feat20-step3"><strong>Each check in the cheapest layer that can catch it.</strong> New React component tests took over pixel, CSS and error-state checks. 60 end-to-end tests were removed and 17 slimmed down, and a lint rule stops new ones of that kind.</span></li>
+      </ol>
+      <p data-i18n="c7-feat20-p2">The end-to-end suite now runs in under 5 minutes, down from 8–10 minutes and up to 26 under load. A new push cancels the branch's older CI run.</p>
+      <div class="tags"><span class="tag" data-i18n="c7-feat20-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">Vitest</span><span class="tag">CI/CD</span></div>
+    </div>
+
+    <div class="card featured" id="c7-feat21">
+      <a class="card-anchor" href="#c7-feat21" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c7-feat21-h3">A finance report, from 18 seconds to 2</h3>
+      <p data-i18n="c7-feat21-p1">One customer's valuation report took almost 20 seconds at the median in the production access log. The query plan showed 88% of the time in one correlated subquery.</p>
+      <ol class="steps">
+        <li><span data-i18n="c7-feat21-step1"><strong>Measure before changing anything.</strong> The subquery's filter pointed at the outer row, so it could not use the index and read about 45.8 million rows.</span></li>
+        <li><span data-i18n="c7-feat21-step2"><strong>One condition moved.</strong> With the filter inside the subquery, the query took 2.3 seconds instead of 18.2 on a copy of the customer's data. The two slowest columns went from 10.7 and 5.3 seconds to under 50 ms each.</span></li>
+        <li><span data-i18n="c7-feat21-step3"><strong>Same rows, proved.</strong> On generated data, the old and new queries returned identical results, checked with an md5 of the output.</span></li>
+      </ol>
+      <p data-i18n="c7-feat21-p2">On another customer's invoice and offer lists, grouped rows are now counted in SQL instead of in PHP.</p>
+      <div class="tags"><span class="tag">Performance</span><span class="tag">SQL</span></div>
+    </div>
+
+    <div class="card" id="c7-card22">
+      <a class="card-anchor" href="#c7-card22" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="c7-card22-h3">Agent skills that carry the team's definition of done</h3>
+      <p data-i18n="c7-card22-p">Our definition of done lived only in knowledge-base articles, so reviews kept sending work back for the same reasons. One agent skill now takes a ticket through those gates up to human review: tests, an end-to-end path, green CI and resolved review threads. A second one rebuilds slow-query bugs on a staging system with generated data, so QA can check a fix without a customer database. It refuses to seed anything but staging, and it measures the old and new code on the same data.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="c7-card22-tag-tooling">Developer Tooling</span><span class="tag">QA</span></div>
+    </div>
+
+  </section>
+
   <section class="block" id="cycle-20260924">
     <div class="block-head">
-      <p class="kicker" data-i18n="c6-kicker">September 24 – October 8, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <p class="kicker" data-i18n="c6-kicker">September 24 – October 8, 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Superseded</span></p>
       <h2 data-i18n="c6-h2">290 commits, 35 tickets</h2>
-      <p data-i18n="c6-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+      <p data-i18n="c6-p">Replaced on the homepage by the October 9 – November 11 cycle — kept here in full.</p>
     </div>
 
     <div class="stats">
@@ -666,9 +718,29 @@
 
   I18N.de = {
     'stat-tickets': 'Tickets',
-    'c6-kicker': '24. September – 8. Oktober 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c7-kicker': '9. Oktober – 11. November 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c7-h2': '805 Commits, 16 Workstreams',
+    'c7-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c7-stats-note': '*Ohne rund 12k Zeilen bestehender Test-Specs, die zwischen Repositories verschoben wurden, und einen Prototyp mit 8k Zeilen.',
+    'c7-feat20-h3': `Die App und ihre End-to-End-Tests in einem Repository, und eine Suite, die in 5 Minuten durchläuft`,
+    'c7-feat20-p1': `Die Playwright-Specs lagen in einem eigenen Repository, also konnten ein Feature und sein Test nie im selben Commit geändert werden. Im Oktober baute ich einen Workaround, der jeden Branch auf eine Spec-Version festlegte. Er ließ den Main-Branch dreimal fehlschlagen.`,
+    'c7-feat20-step1': `<strong>Den Workaround löschen, statt ihn noch einmal zu flicken.</strong> Ich habe den Pin einmal gehärtet und die Specs dann in einem Schritt ins Anwendungs-Repository verschoben. Die 390 Zeilen Pin-Prüfcode sind dabei wieder entfallen.`,
+    'c7-feat20-step2': `<strong>Offene Arbeit zieht per Werkzeug um, nicht von Hand.</strong> Ein Skript und ein Agent-Skill übertragen einen offenen Spec-Pull-Request in die neue Struktur. Zehn sind so umgezogen.`,
+    'c7-feat20-step3': `<strong>Jede Prüfung in der günstigsten Schicht, die sie erkennen kann.</strong> Neue React-Komponententests übernehmen Pixel-, CSS- und Fehlerzustands-Prüfungen. 60 End-to-End-Tests wurden entfernt und 17 verschlankt, und eine Lint-Regel verhindert neue dieser Art.`,
+    'c7-feat20-p2': `Die End-to-End-Suite läuft jetzt in unter 5 Minuten, statt 8–10 Minuten und unter Last bis zu 26. Ein neuer Push bricht den älteren CI-Lauf des Branches ab.`,
+    'c7-feat20-tag-testinfra': 'Test-Infrastruktur',
+    'c7-feat21-h3': `Ein Finanzbericht, von 18 Sekunden auf 2`,
+    'c7-feat21-p1': `Der Bewertungsbericht eines Kunden brauchte laut Produktions-Access-Log im Median fast 20 Sekunden. Der Ausführungsplan zeigte 88 % der Zeit in einer einzigen korrelierten Unterabfrage.`,
+    'c7-feat21-step1': `<strong>Erst messen, dann ändern.</strong> Der Filter der Unterabfrage verwies auf die äußere Zeile, konnte also den Index nicht nutzen und las rund 45,8 Millionen Zeilen.`,
+    'c7-feat21-step2': `<strong>Eine Bedingung verschoben.</strong> Mit dem Filter in der Unterabfrage brauchte die Abfrage auf einer Kopie der Kundendaten 2,3 statt 18,2 Sekunden. Die beiden langsamsten Spalten gingen von 10,7 und 5,3 Sekunden auf je unter 50 ms.`,
+    'c7-feat21-step3': `<strong>Dieselben Zeilen, nachgewiesen.</strong> Auf generierten Daten lieferten alte und neue Abfrage identische Ergebnisse, geprüft mit einem md5 der Ausgabe.`,
+    'c7-feat21-p2': `Bei den Rechnungs- und Angebotslisten eines weiteren Kunden werden gruppierte Zeilen jetzt in SQL statt in PHP gezählt.`,
+    'c7-card22-h3': `Agent-Skills, die die Definition of Done des Teams mitbringen`,
+    'c7-card22-p': `Unsere Definition of Done stand nur in Artikeln der Wissensdatenbank, also schickten Reviews Arbeit immer wieder aus denselben Gründen zurück. Ein Agent-Skill führt ein Ticket jetzt durch diese Gates bis zum menschlichen Review: Tests, ein End-to-End-Pfad, grüne CI und erledigte Review-Threads. Ein zweiter baut Bugs mit langsamen Abfragen auf einem Staging-System mit generierten Daten nach, damit QA einen Fix ohne Kundendatenbank prüfen kann. Er befüllt nur Staging-Systeme und misst alten und neuen Code auf denselben Daten.`,
+    'c7-card22-tag-tooling': 'Entwickler-Tools',
+    'c6-kicker': '24. September – 8. Oktober 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c6-h2': '290 Commits, 35 Tickets',
-    'c6-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c6-p': 'Auf der Startseite durch den Zyklus 9. Oktober – 11. November ersetzt — hier vollständig aufbewahrt.',
     'c6-feat17-link': 'Den vollständigen Text lesen →',
     'c6-feat17-h3': `KI-Agenten melden sich per OAuth an statt mit einem eingefügten API-Token`,
     'c6-feat17-p1': `Einen KI-Agenten mit unserem MCP-Server zu verbinden hieß bisher: ein persönliches API-Token, eine Node.js-Brücke und eine von Hand bearbeitete Konfigurationsdatei. Teams ohne Entwickler kamen damit nicht zurecht, und das Token öffnete die ganze API, nicht nur die Agenten-Tools.`,
