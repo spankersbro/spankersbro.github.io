@@ -275,14 +275,14 @@
     <div class="card featured" id="c7-feat20">
       <a class="card-anchor" href="#c7-feat20" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="c7-feat20-h3">The app and its end-to-end tests in one repository, and a suite that runs in 5 minutes</h3>
+      <h3 data-i18n="c7-feat20-h3">The app and its end-to-end tests in one repository</h3>
       <p data-i18n="c7-feat20-p1">The Playwright specs lived in a separate repository, so a feature and its test could never change in one commit. In October I built a workaround that pinned each branch to a spec version. It broke the main branch three times.</p>
       <ol class="steps">
         <li><span data-i18n="c7-feat20-step1"><strong>Delete the workaround instead of patching it again.</strong> I hardened the pin once, then moved the specs into the application repository in one cutover. The 390 lines of pin-checking code went with it.</span></li>
-        <li><span data-i18n="c7-feat20-step2"><strong>Open work moves with a tool, not by hand.</strong> A script and an agent skill carry an open spec pull request across to the new layout. Ten of them moved that way.</span></li>
-        <li><span data-i18n="c7-feat20-step3"><strong>Each check in the cheapest layer that can catch it.</strong> New React component tests took over pixel, CSS and error-state checks. 60 end-to-end tests were removed and 17 slimmed down, and a lint rule stops new ones of that kind.</span></li>
+        <li><span data-i18n="c7-feat20-step2"><strong>Open work moves with a tool, not by hand.</strong> A script and an agent skill carry an open spec pull request across to the new layout. Eleven moved that way on the day of the cutover.</span></li>
+        <li><span data-i18n="c7-feat20-step3"><strong>Each check in the cheapest layer that can catch it.</strong> New React component tests took over pixel, CSS and error-state checks. 59 end-to-end tests were removed and 17 slimmed down, and a lint rule stops new ones of that kind.</span></li>
       </ol>
-      <p data-i18n="c7-feat20-p2">The end-to-end suite now runs in under 5 minutes, down from 8–10 minutes and up to 26 under load. A new push cancels the branch's older CI run.</p>
+      <p data-i18n="c7-feat20-p2">A CI step that took 5 to 10 minutes on every run is gone, and a new push cancels the branch's older CI run instead of queuing behind it.</p>
       <div class="tags"><span class="tag" data-i18n="c7-feat20-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">Vitest</span><span class="tag">CI/CD</span></div>
     </div>
 
@@ -722,12 +722,12 @@
     'c7-h2': '805 Commits, 16 Workstreams',
     'c7-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
     'c7-stats-note': '*Ohne rund 12k Zeilen bestehender Test-Specs, die zwischen Repositories verschoben wurden, und einen Prototyp mit 8k Zeilen.',
-    'c7-feat20-h3': `Die App und ihre End-to-End-Tests in einem Repository, und eine Suite, die in 5 Minuten durchläuft`,
+    'c7-feat20-h3': `Die App und ihre End-to-End-Tests in einem Repository`,
     'c7-feat20-p1': `Die Playwright-Specs lagen in einem eigenen Repository, also konnten ein Feature und sein Test nie im selben Commit geändert werden. Im Oktober baute ich einen Workaround, der jeden Branch auf eine Spec-Version festlegte. Er ließ den Main-Branch dreimal fehlschlagen.`,
     'c7-feat20-step1': `<strong>Den Workaround löschen, statt ihn noch einmal zu flicken.</strong> Ich habe den Pin einmal gehärtet und die Specs dann in einem Schritt ins Anwendungs-Repository verschoben. Die 390 Zeilen Pin-Prüfcode sind dabei wieder entfallen.`,
-    'c7-feat20-step2': `<strong>Offene Arbeit zieht per Werkzeug um, nicht von Hand.</strong> Ein Skript und ein Agent-Skill übertragen einen offenen Spec-Pull-Request in die neue Struktur. Zehn sind so umgezogen.`,
-    'c7-feat20-step3': `<strong>Jede Prüfung in der günstigsten Schicht, die sie erkennen kann.</strong> Neue React-Komponententests übernehmen Pixel-, CSS- und Fehlerzustands-Prüfungen. 60 End-to-End-Tests wurden entfernt und 17 verschlankt, und eine Lint-Regel verhindert neue dieser Art.`,
-    'c7-feat20-p2': `Die End-to-End-Suite läuft jetzt in unter 5 Minuten, statt 8–10 Minuten und unter Last bis zu 26. Ein neuer Push bricht den älteren CI-Lauf des Branches ab.`,
+    'c7-feat20-step2': `<strong>Offene Arbeit zieht per Werkzeug um, nicht von Hand.</strong> Ein Skript und ein Agent-Skill übertragen einen offenen Spec-Pull-Request in die neue Struktur. Elf sind am Tag der Umstellung so umgezogen.`,
+    'c7-feat20-step3': `<strong>Jede Prüfung in der günstigsten Schicht, die sie erkennen kann.</strong> Neue React-Komponententests übernehmen Pixel-, CSS- und Fehlerzustands-Prüfungen. 59 End-to-End-Tests wurden entfernt und 17 verschlankt, und eine Lint-Regel verhindert neue dieser Art.`,
+    'c7-feat20-p2': `Ein CI-Schritt, der bei jedem Lauf 5 bis 10 Minuten dauerte, ist weg, und ein neuer Push bricht den älteren CI-Lauf des Branches ab, statt sich dahinter einzureihen.`,
     'c7-feat20-tag-testinfra': 'Test-Infrastruktur',
     'c7-feat21-h3': `Ein Finanzbericht, von 18 Sekunden auf 2`,
     'c7-feat21-p1': `Der Bewertungsbericht eines Kunden brauchte laut Produktions-Access-Log im Median fast 20 Sekunden. Der Ausführungsplan zeigte 88 % der Zeit in einer einzigen korrelierten Unterabfrage.`,
