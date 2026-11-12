@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Three agent skills from daily work on a twenty-year-old product: what each one does, the numbers behind it, and where a person still decides.">
+<link rel="canonical" href="https://davidirving.dev/work/agent-skills.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap">
+<meta property="og:description" content="Three agent skills from daily work on a twenty-year-old product: what each one does, the numbers behind it, and where a person still decides.">
+<meta property="og:url" content="https://davidirving.dev/work/agent-skills.html">
+<meta property="article:published_time" content="2026-11-12">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap">
+<meta name="twitter:description" content="Three agent skills from daily work on a twenty-year-old product: what each one does, the numbers behind it, and where a person still decides.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap",
+  "description": "Three agent skills from daily work on a twenty-year-old product: what each one does, the numbers behind it, and where a person still decides.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-11-12",
+  "dateModified": "2026-11-12",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/agent-skills.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap</h1>
+    <p class="lede" data-i18n="hero-lede">Three agent skills from my daily work: what each one does, the numbers behind it, and where a person still decides.</p>
+    <p class="meta-row" data-i18n="meta-date">October – November 2026 · Three agent skills</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Porting eleven open pull requests: about 44 hours by hand, done on the day of the cutover with the agent skill">
+        <text x="0" y="30" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-hand">By hand (my estimate)</text>
+        <rect x="0" y="40" width="640" height="34" rx="8" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="14" y="62" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-hand-v">11 pull requests × about 4 hours ≈ 44 hours</text>
+        <text x="0" y="112" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-skill">With the skill</text>
+        <rect x="0" y="122" width="116" height="34" rx="8" fill="var(--accent)"/>
+        <text x="130" y="144" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-skill-v">all 11 on the day of the cutover</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">Bar lengths are to scale only roughly: one working day against about five and a half.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why I write agent skills</h2>
+    <p data-i18n="why-p1">An agent skill is a written procedure an AI agent follows, with small scripts for the parts that must never vary. I write one when a task is repeated, risky, or blocked on something only one person knows. The skill carries that knowledge, and its refusal rules carry the caution.</p>
+    <p data-i18n="why-p2">Below are three from October and November 2026, in the codebase I have worked on for twenty years. Every number comes from a pull request, a commit or a CI run, except one estimate, which is marked as mine.</p>
+
+    <h2 id="port" data-i18n="s1-h2">1. Eleven pull requests in one day</h2>
+    <p data-i18n="s1-p1">Our end-to-end tests lived in their own repository, so a feature and its test could never change in the same commit. My first fix was a workaround that pinned each branch to a version of the tests. Three times, a pin slipped into the main branch through a squash merge and broke it. I decided to stop patching the workaround and remove the reason for it: move the tests into the application repository.</p>
+    <p data-i18n="s1-p2">The move itself was simple. The open work was not. Eleven test pull requests were still in progress in the old repository. By hand, each would have taken me about four hours: rebase onto the new layout, resolve conflicts, check the screenshots. That is about 44 hours, and until each one moved, its author was stuck.</p>
+    <p data-i18n="s1-p3">So before the cutover I wrote a script and an agent skill that port an open pull request into the new layout:</p>
+    <ul>
+      <li data-i18n="s1-li1"><strong>Three-way, binaries included.</strong> The obvious tool, a plain diff, leaves out binary files, and the visual test baselines are PNG screenshots. The script applies the pull request's changes against the commit the tests were copied from, screenshots included.</li>
+      <li data-i18n="s1-li2"><strong>A conflict stops it.</strong> It marks the conflicting files and commits nothing.</li>
+      <li data-i18n="s1-li3"><strong>A person approves every write.</strong> The skill asks before it merges the main branch, before every commit and before every push.</li>
+      <li data-i18n="s1-li4"><strong>The old mistake cannot come back.</strong> CI now fails a feature branch that still carries a pin.</li>
+    </ul>
+    <p data-i18n="s1-p4">The cutover pull request, about 11,900 lines, was opened at 09:57 and merged at 20:08 on 3 November. All eleven open pull requests were ported the same day.</p>
+
+    <h2 id="staging" data-i18n="s2-h2">2. Testing a slow-query fix without a customer's database</h2>
+    <p data-i18n="s2-p1">Some bugs only appear with a customer's volume of data. QA cannot test those fixes on a small test system, and a customer database is not something QA should have. So fixes waited, or went out with a developer's word as the only test.</p>
+    <p data-i18n="s2-p2">This skill walks from the ticket to a QA hand-off: find the expensive query, seed a staging copy, generate data in the right shape, measure the old and the new code on the same data, hand QA a one-click case, clean up. The interesting part is what it refuses to do:</p>
+    <ul>
+      <li data-i18n="s2-li1">Seeding runs only on a staging copy, and only when it is given that installation's own identifier. A missing or wrong identifier stops it.</li>
+      <li data-i18n="s2-li2">The generator asks for an explicit YES before it writes, marks every row it creates, caps the number of rows, and refuses to run again while marked rows still exist.</li>
+      <li data-i18n="s2-li3">Every query it runs is capped at 60 seconds. Measurement runs each query twice and reports the warm run, so caching does not flatter the fix.</li>
+    </ul>
+    <p data-i18n="s2-p3">The refusals were tested on purpose: without YES, over the row cap, with a real timeout and with an SQL error.</p>
+
+    <h2 id="review" data-i18n="s3-h2">3. What review keeps sending back</h2>
+    <p data-i18n="s3-p1">Tickets came back from review for the same reasons again and again. I sorted 299 review comments and 22 bounces from seven weeks into kinds, and turned each kind into a question the agent must answer, with evidence, before a person looks at its work. The method is in <a href="../strategies/review-history-as-checks.html">Review History as a Checklist</a>.</p>
+    <p data-i18n="s3-p2">The skill takes a ticket of any type through the team's gates to human review. It reuses the existing bug-fix and triage skills instead of copying them. Every write, whether a comment, a state change, a push, a pull request or a branch delete, waits for a yes. The skill itself went through nine rounds of fresh review; the last one found nothing.</p>
+
+    <h2 data-i18n="limit-h2">What the agents did not fix</h2>
+    <p data-i18n="limit-p1">CI time. Our five CI runners share one machine. Over 25 successful runs on the main branch, the same end-to-end suite took between 11 and 30 minutes, and the same runner took 11 minutes in the middle of a quiet day and 26 in a busy morning. That is load, not test count. Moving checks into faster test layers helps, but the real fix is capacity, and that is the next problem.</p>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>The agent did not make the decision.</strong> Moving the tests was my call. The skill made the right call cheap enough to take in one day instead of a week.</li>
+      <li data-i18n="reflect-li2"><strong>The refusals are the product.</strong> Each skill is mostly a list of things it will not do without a person: write to the wrong system, commit through a conflict, push without a yes.</li>
+      <li data-i18n="reflect-li3"><strong>Numbers get checked, not repeated.</strong> While writing this up I found a claim that the suite ran in under five minutes. It was the title of a ticket, not a result. It is not on this page.</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-skills">Agent Skills</span>
+      <span class="tag" data-i18n="tag-testinfra">Test Infrastructure</span>
+      <span class="tag">CI/CD</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Elf Pull Requests an einem Tag: Agent-Skills, die die richtige Entscheidung billig machen',
+    'hero-lede': 'Drei Agent-Skills aus meiner täglichen Arbeit: was jeder tut, die Zahlen dahinter und wo weiterhin ein Mensch entscheidet.',
+    'meta-date': 'Oktober – November 2026 · Drei Agent-Skills',
+    'd-hand': 'Von Hand (meine Schätzung)',
+    'd-hand-v': '11 Pull Requests × etwa 4 Stunden ≈ 44 Stunden',
+    'd-skill': 'Mit dem Skill',
+    'd-skill-v': 'alle 11 am Tag der Umstellung',
+    'diagram1-caption': 'Die Balken sind nur ungefähr maßstabsgetreu: ein Arbeitstag gegen etwa fünfeinhalb.',
+    'why-h2': 'Warum ich Agent-Skills schreibe',
+    'why-p1': 'Ein Agent-Skill ist eine schriftliche Anleitung, der ein KI-Agent folgt, mit kleinen Skripten für die Teile, die nie variieren dürfen. Ich schreibe einen, wenn eine Aufgabe sich wiederholt, riskant ist oder an Wissen hängt, das nur eine Person hat. Der Skill trägt dieses Wissen, und seine Verweigerungsregeln tragen die Vorsicht.',
+    'why-p2': 'Hier sind drei aus Oktober und November 2026, in der Codebase, an der ich seit zwanzig Jahren arbeite. Jede Zahl stammt aus einem Pull Request, einem Commit oder einem CI-Lauf, außer einer Schätzung, die als meine gekennzeichnet ist.',
+    's1-h2': '1. Elf Pull Requests an einem Tag',
+    's1-p1': 'Unsere End-to-End-Tests lagen in einem eigenen Repository, also konnten ein Feature und sein Test nie im selben Commit geändert werden. Mein erster Fix war ein Workaround, der jeden Branch auf eine Version der Tests festlegte. Dreimal rutschte ein solcher Pin über einen Squash-Merge in den Main-Branch und machte ihn kaputt. Ich habe aufgehört, den Workaround zu flicken, und stattdessen seinen Grund entfernt: die Tests ins Anwendungs-Repository verschieben.',
+    's1-p2': 'Der Umzug selbst war einfach. Die offene Arbeit nicht. Elf Test-Pull-Requests waren im alten Repository noch in Arbeit. Von Hand hätte mich jeder etwa vier Stunden gekostet: auf die neue Struktur rebasen, Konflikte lösen, Screenshots prüfen. Das sind rund 44 Stunden, und bis jeder umgezogen war, steckte seine Autorin oder sein Autor fest.',
+    's1-p3': 'Also schrieb ich vor der Umstellung ein Skript und einen Agent-Skill, die einen offenen Pull Request in die neue Struktur übertragen:',
+    's1-li1': '<strong>Drei-Wege, Binärdateien inklusive.</strong> Das naheliegende Werkzeug, ein einfaches Diff, lässt Binärdateien weg, und die visuellen Test-Baselines sind PNG-Screenshots. Das Skript wendet die Änderungen des Pull Requests gegen den Commit an, von dem die Tests kopiert wurden, Screenshots inklusive.',
+    's1-li2': '<strong>Ein Konflikt stoppt es.</strong> Es markiert die betroffenen Dateien und committet nichts.',
+    's1-li3': '<strong>Jeder Schreibvorgang braucht ein Ja.</strong> Der Skill fragt, bevor er den Main-Branch mergt, vor jedem Commit und vor jedem Push.',
+    's1-li4': '<strong>Der alte Fehler kann nicht zurückkommen.</strong> Die CI lässt jetzt einen Feature-Branch fehlschlagen, der noch einen Pin trägt.',
+    's1-p4': 'Der Umstellungs-Pull-Request, rund 11.900 Zeilen, wurde am 3. November um 09:57 eröffnet und um 20:08 gemergt. Alle elf offenen Pull Requests wurden am selben Tag übertragen.',
+    's2-h2': '2. Einen Fix für eine langsame Abfrage ohne Kundendatenbank testen',
+    's2-p1': 'Manche Bugs zeigen sich nur mit der Datenmenge eines Kunden. QA kann solche Fixes auf einem kleinen Testsystem nicht prüfen, und eine Kundendatenbank gehört nicht in die Hände von QA. Also warteten diese Fixes, oder sie gingen raus mit dem Wort eines Entwicklers als einzigem Test.',
+    's2-p2': 'Dieser Skill führt vom Ticket bis zur Übergabe an QA: die teure Abfrage finden, eine Staging-Kopie aufsetzen, Daten in der richtigen Form erzeugen, alten und neuen Code auf denselben Daten messen, QA einen Fall mit einem Klick übergeben, aufräumen. Interessant ist, was er verweigert:',
+    's2-li1': 'Das Aufsetzen läuft nur auf einer Staging-Kopie, und nur, wenn es die eigene Kennung dieser Installation erhält. Eine fehlende oder falsche Kennung stoppt es.',
+    's2-li2': 'Der Generator verlangt ein ausdrückliches YES, bevor er schreibt, markiert jede erzeugte Zeile, begrenzt die Zeilenzahl und verweigert einen weiteren Lauf, solange markierte Zeilen existieren.',
+    's2-li3': 'Jede Abfrage, die er ausführt, ist auf 60 Sekunden begrenzt. Die Messung führt jede Abfrage zweimal aus und meldet den warmen Lauf, damit Caching den Fix nicht schöner macht.',
+    's2-p3': 'Die Verweigerungen wurden gezielt getestet: ohne YES, über der Zeilengrenze, mit einem echten Timeout und mit einem SQL-Fehler.',
+    's3-h2': '3. Was Reviews immer wieder zurückschicken',
+    's3-p1': 'Tickets kamen immer wieder aus denselben Gründen aus dem Review zurück. Ich habe 299 Review-Kommentare und 22 Rückläufer aus sieben Wochen nach Art sortiert und jede Art in eine Frage verwandelt, die der Agent mit Belegen beantworten muss, bevor ein Mensch seine Arbeit ansieht. Die Methode steht in <a href="../strategies/review-history-as-checks.html">Review-Historie als Checkliste</a>.',
+    's3-p2': 'Der Skill führt ein Ticket jeder Art durch die Gates des Teams bis zum menschlichen Review. Er nutzt die bestehenden Skills für Bugfixes und Triage, statt sie zu kopieren. Jeder Schreibvorgang, ob Kommentar, Statuswechsel, Push, Pull Request oder das Löschen eines Branches, wartet auf ein Ja. Der Skill selbst ging durch neun Runden frischer Reviews; die letzte fand nichts mehr.',
+    'limit-h2': 'Was die Agenten nicht gelöst haben',
+    'limit-p1': 'Die CI-Zeit. Unsere fünf CI-Runner teilen sich eine Maschine. Über 25 erfolgreiche Läufe auf dem Main-Branch brauchte dieselbe End-to-End-Suite zwischen 11 und 30 Minuten, und derselbe Runner brauchte 11 Minuten an einem ruhigen Mittag und 26 an einem vollen Vormittag. Das ist Last, nicht Testanzahl. Prüfungen in schnellere Testschichten zu verschieben hilft, aber die eigentliche Lösung ist Kapazität, und das ist das nächste Problem.',
+    'reflect-h2': 'Was ich daraus mitnehme',
+    'reflect-li1': '<strong>Der Agent hat nicht entschieden.</strong> Die Tests zu verschieben war meine Entscheidung. Der Skill hat sie billig genug gemacht, um sie an einem Tag statt in einer Woche umzusetzen.',
+    'reflect-li2': '<strong>Die Verweigerungen sind das Produkt.</strong> Jeder Skill ist vor allem eine Liste von Dingen, die er ohne einen Menschen nicht tut: ins falsche System schreiben, durch einen Konflikt committen, ohne Ja pushen.',
+    'reflect-li3': '<strong>Zahlen werden geprüft, nicht wiederholt.</strong> Beim Schreiben fand ich die Behauptung, die Suite laufe in unter fünf Minuten. Das war der Titel eines Tickets, kein Ergebnis. Auf dieser Seite steht sie nicht.',
+    'tag-skills': 'Agent-Skills',
+    'tag-testinfra': 'Test-Infrastruktur',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Three agent skills from daily work on a twenty-year-old product: what each one does, the numbers behind it, and where a person still decides.',
+    de: 'Drei Agent-Skills aus der täglichen Arbeit an einem zwanzig Jahre alten Produkt: was jeder tut, die Zahlen dahinter und wo weiterhin ein Mensch entscheidet.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
