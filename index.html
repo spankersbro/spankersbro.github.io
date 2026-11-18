@@ -288,6 +288,48 @@
     </div>
   </section>
 
+  <section class="block" id="agentic">
+    <div class="block-head">
+      <p class="kicker" data-i18n="ae-kicker">Agentic Engineering</p>
+      <h2 data-i18n="ae-h2">Agents at work</h2>
+      <p data-i18n="ae-p">What my agents and agent skills actually do, the numbers behind them, and the points where a person still decides.</p>
+    </div>
+
+    <div class="card featured" id="ae5">
+      <a class="card-anchor" href="#ae5" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="ae5-eyebrow">Featured writeup</p>
+      <h3 data-i18n="ae5-h3">The agent wrote flaky tests too</h3>
+      <p data-i18n="ae5-p">Two weeks of end-to-end test work with an agent: about 100 tests moved to faster layers, about 30 mistakes caught, and most kinds of mistake turned into a rule a machine checks. Several flaky tests were real bugs.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-testinfra">Test Infrastructure</span></div>
+      <a class="card-link" href="work/e2e-reliability.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="ae2">
+      <a class="card-anchor" href="#ae2" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae2-h3">Eleven pull requests in one day</h3>
+      <p data-i18n="ae2-p">An agent skill ported eleven open test pull requests on the day of a repository cutover, screenshots included. By hand that is about 44 hours, by my estimate. It stops on a conflict and asks before every commit and push.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
+      <a class="card-link" href="work/agent-skills.html#port" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="ae3">
+      <a class="card-anchor" href="#ae3" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae3-h3">Testing a slow-query fix without a customer's database</h3>
+      <p data-i18n="ae3-p">Rebuilds the data shape of a slow-query bug on a staging copy, so QA can test the fix. It refuses to seed anything but a staging copy, caps rows and query time, and measures old and new code on the same data.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
+      <a class="card-link" href="work/agent-skills.html#staging" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card" id="ae4">
+      <a class="card-anchor" href="#ae4" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae4-h3">What review keeps sending back</h3>
+      <p data-i18n="ae4-p">299 review comments, sorted by kind and turned into questions the agent answers with evidence before a person reviews its work. Every write, from a comment to a push, waits for a yes.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
+      <a class="card-link" href="work/agent-skills.html#review" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+
+  </section>
+
   <section class="block" id="highlights">
     <div class="block-head">
       <p class="kicker" data-i18n="hl-kicker">Work Highlights · October 9 – November 11, 2026</p>
@@ -336,47 +378,6 @@
       <h3 data-i18n="card22-h3">Agent skills that carry the team's definition of done</h3>
       <p data-i18n="card22-p">Our definition of done lived only in knowledge-base articles, so reviews kept sending work back for the same reasons. One agent skill now takes a ticket through those gates up to human review: tests, an end-to-end path, green CI and resolved review threads. A second one rebuilds slow-query bugs on a staging system with generated data, so QA can check a fix without a customer database. It refuses to seed anything but staging, and it measures the old and new code on the same data.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card22-tag-tooling">Developer Tooling</span><span class="tag">QA</span></div>
-    </div>
-
-  </section>
-
-  <section class="block" id="agentic">
-    <div class="block-head">
-      <p class="kicker" data-i18n="ae-kicker">Agentic Engineering</p>
-      <h2 data-i18n="ae-h2">Agent skills at work</h2>
-      <p data-i18n="ae-p">What my agent skills actually do, the numbers behind them, and the points where a person still decides.</p>
-    </div>
-
-    <div class="card" id="ae5">
-      <a class="card-anchor" href="#ae5" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae5-h3">The agent wrote flaky tests too</h3>
-      <p data-i18n="ae5-p">Two weeks of end-to-end test work with an agent: about 100 tests moved to faster layers, about 30 mistakes caught, and most kinds of mistake turned into a rule a machine checks. Several flaky tests were real bugs.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-testinfra">Test Infrastructure</span></div>
-      <a class="card-link" href="work/e2e-reliability.html" data-i18n="ae-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="ae2">
-      <a class="card-anchor" href="#ae2" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae2-h3">Eleven pull requests in one day</h3>
-      <p data-i18n="ae2-p">An agent skill ported eleven open test pull requests on the day of a repository cutover, screenshots included. By hand that is about 44 hours, by my estimate. It stops on a conflict and asks before every commit and push.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#port" data-i18n="ae-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="ae3">
-      <a class="card-anchor" href="#ae3" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae3-h3">Testing a slow-query fix without a customer's database</h3>
-      <p data-i18n="ae3-p">Rebuilds the data shape of a slow-query bug on a staging copy, so QA can test the fix. It refuses to seed anything but a staging copy, caps rows and query time, and measures old and new code on the same data.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#staging" data-i18n="ae-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="ae4">
-      <a class="card-anchor" href="#ae4" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae4-h3">What review keeps sending back</h3>
-      <p data-i18n="ae4-p">299 review comments, sorted by kind and turned into questions the agent answers with evidence before a person reviews its work. Every write, from a comment to a push, waits for a yes.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#review" data-i18n="ae-link">Read the full writeup →</a>
     </div>
 
   </section>
@@ -674,8 +675,8 @@
     'strategy3-link': 'Den vollständigen Text lesen →',
     'nav-strategies': 'Agentic Strategies',
     'ae-kicker': 'Agentic Engineering',
-    'ae-h2': 'Agent-Skills im Einsatz',
-    'ae-p': 'Was meine Agent-Skills tatsächlich tun, die Zahlen dahinter und die Stellen, an denen weiterhin ein Mensch entscheidet.',
+    'ae-h2': 'Agenten im Einsatz',
+    'ae-p': 'Was meine Agenten und Agent-Skills tatsächlich tun, die Zahlen dahinter und die Stellen, an denen weiterhin ein Mensch entscheidet.',
     'ae-link': 'Den vollständigen Text lesen →',
     'ae2-h3': `Elf Pull Requests an einem Tag`,
     'ae2-p': `Ein Agent-Skill hat am Tag einer Repository-Umstellung elf offene Test-Pull-Requests übertragen, Screenshots inklusive. Von Hand wären das nach meiner Schätzung rund 44 Stunden. Bei einem Konflikt stoppt er, und vor jedem Commit und Push fragt er nach.`,
@@ -685,6 +686,7 @@
     'ae4-p': `299 Review-Kommentare, nach Art sortiert und in Fragen verwandelt, die der Agent mit Belegen beantwortet, bevor ein Mensch seine Arbeit prüft. Jeder Schreibvorgang, vom Kommentar bis zum Push, wartet auf ein Ja.`,
     'ae-tag-skills': 'Agent-Skills',
     'ae-tag-testinfra': 'Test-Infrastruktur',
+    'ae5-eyebrow': 'Ausgewählter Beitrag',
     'ae5-h3': 'Auch der Agent schrieb flaky Tests',
     'ae5-p': 'Zwei Wochen Arbeit an End-to-End-Tests mit einem Agenten: rund 100 Tests in schnellere Schichten verschoben, etwa 30 Fehler gefunden, und die meisten Arten von Fehlern wurden zu einer Regel, die eine Maschine prüft. Mehrere flaky Tests waren echte Bugs.',
     'strategies-viewall': 'Alle Agentic Strategies ansehen →',
