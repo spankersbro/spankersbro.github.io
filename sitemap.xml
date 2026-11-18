@@ -61,6 +61,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://davidirving.dev/work/e2e-reliability.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://davidirving.dev/work/agent-skills.html</loc>
     <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
