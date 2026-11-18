@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agent Wrote Flaky Tests Too: Making an End-to-End Suite Trustworthy — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Two weeks of end-to-end test work with an AI agent: what it did, the mistakes it made, the rules each mistake became, and the flaky tests that turned out to be real bugs.">
+<link rel="canonical" href="https://davidirving.dev/work/e2e-reliability.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="The Agent Wrote Flaky Tests Too: Making an End-to-End Suite Trustworthy">
+<meta property="og:description" content="Two weeks of end-to-end test work with an AI agent: what it did, the mistakes it made, the rules each mistake became, and the flaky tests that turned out to be real bugs.">
+<meta property="og:url" content="https://davidirving.dev/work/e2e-reliability.html">
+<meta property="article:published_time" content="2026-11-18">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Agent Wrote Flaky Tests Too: Making an End-to-End Suite Trustworthy">
+<meta name="twitter:description" content="Two weeks of end-to-end test work with an AI agent: what it did, the mistakes it made, the rules each mistake became, and the flaky tests that turned out to be real bugs.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Agent Wrote Flaky Tests Too: Making an End-to-End Suite Trustworthy",
+  "description": "Two weeks of end-to-end test work with an AI agent: what it did, the mistakes it made, the rules each mistake became, and the flaky tests that turned out to be real bugs.",
+  "author": { "@type": "Person", "name": "David Irving", "url": "https://davidirving.dev/" },
+  "publisher": { "@type": "Person", "name": "David Irving" },
+  "datePublished": "2026-11-18",
+  "dateModified": "2026-11-18",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://davidirving.dev/work/e2e-reliability.html" }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  /* mistake table */
+  .table-wrap{margin:0 0 28px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring);overflow-x:auto}
+  .table-wrap table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5}
+  .table-wrap th,.table-wrap td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .table-wrap th{color:var(--sub);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .table-wrap tr:last-child td{border-bottom:none}
+  @media (max-width:560px){
+    .table-wrap table{table-layout:fixed}
+    .table-wrap th,.table-wrap td{padding:10px 8px;font-size:12.5px;hyphens:auto;overflow-wrap:anywhere}
+    .table-wrap th{font-size:10.5px;letter-spacing:0}
+  }
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">The Agent Wrote Flaky Tests Too: Making an End-to-End Suite Trustworthy</h1>
+    <p class="lede" data-i18n="hero-lede">Two weeks of end-to-end test work with an AI agent. It did the volume. It also made mistakes, and each kind of mistake became a rule that the next test had to pass.</p>
+    <p class="meta-row" data-i18n="meta-date">4 – 17 November 2026 · End-to-end tests, an AI agent and the rules between them</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The loop: the agent writes or moves a test, CI, a reviewer or I catch a mistake, the mistake becomes a rule, and the next test has to pass that rule">
+        <rect x="0" y="20" width="190" height="96" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="95" y="50" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="l1a">The agent writes</text>
+        <text x="95" y="70" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="l1b">or moves a test</text>
+        <text x="95" y="96" font-size="12" fill="var(--chip-ink)" text-anchor="middle" data-i18n="l1c">fast, in volume</text>
+
+        <rect x="225" y="20" width="190" height="96" rx="12" fill="var(--panel)" stroke="var(--sub)"/>
+        <text x="320" y="50" font-size="13" font-weight="700" fill="var(--ink)" text-anchor="middle" data-i18n="l2a">CI, a reviewer or I</text>
+        <text x="320" y="70" font-size="13" font-weight="700" fill="var(--ink)" text-anchor="middle" data-i18n="l2b">catch a mistake</text>
+        <text x="320" y="96" font-size="12" fill="var(--sub)" text-anchor="middle" data-i18n="l2c">about 25 in two weeks</text>
+
+        <rect x="450" y="20" width="190" height="96" rx="12" fill="var(--accent)"/>
+        <text x="545" y="50" font-size="13" font-weight="700" fill="var(--accent-ink)" text-anchor="middle" data-i18n="l3a">The mistake</text>
+        <text x="545" y="70" font-size="13" font-weight="700" fill="var(--accent-ink)" text-anchor="middle" data-i18n="l3b">becomes a rule</text>
+        <text x="545" y="96" font-size="12" fill="var(--accent-ink)" text-anchor="middle" data-i18n="l3c">lint, CI gate or brief</text>
+
+        <path d="M192 68 H220" stroke="var(--sub)" stroke-width="2" fill="none"/>
+        <path d="M214 62 L222 68 L214 74" stroke="var(--sub)" stroke-width="2" fill="none"/>
+        <path d="M417 68 H445" stroke="var(--sub)" stroke-width="2" fill="none"/>
+        <path d="M439 62 L447 68 L439 74" stroke="var(--sub)" stroke-width="2" fill="none"/>
+
+        <path d="M545 118 V170 H95 V122" stroke="var(--accent)" stroke-width="2" fill="none" stroke-dasharray="5 4"/>
+        <path d="M89 128 L95 118 L101 128" stroke="var(--accent)" stroke-width="2" fill="none"/>
+        <text x="320" y="196" font-size="12.5" font-weight="600" fill="var(--sub)" text-anchor="middle" data-i18n="l4">the next test has to pass the rule</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">The loop that did the work. The agent supplied the volume; the rules kept its output honest.</p>
+    </div>
+
+    <h2 data-i18n="start-h2">Where it started</h2>
+    <p data-i18n="start-p1">The end-to-end tests drive a real browser through a twenty-year-old product. In the runs on the main branch before this work, 15 of 24 had a flaky test: one that failed and then passed on its retry. The retry made the run green, so nobody had to look.</p>
+    <p data-i18n="start-p2">The suite was also slow, and the first thing to settle was why. The same 395 tests took 9.5 minutes on a quiet CI runner and 27.5 on a busy one. The same build took 4.6 minutes on my machine and 18.5 in CI. Most of the slowness was runner load, not the tests. That ended the plan to split the slowest test files: the agent measured that a perfect split would save under a minute.</p>
+    <p data-i18n="start-p3">So the goal became two things: every check in the right test layer, and a suite whose green means something.</p>
+
+    <h2 data-i18n="split-h2">Who did what</h2>
+    <p data-i18n="split-p1">I decided what good looks like, and where the limits were:</p>
+    <ul>
+      <li data-i18n="split-li1"><strong>Decide, don't defer.</strong> The agent first left misplaced tests to "each author's call". I overruled that: we decide which layer a check belongs in, and delete what we don't need.</li>
+      <li data-i18n="split-li2"><strong>Measure first.</strong> A colleague proposed one test user per worker. We measured first: the session lock it would remove cost 1.5&nbsp;% of worker time.</li>
+      <li data-i18n="split-li3"><strong>No workarounds.</strong> No code in the product that exists only to make a test pass. That started a full audit of the suite.</li>
+      <li data-i18n="split-li4"><strong>The process applies.</strong> When the agent suggested an admin merge to save time, the answer was no. Colleagues reviewed and approved every pull request.</li>
+    </ul>
+    <p data-i18n="split-p2">The agent did the volume. Seven reader agents audited 81 test files, 13,181 lines and 388 tests, in about 15 minutes. It moved about 100 tests into faster layers, checked moved tests by breaking the code on purpose, ran the CI comparisons and wrote the pull requests. Some of it ran unattended, overnight and on a weekend.</p>
+
+    <h2 data-i18n="mist-h2">The agent's mistakes, and the rules they became</h2>
+    <p data-i18n="mist-p1">The agent wrote flaky tests too. Two of its new tests used fixed 300 and 200&nbsp;ms delays. In its own words: "the same mistake I flagged in" a colleague's pull request. Over the two weeks I count about 25 mistakes: flaky tests, checks moved to the wrong layer, waits on the wrong signal, and work called done that was not.</p>
+    <p data-i18n="mist-p2">Correcting each one was not enough, because the next test would make the same mistake. So each kind became a rule:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th data-i18n="t-h1">What went wrong</th><th data-i18n="t-h2">Caught by</th><th data-i18n="t-h3">The rule after it</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-i18n="t1a">A retry turned flaky tests green.</td><td data-i18n="t1b">My question: does the run fail as it should?</td><td data-i18n="t1c">A test that passes only on its retry fails the run. The run stops at the first failure.</td></tr>
+          <tr><td data-i18n="t2a">New component tests passed locally and failed on busy CI runners.</td><td data-i18n="t2b">CI, then the agent's own reproduction on 0.4 of a CPU</td><td data-i18n="t2c">A new component test must pass three times on 0.4 of a CPU in the CI image.</td></tr>
+          <tr><td data-i18n="t3a">A wait was written for a dev build. The production build batches its requests, so the wait never came.</td><td data-i18n="t3b">CI, on both attempts</td><td data-i18n="t3c">Dev builds don't batch requests; production builds do. Check against production.</td></tr>
+          <tr><td data-i18n="t4a">A merge deleted three keyboard tests along with a pixel check.</td><td data-i18n="t4b">A review agent with fresh context</td><td data-i18n="t4c">No deleted checks. Later the agent restored a check it had dropped, unprompted.</td></tr>
+          <tr><td data-i18n="t5a">New tests kept arriving in the old style: faked server answers and pixel checks in the browser suite.</td><td data-i18n="t5b">Six new ones on the main branch while the work was open</td><td data-i18n="t5c">A lint refuses them. 65 existing exceptions each carry a written reason.</td></tr>
+          <tr><td data-i18n="t6a">A pull request went to human review with a merge conflict.</td><td data-i18n="t6b">Me</td><td data-i18n="t6c">A written note: check the merge state before hand-over. It was missed again the same day.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p data-i18n="mist-p3">The last row is the lesson. A rule the agent has to remember can fail on the same day. A rule a machine checks, the lint or the CI gate, held every time. The flaky-test gate caught the agent's own flaky test on its first run.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sunday 15 November: 59 tests moved, three fail only in CI, a longer timeout does not help, the failure is reproduced on 0.4 of a CPU, the three tests move back and the rule is written">
+        <text x="30" y="20" font-size="12" font-weight="700" fill="var(--sub)" text-anchor="start" data-i18n="tl-day">Sunday</text>
+        <text x="610" y="20" font-size="12" font-weight="700" fill="var(--sub)" text-anchor="end" data-i18n="tl-next">later slices</text>
+        <path d="M30 120 H610" stroke="var(--line)" stroke-width="3"/>
+        <circle cx="40" cy="120" r="8" fill="var(--accent)"/>
+        <circle cx="180" cy="120" r="8" fill="var(--sub)"/>
+        <circle cx="320" cy="120" r="8" fill="var(--sub)"/>
+        <circle cx="460" cy="120" r="8" fill="var(--accent)"/>
+        <circle cx="600" cy="120" r="8" fill="var(--accent)"/>
+        <text x="30" y="156" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="start" data-i18n="tl1a">59 tests move</text>
+        <text x="30" y="174" font-size="12" fill="var(--sub)" text-anchor="start" data-i18n="tl1b">to component tests</text>
+        <text x="180" y="72" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle" data-i18n="tl2a">3 fail only in CI</text>
+        <text x="180" y="90" font-size="12" fill="var(--sub)" text-anchor="middle" data-i18n="tl2b">green locally</text>
+        <text x="320" y="156" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle" data-i18n="tl3a">longer timeout</text>
+        <text x="320" y="174" font-size="12" fill="var(--sub)" text-anchor="middle" data-i18n="tl3b">does not help</text>
+        <text x="460" y="72" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle" data-i18n="tl4a">reproduced</text>
+        <text x="460" y="90" font-size="12" fill="var(--sub)" text-anchor="middle" data-i18n="tl4b">on 0.4 of a CPU</text>
+        <text x="610" y="156" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="end" data-i18n="tl5a">3 move back</text>
+        <text x="610" y="174" font-size="12" fill="var(--sub)" text-anchor="end" data-i18n="tl5b">rule: 3 runs at 0.4 CPU</text>
+        <rect x="30" y="206" width="580" height="70" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="320" y="236" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="tl-q1">"A replacement that fails without a known cause</text>
+        <text x="320" y="258" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="tl-q2">is not a proven replacement."</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram2-caption">15 November, unattended on a quiet weekend. The agent moved three of its own tests back, then wrote the rule that later slices followed.</p>
+    </div>
+
+    <h2 data-i18n="bugs-h2">Flaky tests that were real bugs</h2>
+    <p data-i18n="bugs-p1">The surprise was how often a flaky test was not a test problem. It was a race that only showed under the timing of a loaded runner, and users could hit it too:</p>
+    <ul>
+      <li data-i18n="bugs-li1">A list could show another browser tab's saved filter, because its first requests left before the tab had an id.</li>
+      <li data-i18n="bugs-li2">A quick pick from a menu got lost. The wait in the agent's first fix hid it; a review agent caught that.</li>
+      <li data-i18n="bugs-li3">An amount typed right after choosing a type could be lost, and the server answered with an error.</li>
+      <li data-i18n="bugs-li4">Going back to a list could show the old filter, because two requests were merged. Fixed with a failing test first; CI was green 12 minutes later.</li>
+      <li data-i18n="bugs-li5">The server log of every test run held 22 database errors from a real bug, live since an earlier release. CI printed only the last 2,000 lines of that log, about 90&nbsp;% of them web-server noise.</li>
+    </ul>
+    <p data-i18n="bugs-p2">It went the other way too. One flaky test in a colleague's pull request was a test defect only, and one import test was hardened without its root cause ever being found: 40 runs under CPU load did not reproduce it. The same lesson came up when <a href="test-suite-migration.html">running the PHP tests together instead of in isolation</a>: a test that fails sometimes is a bug report until proven otherwise.</p>
+
+    <h2 data-i18n="num-h2">The numbers so far</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Runs on main with a flaky test: 63 percent before, 10 percent after. Median end-to-end run: 11.9 minutes before, 7.7 minutes after. Skipped tests: 30 before, 1 after.">
+        <text x="0" y="22" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="c1">Runs with a flaky test</text>
+        <text x="0" y="48" font-size="12" fill="var(--sub)" data-i18n="c-before">before</text>
+        <rect x="70" y="35" width="327" height="20" rx="5" fill="var(--sub)"/>
+        <text x="405" y="50" font-size="12.5" font-weight="700" fill="var(--ink)">63 %</text>
+        <text x="0" y="76" font-size="12" fill="var(--sub)" data-i18n="c-after">after</text>
+        <rect x="70" y="63" width="52" height="20" rx="5" fill="var(--accent)"/>
+        <text x="130" y="78" font-size="12.5" font-weight="700" fill="var(--ink)">10 %</text>
+
+        <text x="0" y="112" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="c2">Median end-to-end run</text>
+        <text x="0" y="138" font-size="12" fill="var(--sub)" data-i18n="c-before">before</text>
+        <rect x="70" y="125" width="520" height="20" rx="5" fill="var(--sub)"/>
+        <text x="548" y="140" font-size="12.5" font-weight="700" fill="var(--accent-ink)" text-anchor="end" data-i18n="c2b">11.9 min</text>
+        <text x="0" y="166" font-size="12" fill="var(--sub)" data-i18n="c-after">after</text>
+        <rect x="70" y="153" width="337" height="20" rx="5" fill="var(--accent)"/>
+        <text x="415" y="168" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="c2a">7.7 min</text>
+
+        <text x="0" y="206" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="c3">Skipped end-to-end tests: 30 → 1</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram3-caption">One day of runs on the main branch, 86 runs, against the runs before the work. Runner mix and load differ between days.</p>
+    </div>
+    <p data-i18n="num-p1">These are early numbers, from one day of runs, and I treat them that way. Eleven flaky tests were still open at the time, five of them new since the day before. Fixed waits in the suite went from 15 to 4. The component tests went from none to 386.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Test layers: about 100 tests left the browser suite, 81 to component tests and 6 to backend tests; 59 pixel and CSS checks were removed and QA checks the design">
+        <rect x="0" y="10" width="400" height="62" rx="12" fill="var(--panel)" stroke="var(--sub)"/>
+        <text x="20" y="38" font-size="13.5" font-weight="700" fill="var(--ink)" data-i18n="ly1a">Browser (end-to-end) tests</text>
+        <text x="20" y="58" font-size="12" fill="var(--sub)" data-i18n="ly1b">user journeys through the real product</text>
+        <text x="384" y="47" font-size="16" font-weight="700" fill="var(--ink)" text-anchor="end">≈ −100</text>
+
+        <rect x="0" y="100" width="400" height="62" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="20" y="128" font-size="13.5" font-weight="700" fill="var(--chip-ink)" data-i18n="ly2a">Component tests</text>
+        <text x="20" y="148" font-size="12" fill="var(--chip-ink)" data-i18n="ly2b">one screen part, server answers faked</text>
+        <text x="384" y="137" font-size="16" font-weight="700" fill="var(--chip-ink)" text-anchor="end">+81</text>
+
+        <rect x="0" y="190" width="400" height="50" rx="12" fill="var(--accent)"/>
+        <text x="20" y="220" font-size="13.5" font-weight="700" fill="var(--accent-ink)" data-i18n="ly3a">Backend tests: server rules</text>
+        <text x="384" y="221" font-size="16" font-weight="700" fill="var(--accent-ink)" text-anchor="end">+6</text>
+
+        <path d="M420 41 C470 41 470 131 420 131" stroke="var(--accent)" stroke-width="2" fill="none"/>
+        <path d="M428 125 L419 131 L428 137" stroke="var(--accent)" stroke-width="2" fill="none"/>
+
+        <path d="M420 30 C560 30 560 215 420 215" stroke="var(--accent)" stroke-width="2" fill="none"/>
+        <path d="M428 209 L419 215 L428 221" stroke="var(--accent)" stroke-width="2" fill="none"/>
+
+        <text x="440" y="16" font-size="12" fill="var(--sub)" data-i18n="ly-rm">59 pixel checks removed</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram4-caption">About 100 tests left the browser suite by mid-November. The pixel and CSS checks were removed in the first step; QA checks the design.</p>
+    </div>
+
+    <h2 data-i18n="limit-h2">What it did not fix</h2>
+    <p data-i18n="limit-p1">Runner capacity. On 10 November the same build ran four times slower in CI than on my machine. The tests for the old screens are now the biggest cost: 43&nbsp;% of the test time, and about half of the flaky-test incidents. That is the next problem.</p>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>The agent's mistakes are predictable.</strong> Fixed delays, waits on the wrong signal, tests that only pass on a quiet machine. Predictable mistakes can be written down as rules before they happen again.</li>
+      <li data-i18n="reflect-li2"><strong>A rule a machine checks beats a rule the agent remembers.</strong> The lint and the CI gate held every time. A written note failed on the same day it was written.</li>
+      <li data-i18n="reflect-li3"><strong>A flaky test is a bug report until proven otherwise.</strong> Most of the ones we chased were races that users could hit.</li>
+      <li data-i18n="reflect-li4"><strong>"Done" needs proof.</strong> The agent called work done that was not, more than once. Every claim on this page comes from a CI run, a commit or a measurement, and the numbers that cover one day say so.</li>
+    </ul>
+    <p data-i18n="more-p">More on how the agents work: <a href="agent-skills.html">Agent skills that make the right decision cheap</a>.</p>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-testinfra">Test Infrastructure</span>
+      <span class="tag" data-i18n="tag-e2e">End-to-End Testing</span>
+      <span class="tag">CI/CD</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': 'Auch der Agent schrieb instabile Tests: eine End-to-End-Suite, der man wieder trauen kann',
+    'hero-lede': 'Zwei Wochen Arbeit an End-to-End-Tests mit einem KI-Agenten. Er lieferte die Menge. Er machte auch Fehler, und jede Art von Fehler wurde zu einer Regel, die der nächste Test erfüllen musste.',
+    'meta-date': '4. – 17. November 2026 · End-to-End-Tests, ein KI-Agent und die Regeln dazwischen',
+    'l1a': 'Der Agent schreibt',
+    'l1b': 'oder verschiebt einen Test',
+    'l1c': 'schnell, in Menge',
+    'l2a': 'CI, ein Reviewer oder ich',
+    'l2b': 'finden einen Fehler',
+    'l2c': 'etwa 25 in zwei Wochen',
+    'l3a': 'Der Fehler',
+    'l3b': 'wird zur Regel',
+    'l3c': 'Lint, CI-Gate oder Briefing',
+    'l4': 'der nächste Test muss die Regel erfüllen',
+    'diagram1-caption': 'Die Schleife, die die Arbeit gemacht hat. Der Agent lieferte die Menge, die Regeln hielten sein Ergebnis ehrlich.',
+    'start-h2': 'Der Ausgangspunkt',
+    'start-p1': 'Die End-to-End-Tests steuern einen echten Browser durch ein zwanzig Jahre altes Produkt. In den Läufen auf dem Main-Branch vor dieser Arbeit hatten 15 von 24 einen flaky Test: einen, der fehlschlug und beim zweiten Versuch bestand. Der zweite Versuch machte den Lauf grün, also musste niemand hinsehen.',
+    'start-p2': 'Die Suite war auch langsam, und als Erstes war zu klären, warum. Dieselben 395 Tests brauchten 9,5 Minuten auf einem ruhigen CI-Runner und 27,5 auf einem ausgelasteten. Derselbe Build brauchte 4,6 Minuten auf meinem Rechner und 18,5 in der CI. Der Großteil der Langsamkeit war Runner-Last, nicht die Tests. Damit war der Plan erledigt, die langsamsten Testdateien aufzuteilen: Der Agent hat gemessen, dass eine perfekte Aufteilung unter einer Minute spart.',
+    'start-p3': 'Das Ziel wurde also zweierlei: jede Prüfung in der richtigen Testschicht, und eine Suite, deren Grün etwas bedeutet.',
+    'split-h2': 'Wer was gemacht hat',
+    'split-p1': 'Ich habe entschieden, wie gut aussieht, und wo die Grenzen liegen:',
+    'split-li1': '<strong>Entscheiden statt verschieben.</strong> Der Agent überließ falsch platzierte Tests zuerst „der Entscheidung jedes Autors“. Das habe ich geändert: Wir entscheiden, in welche Schicht eine Prüfung gehört, und löschen, was wir nicht brauchen.',
+    'split-li2': '<strong>Erst messen.</strong> Ein Kollege schlug einen Testbenutzer pro Worker vor. Wir haben zuerst gemessen: Die Session-Sperre, die das entfernen würde, kostete 1,5&nbsp;% der Worker-Zeit.',
+    'split-li3': '<strong>Keine Workarounds.</strong> Kein Code im Produkt, der nur existiert, damit ein Test besteht. Das hat ein vollständiges Audit der Suite ausgelöst.',
+    'split-li4': '<strong>Der Prozess gilt.</strong> Als der Agent einen Admin-Merge vorschlug, um Zeit zu sparen, war die Antwort nein. Kolleginnen und Kollegen haben jeden Pull Request reviewt und freigegeben.',
+    'split-p2': 'Der Agent lieferte die Menge. Sieben lesende Agenten prüften 81 Testdateien, 13.181 Zeilen und 388 Tests, in etwa 15 Minuten. Er verschob rund 100 Tests in schnellere Schichten, prüfte verschobene Tests, indem er den Code absichtlich kaputt machte, führte die CI-Vergleiche durch und schrieb die Pull Requests. Ein Teil davon lief unbeaufsichtigt, über Nacht und an einem Wochenende.',
+    'mist-h2': 'Die Fehler des Agenten und die Regeln, die daraus wurden',
+    'mist-p1': 'Auch der Agent schrieb flaky Tests. Zwei seiner neuen Tests nutzten feste Verzögerungen von 300 und 200&nbsp;ms. In seinen eigenen Worten: „derselbe Fehler, den ich“ im Pull Request eines Kollegen angemerkt hatte. Über die zwei Wochen zähle ich etwa 25 Fehler: flaky Tests, Prüfungen in der falschen Schicht, Warten auf das falsche Signal, und Arbeit, die als fertig galt, aber es nicht war.',
+    'mist-p2': 'Jeden einzeln zu korrigieren reichte nicht, denn der nächste Test hätte denselben Fehler gemacht. Also wurde jede Art zu einer Regel:',
+    't-h1': 'Was schiefging',
+    't-h2': 'Gefunden von',
+    't-h3': 'Die Regel danach',
+    't1a': 'Ein zweiter Versuch machte flaky Tests grün.',
+    't1b': 'Meine Frage: Schlägt der Lauf fehl, wie er soll?',
+    't1c': 'Ein Test, der nur im zweiten Versuch besteht, lässt den Lauf fehlschlagen. Der Lauf stoppt beim ersten Fehler.',
+    't2a': 'Neue Komponententests bestanden lokal und scheiterten auf ausgelasteten CI-Runnern.',
+    't2b': 'CI, dann die eigene Reproduktion des Agenten auf 0,4 CPU',
+    't2c': 'Ein neuer Komponententest muss dreimal auf 0,4 CPU im CI-Image bestehen.',
+    't3a': 'Ein Warten war für einen Dev-Build geschrieben. Der Produktions-Build bündelt seine Requests, also kam das Erwartete nie.',
+    't3b': 'CI, in beiden Versuchen',
+    't3c': 'Dev-Builds bündeln keine Requests, Produktions-Builds schon. Gegen die Produktion prüfen.',
+    't4a': 'Ein Merge löschte drei Tastaturtests zusammen mit einer Pixelprüfung.',
+    't4b': 'Ein Review-Agent mit frischem Kontext',
+    't4c': 'Keine gelöschten Prüfungen. Später stellte der Agent eine weggefallene Prüfung von sich aus wieder her.',
+    't5a': 'Neue Tests kamen weiter im alten Stil: gefälschte Serverantworten und Pixelprüfungen in der Browser-Suite.',
+    't5b': 'Sechs neue auf dem Main-Branch, während die Arbeit offen war',
+    't5c': 'Ein Lint weist sie ab. 65 bestehende Ausnahmen tragen jeweils eine schriftliche Begründung.',
+    't6a': 'Ein Pull Request ging mit einem Merge-Konflikt ins menschliche Review.',
+    't6b': 'Ich',
+    't6c': 'Eine schriftliche Notiz: vor der Übergabe den Merge-Status prüfen. Sie wurde am selben Tag wieder übersehen.',
+    'mist-p3': 'Die letzte Zeile ist die Lehre. Eine Regel, an die sich der Agent erinnern muss, kann am selben Tag versagen. Eine Regel, die eine Maschine prüft, der Lint oder das CI-Gate, hat jedes Mal gehalten. Das Gate für flaky Tests fing beim ersten Lauf den flaky Test des Agenten selbst.',
+    'tl-day': 'Sonntag',
+    'tl-next': 'spätere Etappen',
+    'tl1a': '59 Tests ziehen um',
+    'tl1b': 'in Komponententests',
+    'tl2a': '3 scheitern nur in CI',
+    'tl2b': 'lokal grün',
+    'tl3a': 'längerer Timeout',
+    'tl3b': 'hilft nicht',
+    'tl4a': 'reproduziert',
+    'tl4b': 'auf 0,4 CPU',
+    'tl5a': '3 ziehen zurück',
+    'tl5b': 'Regel: 3 Läufe auf 0,4 CPU',
+    'tl-q1': '„Ein Ersatz, der ohne bekannte Ursache scheitert,',
+    'tl-q2': 'ist kein bewiesener Ersatz.“',
+    'diagram2-caption': '15. November, unbeaufsichtigt an einem ruhigen Wochenende. Der Agent holte drei seiner eigenen Tests zurück und schrieb dann die Regel, der die späteren Etappen folgten.',
+    'bugs-h2': 'Flaky Tests, die echte Bugs waren',
+    'bugs-p1': 'Überraschend war, wie oft ein flaky Test kein Testproblem war. Es war ein Race, das sich nur unter dem Timing eines ausgelasteten Runners zeigte, und Benutzer konnten es ebenfalls treffen:',
+    'bugs-li1': 'Eine Liste konnte den gespeicherten Filter eines anderen Browser-Tabs zeigen, weil ihre ersten Requests losgingen, bevor der Tab eine Kennung hatte.',
+    'bugs-li2': 'Eine schnelle Auswahl aus einem Menü ging verloren. Das Warten im ersten Fix des Agenten verdeckte das; ein Review-Agent hat es bemerkt.',
+    'bugs-li3': 'Ein Betrag, der direkt nach der Wahl einer Art eingetippt wurde, konnte verloren gehen, und der Server antwortete mit einem Fehler.',
+    'bugs-li4': 'Der Weg zurück zu einer Liste konnte den alten Filter zeigen, weil zwei Requests zusammengelegt wurden. Behoben mit einem fehlschlagenden Test zuerst; die CI war 12 Minuten später grün.',
+    'bugs-li5': 'Das Server-Log jedes Testlaufs enthielt 22 Datenbankfehler aus einem echten Bug, live seit einem früheren Release. Die CI zeigte nur die letzten 2.000 Zeilen dieses Logs, davon etwa 90&nbsp;% Rauschen des Webservers.',
+    'bugs-p2': 'Es ging auch umgekehrt. Ein flaky Test im Pull Request eines Kollegen war nur ein Testfehler, und ein Import-Test wurde gehärtet, ohne dass seine Ursache je gefunden wurde: 40 Läufe unter CPU-Last haben ihn nicht reproduziert. Dieselbe Lehre gab es schon, als <a href="test-suite-migration.html">die PHP-Tests gemeinsam statt isoliert liefen</a>: Ein Test, der manchmal fehlschlägt, ist ein Bug-Report, bis das Gegenteil bewiesen ist.',
+    'num-h2': 'Die Zahlen bisher',
+    'c1': 'Läufe mit einem flaky Test',
+    'c-before': 'vorher',
+    'c-after': 'nachher',
+    'c2': 'Median eines End-to-End-Laufs',
+    'c2b': '11,9 Min',
+    'c2a': '7,7 Min',
+    'c3': 'Übersprungene End-to-End-Tests: 30 → 1',
+    'diagram3-caption': 'Ein Tag mit Läufen auf dem Main-Branch, 86 Läufe, gegen die Läufe vor der Arbeit. Runner-Mix und Last unterscheiden sich zwischen den Tagen.',
+    'num-p1': 'Das sind frühe Zahlen aus einem Tag, und so behandle ich sie. Elf flaky Tests waren zu dem Zeitpunkt noch offen, fünf davon neu seit dem Vortag. Feste Wartezeiten in der Suite gingen von 15 auf 4 zurück. Die Komponententests stiegen von keinem auf 386.',
+    'ly1a': 'Browser-Tests (End-to-End)',
+    'ly1b': 'Abläufe durch das echte Produkt',
+    'ly2a': 'Komponententests',
+    'ly2b': 'ein Bildschirmteil, Serverantworten gefälscht',
+    'ly3a': 'Backend-Tests: Serverregeln',
+    'ly-rm': '59 Pixelprüfungen entfernt',
+    'diagram4-caption': 'Rund 100 Tests verließen die Browser-Suite bis Mitte November. Die Pixel- und CSS-Prüfungen wurden im ersten Schritt entfernt; das Design prüft QA.',
+    'limit-h2': 'Was es nicht gelöst hat',
+    'limit-p1': 'Die Runner-Kapazität. Am 10. November lief derselbe Build in der CI viermal langsamer als auf meinem Rechner. Die Tests für die alten Bildschirme sind jetzt der größte Kostenblock: 43&nbsp;% der Testzeit und etwa die Hälfte der Vorfälle mit flaky Tests. Das ist das nächste Problem.',
+    'reflect-h2': 'Was ich daraus mitnehme',
+    'reflect-li1': '<strong>Die Fehler des Agenten sind vorhersehbar.</strong> Feste Verzögerungen, Warten auf das falsche Signal, Tests, die nur auf einem ruhigen Rechner bestehen. Vorhersehbare Fehler lassen sich als Regeln aufschreiben, bevor sie wieder passieren.',
+    'reflect-li2': '<strong>Eine Regel, die eine Maschine prüft, schlägt eine Regel, an die sich der Agent erinnert.</strong> Der Lint und das CI-Gate haben jedes Mal gehalten. Eine schriftliche Notiz versagte am Tag, an dem sie geschrieben wurde.',
+    'reflect-li3': '<strong>Ein flaky Test ist ein Bug-Report, bis das Gegenteil bewiesen ist.</strong> Die meisten, denen wir nachgegangen sind, waren Races, die auch Benutzer treffen konnten.',
+    'reflect-li4': '<strong>„Fertig“ braucht einen Beweis.</strong> Der Agent hat mehr als einmal Arbeit als fertig gemeldet, die es nicht war. Jede Behauptung auf dieser Seite stammt aus einem CI-Lauf, einem Commit oder einer Messung, und die Zahlen, die nur einen Tag abdecken, sagen das auch.',
+    'more-p': 'Mehr dazu, wie die Agenten arbeiten: <a href="agent-skills.html">Agent-Skills, die die richtige Entscheidung billig machen</a>.',
+    'tag-testinfra': 'Test-Infrastruktur',
+    'tag-e2e': 'End-to-End-Tests',
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: 'Two weeks of end-to-end test work with an AI agent: what it did, the mistakes it made, the rules each mistake became, and the flaky tests that turned out to be real bugs.',
+    de: 'Zwei Wochen Arbeit an End-to-End-Tests mit einem KI-Agenten: was er getan hat, welche Fehler er gemacht hat, welche Regeln daraus wurden, und die flaky Tests, die echte Bugs waren.'
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
