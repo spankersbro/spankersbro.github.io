@@ -87,6 +87,10 @@
   section.block{padding:0 0 48px}
 
   /* card */
+  .badge{float:right;margin:0 0 10px 16px;text-align:right;max-width:170px}
+  .badge .n{display:block;font-size:22px;font-weight:750;color:var(--accent);letter-spacing:-.01em;line-height:1.1}
+  .badge .l{display:block;font-size:11.5px;color:var(--sub);line-height:1.3;margin-top:2px}
+  @media (max-width:560px){.badge{float:none;margin:0 0 8px;text-align:left;max-width:none}}
   .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:var(--ring)}
   .card h3{font-size:18px;margin:0 0 8px;letter-spacing:-.005em}
   .card p{margin:0;color:var(--sub);font-size:14.5px}
@@ -131,6 +135,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-e2e-meta">November 2026 · End-to-end tests with an AI agent</p>
+      <div class="badge"><span class="n">3.9 → 0.9</span><span class="l" data-i18n="badge-0">flaky results per 1,000 tests</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="e2e-reliability.html" data-i18n="post-e2e-h3">The Agent Wrote Flaky Tests Too: Turning Its Mistakes into Rules</a></h3>
       <p data-i18n="post-e2e-p">Two weeks of end-to-end test work with an AI agent. It moved about 100 tests into faster layers, and it made about 30 mistakes. Most kinds of mistake became a rule a machine checks. Several flaky tests turned out to be real bugs.</p>
       <a class="card-link" href="e2e-reliability.html" data-i18n="post-e2e-link">Read the full writeup →</a>
@@ -139,6 +144,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-dbworker-meta">November 2026 · Test infrastructure</p>
+      <div class="badge"><span class="n">26–44 ms</span><span class="l" data-i18n="badge-1">database reset per test</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="one-database-per-test-worker.html" data-i18n="post-dbworker-h3">Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone</a></h3>
       <p data-i18n="post-dbworker-p">Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.</p>
       <a class="card-link" href="one-database-per-test-worker.html" data-i18n="post-dbworker-link">Read the full writeup →</a>
@@ -147,6 +153,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-rounding-meta">November 2026 · Runtime upgrade</p>
+      <div class="badge"><span class="n">206</span><span class="l" data-i18n="badge-2">rounding calls behind one helper</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="runtime-upgrade-rounding-guard.html" data-i18n="post-rounding-h3">A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe</a></h3>
       <p data-i18n="post-rounding-p">Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.</p>
       <a class="card-link" href="runtime-upgrade-rounding-guard.html" data-i18n="post-rounding-link">Read the full writeup →</a>
@@ -155,6 +162,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-specmove-meta">October – November 2026 · Test infrastructure</p>
+      <div class="badge"><span class="n">3×</span><span class="l" data-i18n="badge-3">main broken in two days</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="specs-into-the-app-repository.html" data-i18n="post-specmove-h3">Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository</a></h3>
       <p data-i18n="post-specmove-p">A pin that tied each branch to a version of the end-to-end tests broke the main branch three times in two days. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.</p>
       <a class="card-link" href="specs-into-the-app-repository.html" data-i18n="post-specmove-link">Read the full writeup →</a>
@@ -163,6 +171,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-finance-meta">October – November 2026 · Performance</p>
+      <div class="badge"><span class="n">18 → 2 s</span><span class="l" data-i18n="badge-4">report query on a copy</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="finance-report-18s-to-2s.html" data-i18n="post-finance-h3">A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows</a></h3>
       <p data-i18n="post-finance-p">A slow finance report and its query, measured on a copy of the customer data: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.</p>
       <a class="card-link" href="finance-report-18s-to-2s.html" data-i18n="post-finance-link">Read the full writeup →</a>
@@ -171,6 +180,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-skills-meta">October – November 2026 · Three agent skills</p>
+      <div class="badge"><span class="n">11</span><span class="l" data-i18n="badge-5">pull requests ported in one day</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="agent-skills.html" data-i18n="post-skills-h3">Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap</a></h3>
       <p data-i18n="post-skills-p">Three agent skills from daily work: porting eleven open pull requests in one day, testing a slow-query fix without a customer's database, and answering review's questions before review. What each does, and where a person still decides.</p>
       <a class="card-link" href="agent-skills.html" data-i18n="post-skills-link">Read the full writeup →</a>
@@ -179,6 +189,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-agents-meta">September – October 2026 · Six stacked changes · partly in review</p>
+      <div class="badge"><span class="n">15 min</span><span class="l" data-i18n="badge-6">token, agent endpoint only</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="ai-agents-safely.html" data-i18n="post-agents-h3">Letting AI Agents Into a Twenty-Year-Old Product, Safely</a></h3>
       <p data-i18n="post-agents-p">A standard OAuth sign-in for AI agents, a token that works only where it should, tools that follow the customer’s permissions, and an audit of the API around them.</p>
       <a class="card-link" href="ai-agents-safely.html" data-i18n="post-agents-link">Read the full writeup →</a>
@@ -195,6 +206,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post2-meta">June – September 2026 · Four phases, still in review</p>
+      <div class="badge"><span class="n">16,136</span><span class="l" data-i18n="badge-7">Pest tests in 29 suites</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="test-suite-migration.html" data-i18n="post2-h3">Migrating a Legacy PHP Test Suite to Pest — Four Phases, and a Pull Request That Outgrew Its Own Plan</a></h3>
       <p data-i18n="post2-p">Rewriting the test suite was the mechanical part. The real payoff was what running tests together instead of in isolation surfaced — a different real bug in nearly every module, then an end-to-end suite, a CI topology that took five attempts, and a branch that outgrew its own estimate.</p>
       <a class="card-link" href="test-suite-migration.html" data-i18n="post2-link">Read the full writeup →</a>
@@ -203,6 +215,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post3-meta">June – September 2026 · Three phases · in review</p>
+      <div class="badge"><span class="n">286 / 286</span><span class="l" data-i18n="badge-8">tables matched by round trip</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="migration-tooling-rebuild.html" data-i18n="post3-h3">Replacing a Homegrown Migration System — and Making Sure It Can’t Empty Production</a></h3>
       <p data-i18n="post3-p">Deleting the old schema-migration system was the easy part. Making sure its replacement cannot quietly empty a production database took longer.</p>
       <a class="card-link" href="migration-tooling-rebuild.html" data-i18n="post3-link">Read the full writeup →</a>
@@ -211,6 +224,7 @@
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post4-meta">June – July 2026 · Two phases</p>
+      <div class="badge"><span class="n">4</span><span class="l" data-i18n="badge-9">concrete gaps found</span></div>
       <h3><a style="color:inherit;text-decoration:none" href="vendor-platform-evaluation.html" data-i18n="post4-h3">Evaluating a Third-Party AI Development Platform Against Real CI and Security Needs — Not a Demo</a></h3>
       <p data-i18n="post4-p">A structured, honest vendor evaluation: four concrete gaps found and written up specifically, real CI hardening kept regardless of the verdict, and feedback rewritten to be constructive once the first draft read as just critical.</p>
       <a class="card-link" href="vendor-platform-evaluation.html" data-i18n="post4-link">Read the full writeup →</a>
@@ -271,6 +285,16 @@
   });
 
   I18N.de = {
+    "badge-0": "flaky Ergebnisse pro 1.000 Tests",
+    "badge-1": "Datenbank-Reset pro Test",
+    "badge-2": "Rundungsaufrufe hinter einem Helfer",
+    "badge-3": "Main in zwei Tagen kaputt",
+    "badge-4": "Berichtsabfrage auf einer Kopie",
+    "badge-5": "Pull Requests an einem Tag übertragen",
+    "badge-6": "Token, nur Agent-Endpunkt",
+    "badge-7": "Pest-Tests in 29 Suiten",
+    "badge-8": "Tabellen per Rundlauf gleich",
+    "badge-9": "konkrete Lücken gefunden",
     'nav-home': '← Startseite',
     'hero-kicker': 'Featured Work',
     'hero-h1': 'Was ausgeliefert wurde, ausführlich',

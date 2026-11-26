@@ -183,6 +183,24 @@
     <p data-i18n="p2-p2">An upgrade flag crashed on every real run: the normal path, not an edge case. A CI database-authentication failure came from two password conventions, old and new, that decoded differently.</p>
     <p data-i18n="p2-p3">The most serious: installs from the old system could not mark the new baseline as applied, because the metadata table the new system expected did not exist on them yet. That blocks a real deployment, and no test environment that starts from a clean database would ever hit it. The migration strategy is now an architecture decision record that schema-change reviews are checked against.</p>
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Proof by round trip: rebuild a database through the migrations, compare it table by table with a fresh reference: 286 of 286 tables matched.">
+        <rect x="0" y="10" width="190" height="70" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="95" y="40" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="rt-a1">Rebuild a database</text>
+        <text x="95" y="60" font-size="11.5" fill="var(--chip-ink)" text-anchor="middle" data-i18n="rt-a2">through the migrations</text>
+        <text x="210" y="50" font-size="18" fill="var(--sub)" text-anchor="middle">→</text>
+        <rect x="230" y="10" width="190" height="70" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="325" y="40" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="rt-b1">Compare table by table</text>
+        <text x="325" y="60" font-size="11.5" fill="var(--chip-ink)" text-anchor="middle" data-i18n="rt-b2">with a fresh reference</text>
+        <text x="440" y="50" font-size="18" fill="var(--sub)" text-anchor="middle">→</text>
+        <rect x="460" y="10" width="180" height="70" rx="10" fill="var(--accent)"/>
+        <text x="550" y="40" font-size="15" font-weight="700" fill="var(--accent-ink)" text-anchor="middle" data-i18n="rt-c1">286 of 286</text>
+        <text x="550" y="60" font-size="11.5" fill="var(--accent-ink)" text-anchor="middle" data-i18n="rt-c2">tables matched</text>
+        <text x="0" y="118" font-size="12.5" fill="var(--sub)" data-i18n="rt-note">No definition differed. Proof by rebuilding, not by reading the baseline.</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="rt-caption">How the new migration baseline was proven in September.</p>
+    </div>
+
     <h3 data-i18n="p3-h3">Phase three: making sure it can't empty production</h3>
     <p data-i18n="p3-p1">The original branch was built on an infrastructure stack that has not shipped yet, so in September I re-integrated the work directly onto mainline. That meant regenerating the migration baseline from current mainline and proving it by round trip, not inspection: rebuild a database through the migrations, then compare it table by table against a fresh reference. 286 of 286 tables matched, with no definition differing.</p>
     <p data-i18n="p3-p2">Before merge, four paths to data loss turned up. Each was reproduced before it was fixed:</p>
@@ -261,6 +279,14 @@
   });
 
   I18N.de = {
+    "rt-a1": "Datenbank neu aufbauen",
+    "rt-a2": "über die Migrationen",
+    "rt-b1": "Tabelle für Tabelle vergleichen",
+    "rt-b2": "mit einer frischen Referenz",
+    "rt-c1": "286 von 286",
+    "rt-c2": "Tabellen stimmten",
+    "rt-note": "Keine Definition wich ab. Beweis durch Neuaufbau, nicht durch Lesen der Baseline.",
+    "rt-caption": "Wie die neue Migrations-Baseline im September bewiesen wurde.",
     'nav-home': '← Startseite',
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',

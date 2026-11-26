@@ -174,6 +174,26 @@
     <h3 data-i18n="s1-h3">1. One canonical guide, read by every AI tool the same way</h3>
     <p data-i18n="s1-p">Three different AI coding tools touch this codebase — Claude Code, GitHub Copilot, and JetBrains Junie — each with its own configuration format. The obvious failure mode is writing separate instructions for each and watching them quietly drift apart. Instead there's one full guide — project structure, conventions, guardrails, where to look for what — and each tool's own config file (Claude Code's <code>CLAUDE.md</code>, GitHub Copilot's <code>copilot-instructions.md</code>) is a short pointer into it, not a parallel copy. A tool-specific file states the handful of things that tool needs immediately, then says "the full guide lives here, read it first." One source of truth, several thin adapters, so a correction made once actually applies to all three tools at once — and so the choice of which AI tool a developer happens to be using on a given day is genuinely irrelevant to the outcome, not something that quietly changes what the codebase expects of them.</p>
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three AI tools, each with a short config file that points to one full guide; a correction made in the guide applies to all three.">
+        <rect x="0" y="10" width="200" height="50" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="100" y="32" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">Claude Code</text>
+        <text x="100" y="50" font-size="11.5" fill="var(--chip-ink)" text-anchor="middle">CLAUDE.md</text>
+        <rect x="0" y="75" width="200" height="50" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="100" y="97" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">GitHub Copilot</text>
+        <text x="100" y="115" font-size="11.5" fill="var(--chip-ink)" text-anchor="middle">copilot-instructions.md</text>
+        <rect x="0" y="140" width="200" height="50" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="100" y="170" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">JetBrains Junie</text>
+        <path d="M200 35 C 290 35, 300 100, 380 100 M200 100 L380 100 M200 165 C 290 165, 300 100, 380 100" fill="none" stroke="var(--sub)" stroke-width="2"/>
+        <text x="290" y="88" font-size="11.5" fill="var(--sub)" text-anchor="middle" data-i18n="cd-ptr">thin pointers</text>
+        <rect x="380" y="45" width="260" height="110" rx="12" fill="var(--accent)"/>
+        <text x="510" y="86" font-size="15" font-weight="700" fill="var(--accent-ink)" text-anchor="middle" data-i18n="cd-guide">One full guide</text>
+        <text x="510" y="108" font-size="12" fill="var(--accent-ink)" text-anchor="middle" data-i18n="cd-guide2">structure, conventions, guardrails</text>
+        <text x="510" y="128" font-size="12" fill="var(--accent-ink)" text-anchor="middle" data-i18n="cd-guide3">a fix here applies to all three</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="cd-caption">One source of truth, several thin adapters.</p>
+    </div>
+
     <h3 data-i18n="s2-h3">2. A stated order to consult sources in — not an implicit one</h3>
     <p data-i18n="s2-p">The guide doesn't just list what documentation exists; it states the order to read it in when implementing or changing behavior: first the high-level context for why an initiative exists, then the specific requirements and acceptance criteria for what's being asked, then the durable architectural decisions that constrain how, then the delivery-level breakdown of this particular piece of work, then the baseline engineering conventions that apply by default absent a more specific rule. And it states what happens when two of those disagree: more specific wins over more general, and — critically — the agent is instructed to surface the conflict explicitly rather than silently pick a side. An agent that guesses which instruction takes precedence is making an undocumented judgment call on your behalf; one that's told the actual precedence order doesn't have to guess, and one that's told to flag conflicts doesn't get to quietly resolve them in whichever direction was easiest.</p>
 
@@ -246,6 +266,11 @@
   });
 
   I18N.de = {
+    "cd-ptr": "dünne Verweise",
+    "cd-guide": "Ein vollständiger Leitfaden",
+    "cd-guide2": "Struktur, Konventionen, Leitplanken",
+    "cd-guide3": "eine Korrektur gilt für alle drei",
+    "cd-caption": "Eine Quelle der Wahrheit, mehrere dünne Adapter.",
     'nav-home': '← Startseite',
     'nav-strategies': 'Alle Strategies',
     'hero-kicker': 'Agentic Strategies',
