@@ -138,6 +138,38 @@
 
     <div class="card">
       <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
+      <p class="meta" data-i18n="post-dbworker-meta">November 2026 · Test infrastructure</p>
+      <h3><a style="color:inherit;text-decoration:none" href="one-database-per-test-worker.html" data-i18n="post-dbworker-h3">Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone</a></h3>
+      <p data-i18n="post-dbworker-p">Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.</p>
+      <a class="card-link" href="one-database-per-test-worker.html" data-i18n="post-dbworker-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
+      <p class="meta" data-i18n="post-rounding-meta">November 2026 · Runtime upgrade</p>
+      <h3><a style="color:inherit;text-decoration:none" href="runtime-upgrade-rounding-guard.html" data-i18n="post-rounding-h3">A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe</a></h3>
+      <p data-i18n="post-rounding-p">Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.</p>
+      <a class="card-link" href="runtime-upgrade-rounding-guard.html" data-i18n="post-rounding-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
+      <p class="meta" data-i18n="post-specmove-meta">October – November 2026 · Test infrastructure</p>
+      <h3><a style="color:inherit;text-decoration:none" href="specs-into-the-app-repository.html" data-i18n="post-specmove-h3">Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository</a></h3>
+      <p data-i18n="post-specmove-p">A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.</p>
+      <a class="card-link" href="specs-into-the-app-repository.html" data-i18n="post-specmove-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
+      <p class="meta" data-i18n="post-finance-meta">October – November 2026 · Performance</p>
+      <h3><a style="color:inherit;text-decoration:none" href="finance-report-18s-to-2s.html" data-i18n="post-finance-h3">A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows</a></h3>
+      <p data-i18n="post-finance-p">A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.</p>
+      <a class="card-link" href="finance-report-18s-to-2s.html" data-i18n="post-finance-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow" data-i18n="eyebrow-work">Featured Work</p>
       <p class="meta" data-i18n="post-skills-meta">October – November 2026 · Three agent skills</p>
       <h3><a style="color:inherit;text-decoration:none" href="agent-skills.html" data-i18n="post-skills-h3">Eleven Pull Requests in One Day: Agent Skills That Make the Right Decision Cheap</a></h3>
       <p data-i18n="post-skills-p">Three agent skills from daily work: porting eleven open pull requests in one day, testing a slow-query fix without a customer's database, and answering review's questions before review. What each does, and where a person still decides.</p>
@@ -252,6 +284,22 @@
     'post2-h3': 'Eine Legacy-PHP-Testsuite zu Pest migriert — vier Phasen, und ein Pull Request, der über sich hinauswuchs',
     'post2-p': 'Die Testsuite neu zu schreiben war der mechanische Teil. Der eigentliche Gewinn war, was das gemeinsame statt isolierte Ausführen der Tests zutage brachte — ein echter Bug in fast jedem Modul, dann eine End-to-End-Suite, eine CI-Topologie mit fünf Anläufen, und ein Branch, der über seine eigene Schätzung hinauswuchs.',
     'post2-link': 'Den vollständigen Text lesen →',
+    'post-dbworker-meta': 'November 2026 · Test-Infrastruktur',
+    'post-dbworker-h3': 'Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank: in Millisekunden zurückgesetzt, und der Isolationscode ist weg',
+    'post-dbworker-p': 'Browser-Tests, die sich eine Datenbank teilten, trugen Aufräumcode und konnten nicht parallel laufen. Eine Datenbank pro Worker, vor jedem Test auf den Seed zurückgesetzt, hat beides beseitigt und unterwegs zwei echte Bugs gefunden.',
+    'post-dbworker-link': 'Den vollständigen Text lesen →',
+    'post-rounding-meta': 'November 2026 · Runtime-Upgrade',
+    'post-rounding-h3': 'Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte: Absicherungen, die eine Änderung an 448 Dateien sicher machen',
+    'post-rounding-p': 'Ein zwanzig Jahre altes Produkt von PHP 8.2 auf 8.5 heben: eine Rundungsänderung, die Geld verschiebt, die Absicherungen dagegen, und die Absicherung, die am Tag des Merges zwei neue Aufrufe fand.',
+    'post-rounding-link': 'Den vollständigen Text lesen →',
+    'post-specmove-meta': 'Oktober – November 2026 · Test-Infrastruktur',
+    'post-specmove-h3': 'Einen Workaround löschen, statt ihn zu flicken: Die End-to-End-Tests ziehen ins App-Repository',
+    'post-specmove-p': 'Ein Pin, der jeden Branch an eine Version der End-to-End-Tests band, machte den Main-Branch dreimal kaputt. Ihn einmal härten, dann seinen Grund entfernen: die Tests in einer Umstellung ins Anwendungs-Repository verschieben.',
+    'post-specmove-link': 'Den vollständigen Text lesen →',
+    'post-finance-meta': 'Oktober – November 2026 · Performance',
+    'post-finance-h3': 'Ein Finanzbericht von 18 Sekunden auf 2: erst messen, eine Bedingung verschieben, die Zeilen beweisen',
+    'post-finance-p': 'Ein langsamer Finanzbericht, gefunden im Zugriffslog der Produktion: wohin die Zeit ging, die eine Bedingung, die es behob, und wie ich bewiesen habe, dass der Bericht dieselben Zeilen zeigt.',
+    'post-finance-link': 'Den vollständigen Text lesen →',
     'post-e2e-meta': 'November 2026 · End-to-End-Tests mit einem KI-Agenten',
     'post-e2e-h3': 'Auch der Agent schrieb flaky Tests: wie seine Fehler zu Regeln wurden',
     'post-e2e-p': 'Zwei Wochen Arbeit an End-to-End-Tests mit einem KI-Agenten. Er verschob rund 100 Tests in schnellere Schichten und machte etwa 30 Fehler. Die meisten Arten von Fehlern wurden zu einer Regel, die eine Maschine prüft. Mehrere flaky Tests waren echte Bugs.',

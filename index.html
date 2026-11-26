@@ -95,6 +95,9 @@
     'feat20': 'archive.html#c7-feat20',
     'feat21': 'archive.html#c7-feat21',
     'card22': 'archive.html#c7-card22',
+    // Merged into one agent-skills card (ae2) in the homepage rework (LM-43, 2026-11-26).
+    'ae3': 'work/agent-skills.html#staging',
+    'ae4': 'work/agent-skills.html#review',
     // Dropped from the homepage strategies teaser (cap 4); the full page is unchanged.
     'strategy-implementer-reviewer-tester': 'strategies/implementer-reviewer-tester.html',
     'strategy-instructions-style-memory': 'strategies/instructions-style-memory.html',
@@ -193,6 +196,8 @@
   .stat .n{font-size:20px;font-weight:700}
   .stat .l{font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
   @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .chart-card svg{display:block;width:100%;height:auto}
+  .chart-card .stats-note{margin:12px 0 0}
   .stats-note{color:var(--sub);font-size:12px;margin:-20px 0 28px}
 
   /* cards */
@@ -250,6 +255,7 @@
   <div class="wrap">
     <a href="#" class="brand">David Irving</a>
     <div class="links">
+      <a class="nav-link" data-i18n="nav-agentic" href="#agentic">Agentic Engineering</a>
       <a class="nav-link" href="#highlights">Highlights</a>
       <a class="nav-link" data-i18n="nav-featured-work" href="work/">Featured Work</a>
       <a class="nav-link" data-i18n="nav-strategies" href="#strategies">Agentic Strategies</a>
@@ -272,13 +278,13 @@
       <img class="hero-photo" src="assets/profile.jpg" alt="David Irving" width="148" height="148">
       <div class="hero-text">
         <p class="kicker" data-i18n="hero-kicker">Vienna, Austria</p>
-        <h1 data-i18n="hero-h1">Head of Development, Enterprise Products at everii Group until the end of 2026.<br>Twenty years in one codebase.</h1>
+        <h1 data-i18n="hero-h1">Agentic engineering, in a codebase I have built for twenty years.</h1>
         <p class="lede" data-i18n="hero-lede">
-          I've spent the last two decades building TEAMBOX, the ERP platform for service
-          providers that's now part of everii Group, the <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA market leader in DACH</a> — starting as one of its
-          earliest developers, now running enterprise-level client and product work, CI/CD,
-          and the team behind it. My current focus is agentic engineering: building AI-driven development
-          workflows into a live, twenty-year-old codebase without breaking it.
+          Head of Development, Enterprise Products at everii Group until the end of 2026. I joined TEAMBOX
+          as one of its first developers, and it grew into an ERP for agencies and service providers. For the last
+          eighteen months most of my work has been agentic engineering: bringing AI agents into a live,
+          twenty-year-old codebase, with the rules they work by, the quality gates they have to pass, and an MCP
+          server so customers can connect their own agents safely.
         </p>
         <p class="facts">
           <span data-i18n="fact-1">20+ years, one product</span><span data-i18n="fact-2">PHP &amp; DevOps</span><span data-i18n="fact-3">300+ enterprise clients</span><span data-i18n="fact-4">Agentic engineering focus</span>
@@ -290,6 +296,54 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="block" id="numbers">
+    <div class="block-head">
+      <p class="kicker" data-i18n="num-kicker">Agentic Engineering · May 2025 – November 2026</p>
+      <h2 data-i18n="num-h2">Eighteen months, measured</h2>
+      <p data-i18n="num-p">Measured in the repository, not remembered. AI agents wrote most of the code in these commits; I set the direction, and colleagues reviewed the pull requests.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">16 → 774</div><div class="l" data-i18n="num-s1">commits a month</div></div>
+      <div class="stat"><div class="n">248</div><div class="l" data-i18n="num-s2">PRs merged in 2026</div></div>
+      <div class="stat"><div class="n">0 → 161</div><div class="l" data-i18n="num-s3">e2e tests in six months</div></div>
+      <div class="stat"><div class="n">8</div><div class="l" data-i18n="num-s4">agent skills in the repo</div></div>
+    </div>
+
+    <div class="card chart-card">
+      <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="My commits per month, from 16 in May 2025 to 774 in October 2026. The steep rise starts in May 2026, when the shared agent guide went into the repository.">
+        <rect x="4.7" y="196.7" width="24.3" height="3.3" rx="3" fill="var(--sub)"/>
+        <rect x="38.4" y="193.4" width="24.3" height="6.6" rx="3" fill="var(--sub)"/>
+        <rect x="72.1" y="197.1" width="24.3" height="2.9" rx="3" fill="var(--sub)"/>
+        <rect x="105.8" y="197.9" width="24.3" height="2.1" rx="3" fill="var(--sub)"/>
+        <rect x="139.5" y="196.1" width="24.3" height="3.9" rx="3" fill="var(--sub)"/>
+        <rect x="173.1" y="191.1" width="24.3" height="8.9" rx="3" fill="var(--sub)"/>
+        <rect x="206.8" y="192.4" width="24.3" height="7.6" rx="3" fill="var(--sub)"/>
+        <rect x="240.5" y="196.7" width="24.3" height="3.3" rx="3" fill="var(--sub)"/>
+        <rect x="274.2" y="193.2" width="24.3" height="6.8" rx="3" fill="var(--sub)"/>
+        <rect x="307.9" y="196.3" width="24.3" height="3.7" rx="3" fill="var(--sub)"/>
+        <rect x="341.6" y="190.1" width="24.3" height="9.9" rx="3" fill="var(--sub)"/>
+        <rect x="375.2" y="187.4" width="24.3" height="12.6" rx="3" fill="var(--sub)"/>
+        <rect x="408.9" y="154.5" width="24.3" height="45.5" rx="3" fill="var(--accent)"/>
+        <rect x="442.6" y="162.0" width="24.3" height="38.0" rx="3" fill="var(--accent)"/>
+        <rect x="476.3" y="97.9" width="24.3" height="102.1" rx="3" fill="var(--accent)"/>
+        <rect x="510.0" y="144.2" width="24.3" height="55.8" rx="3" fill="var(--accent)"/>
+        <rect x="543.7" y="83.8" width="24.3" height="116.2" rx="3" fill="var(--accent)"/>
+        <rect x="577.3" y="40.0" width="24.3" height="160.0" rx="3" fill="var(--accent)"/>
+        <rect x="611.0" y="58.2" width="24.3" height="141.8" rx="3" fill="var(--accent)" fill-opacity=".55"/>
+        <text x="0" y="218" font-size="11.5" fill="var(--sub)" text-anchor="start" data-i18n="ch-m0">May 2025</text>
+        <text x="218.9" y="218" font-size="11.5" fill="var(--sub)" text-anchor="middle" data-i18n="ch-m6">Nov 2025</text>
+        <text x="421.1" y="218" font-size="11.5" fill="var(--sub)" text-anchor="middle" data-i18n="ch-m12">May 2026</text>
+        <text x="640" y="218" font-size="11.5" fill="var(--sub)" text-anchor="end" data-i18n="ch-m18">Nov 2026*</text>
+        <text x="16.8" y="190.7" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">16</text>
+        <text x="589.5" y="34.0" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">774</text>
+        <line x1="404.2" y1="26" x2="404.2" y2="200" stroke="var(--line)" stroke-dasharray="4 4"/>
+        <text x="398.2" y="38" font-size="12" fill="var(--sub)" text-anchor="end" data-i18n="ch-guide">Shared agent guide in the repository →</text>
+      </svg>
+      <p class="stats-note" data-i18n="num-note">My commits per month in the product's repository, all branches, without merges. *November 2026 up to the 26th. Highlighted from May 2026, when a shared guide for agents and developers went into the repository.</p>
     </div>
   </section>
 
@@ -309,28 +363,47 @@
       <a class="card-link" href="work/e2e-reliability.html" data-i18n="ae-link">Read the full writeup →</a>
     </div>
 
+    <div class="card" id="ae6">
+      <a class="card-anchor" href="#ae6" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae6-h3">Every end-to-end test worker gets its own database</h3>
+      <p data-i18n="ae6-p">Reset to the seed before every test in 26 to 44 ms, by copying back only the tables a test wrote. The specs lost all their cleanup code, and the change found two bugs users could hit.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-testinfra">Test Infrastructure</span></div>
+      <a class="card-link" href="work/one-database-per-test-worker.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+    <div class="card" id="ae7">
+      <a class="card-anchor" href="#ae7" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae7-h3">A runtime upgrade that would have moved amounts by a cent</h3>
+      <p data-i18n="ae7-p">PHP 8.2 to 8.5, where a computed half cent rounds down. 206 rounding calls behind one helper, and a test that fails on any new native call. It caught two on the day of the merge.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">PHP</span></div>
+      <a class="card-link" href="work/runtime-upgrade-rounding-guard.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+    <div class="card" id="ae8">
+      <a class="card-anchor" href="#ae8" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae8-h3">Deleting a workaround instead of patching it</h3>
+      <p data-i18n="ae8-p">A pin that tied each branch to a version of the tests broke the main branch three times. I hardened it once, then moved the tests into the application repository.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-testinfra">Test Infrastructure</span></div>
+      <a class="card-link" href="work/specs-into-the-app-repository.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+    <div class="card" id="ae9">
+      <a class="card-anchor" href="#ae9" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae9-h3">A finance report from 18 seconds to 2</h3>
+      <p data-i18n="ae9-p">The query plan put 16 of 18 seconds into one subquery. One condition moved, and a row-by-row comparison on the customer’s data proved the same 276 rows.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">Performance</span></div>
+      <a class="card-link" href="work/finance-report-18s-to-2s.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
+    <div class="card" id="ae10">
+      <a class="card-anchor" href="#ae10" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="ae10-h3">Letting AI agents into a twenty-year-old product, safely</h3>
+      <p data-i18n="ae10-p">A standard OAuth sign-in for agents, tools that follow the customer’s own permissions, and an audit of the API around them.</p>
+      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag">MCP</span></div>
+      <a class="card-link" href="work/ai-agents-safely.html" data-i18n="ae-link">Read the full writeup →</a>
+    </div>
     <div class="card" id="ae2">
       <a class="card-anchor" href="#ae2" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae2-h3">Eleven pull requests in one day</h3>
-      <p data-i18n="ae2-p">An agent skill ported eleven open test pull requests on the day of a repository cutover, screenshots included. By hand that is about 44 hours, by my estimate. It stops on a conflict and asks before every commit and push.</p>
+      <h3 data-i18n="ae2-h3">Three agent skills that make the right decision cheap</h3>
+      <p data-i18n="ae2-p">Porting eleven open pull requests in one day, testing a slow-query fix without a customer’s database, and answering review’s questions before review. Every write waits for a yes.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#port" data-i18n="ae-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="ae3">
-      <a class="card-anchor" href="#ae3" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae3-h3">Testing a slow-query fix without a customer's database</h3>
-      <p data-i18n="ae3-p">Rebuilds the data shape of a slow-query bug on a staging copy, so QA can test the fix. It refuses to seed anything but a staging copy, caps rows and query time, and measures old and new code on the same data.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#staging" data-i18n="ae-link">Read the full writeup →</a>
-    </div>
-
-    <div class="card" id="ae4">
-      <a class="card-anchor" href="#ae4" aria-label="Copy link to this entry" title="Copy link">🔗</a>
-      <h3 data-i18n="ae4-h3">What review keeps sending back</h3>
-      <p data-i18n="ae4-p">299 review comments, sorted by kind and turned into questions the agent answers with evidence before a person reviews its work. Every write, from a comment to a push, waits for a yes.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-skills">Agent Skills</span></div>
-      <a class="card-link" href="work/agent-skills.html#review" data-i18n="ae-link">Read the full writeup →</a>
+      <a class="card-link" href="work/agent-skills.html" data-i18n="ae-link">Read the full writeup →</a>
     </div>
 
   </section>
@@ -594,6 +667,31 @@
   });
 
   I18N.de = {
+    'ae10-p': 'Eine Standard-OAuth-Anmeldung für Agenten, Werkzeuge, die den eigenen Berechtigungen des Kunden folgen, und ein Audit der API drumherum.',
+    'ae10-h3': 'KI-Agenten sicher in ein zwanzig Jahre altes Produkt lassen',
+    'ae9-p': 'Der Abfrageplan zeigte 16 von 18 Sekunden in einer Unterabfrage. Eine Bedingung verschoben, und ein Vergleich Zeile für Zeile auf den Kundendaten bewies dieselben 276 Zeilen.',
+    'ae9-h3': 'Ein Finanzbericht von 18 Sekunden auf 2',
+    'ae8-p': 'Ein Pin, der jeden Branch an eine Version der Tests band, machte den Main-Branch dreimal kaputt. Ich habe ihn einmal gehärtet und dann die Tests ins Anwendungs-Repository verschoben.',
+    'ae8-h3': 'Einen Workaround löschen, statt ihn zu flicken',
+    'ae7-p': 'PHP 8.2 auf 8.5, wo ein berechneter halber Cent abgerundet wird. 206 Rundungsaufrufe hinter einem Helfer und ein Test, der bei jedem neuen nativen Aufruf fehlschlägt. Am Tag des Merges fand er zwei.',
+    'ae7-h3': 'Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte',
+    'ae6-p': 'Vor jedem Test in 26 bis 44 ms auf den Seed zurückgesetzt, indem nur die Tabellen zurückkopiert werden, die ein Test geschrieben hat. Die Specs verloren ihren ganzen Aufräumcode, und die Änderung fand zwei Bugs, die Benutzer treffen konnten.',
+    'ae6-h3': 'Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank',
+    'num-note': 'Meine Commits pro Monat im Repository des Produkts, alle Branches, ohne Merges. *November 2026 bis zum 26. Hervorgehoben ab Mai 2026, als ein gemeinsamer Leitfaden für Agenten und Entwickler ins Repository kam.',
+    'ch-guide': 'Gemeinsamer Agent-Leitfaden im Repository →',
+    'ch-m18': 'Nov. 2026*',
+    'ch-m12': 'Mai 2026',
+    'ch-m6': 'Nov. 2025',
+    'ch-m0': 'Mai 2025',
+    'num-s4': 'Agent-Skills im Repo',
+    'num-s3': 'E2E-Tests in sechs Monaten',
+    'num-s2': 'PRs gemergt in 2026',
+    'num-s1': 'Commits pro Monat',
+    'num-p': 'Im Repository gemessen, nicht aus der Erinnerung. KI-Agenten haben den Großteil des Codes in diesen Commits geschrieben; ich habe die Richtung vorgegeben, und Kolleginnen und Kollegen haben die Pull Requests reviewt.',
+    'num-h2': 'Achtzehn Monate, gemessen',
+    'num-kicker': 'Agentic Engineering · Mai 2025 – November 2026',
+    'nav-agentic': 'Agentic Engineering',
+    'hero-lede': 'Head of Development, Enterprise Products bei everii Group bis Ende 2026. Ich kam zu TEAMBOX als einer der ersten Entwickler, und es wuchs zu einem ERP für Agenturen und Dienstleister. In den letzten achtzehn Monaten war der Großteil meiner Arbeit Agentic Engineering: KI-Agenten in eine laufende, zwanzig Jahre alte Codebase bringen, mit den Regeln, nach denen sie arbeiten, den Qualitäts-Gates, die sie bestehen müssen, und einem MCP-Server, damit Kunden ihre eigenen Agenten sicher anbinden können.',
     'stat-tickets': 'Tickets',
     'feat23-h3': `Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank`,
     'feat23-p1': `Die Browser-Tests teilten sich eine Datenbank. Darum trug jede Spec Aufräumcode, eindeutige Namen und Regeln, welche Seed-Daten sie anfassen durfte, und Specs konnten nicht voll parallel laufen.`,
@@ -620,12 +718,7 @@
     'nav-archive': 'Archiv',
     'nav-featured-work': 'Featured Work',
     'hero-kicker': 'Wien, Österreich',
-    'hero-h1': 'Head of Development, Enterprise Products bei everii Group bis Ende 2026.<br>Zwanzig Jahre in einer Codebase.',
-    'hero-lede': `Ich baue seit zwei Jahrzehnten an TEAMBOX, der ERP-Plattform für Dienstleister,
-      die heute zur everii Group gehört, dem <a href="https://www.everii.io/de/company" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px solid var(--line)">PSA-Marktführer im DACH-Raum</a> — angefangen als einer der ersten
-      Entwickler, heute verantwortlich für Enterprise-Kunden- und Produktarbeit, CI/CD und
-      das Team dahinter. Mein aktueller Schwerpunkt: Agentic Engineering — KI-gestützte
-      Entwicklungs-Workflows in eine lebende, zwanzig Jahre alte Codebase einbauen, ohne sie zu brechen.`,
+    'hero-h1': 'Agentic Engineering, in einer Codebase, die ich seit zwanzig Jahren baue.',
     'fact-1': '20+ Jahre, ein Produkt',
     'fact-2': 'PHP &amp; DevOps',
     'fact-3': '300+ Enterprise-Kunden',
@@ -688,12 +781,8 @@
     'ae-h2': 'Agenten im Einsatz',
     'ae-p': 'Was meine Agenten und Agent-Skills tatsächlich tun, die Zahlen dahinter und die Stellen, an denen weiterhin ein Mensch entscheidet.',
     'ae-link': 'Den vollständigen Text lesen →',
-    'ae2-h3': `Elf Pull Requests an einem Tag`,
-    'ae2-p': `Ein Agent-Skill hat am Tag einer Repository-Umstellung elf offene Test-Pull-Requests übertragen, Screenshots inklusive. Von Hand wären das nach meiner Schätzung rund 44 Stunden. Bei einem Konflikt stoppt er, und vor jedem Commit und Push fragt er nach.`,
-    'ae3-h3': `Einen Fix für eine langsame Abfrage ohne Kundendatenbank testen`,
-    'ae3-p': `Baut die Datenform eines Bugs mit langsamer Abfrage auf einer Staging-Kopie nach, damit QA den Fix testen kann. Er befüllt nur Staging-Kopien, begrenzt Zeilen und Abfragezeit und misst alten und neuen Code auf denselben Daten.`,
-    'ae4-h3': `Was Reviews immer wieder zurückschicken`,
-    'ae4-p': `299 Review-Kommentare, nach Art sortiert und in Fragen verwandelt, die der Agent mit Belegen beantwortet, bevor ein Mensch seine Arbeit prüft. Jeder Schreibvorgang, vom Kommentar bis zum Push, wartet auf ein Ja.`,
+    'ae2-h3': 'Drei Agent-Skills, die die richtige Entscheidung billig machen',
+    'ae2-p': 'Elf offene Pull Requests an einem Tag übertragen, einen Fix für eine langsame Abfrage ohne Kundendatenbank testen und die Fragen des Reviews vor dem Review beantworten. Jeder Schreibvorgang wartet auf ein Ja.',
     'ae-tag-skills': 'Agent-Skills',
     'ae-tag-testinfra': 'Test-Infrastruktur',
     'ae5-eyebrow': 'Ausgewählter Beitrag',
