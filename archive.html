@@ -257,11 +257,63 @@
     </div>
   </section>
 
+  <section class="block" id="cycle-20261112">
+    <div class="block-head">
+      <p class="kicker" data-i18n="c8-kicker">November 12 – 26, 2026 <span class="cycle-status current" data-i18n="status-last">Last cycle</span></p>
+      <h2 data-i18n="c8-h2">433 commits, 27 workstreams</h2>
+      <p data-i18n="c8-p">The last cycle. My time at the company ends with 2026, so the monthly record stops here; it stays on the homepage as a closed record.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">433</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">27</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~44k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">53</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
+    </div>
+    <p class="stats-note" data-i18n="c8-stats-note">*Lines added plus removed in the 53 merged pull requests; about 20k of them come from two: the runtime upgrade and the per-worker test databases. Commits without merges; workstreams are the distinct tickets behind the merged pull requests.</p>
+
+    <div class="card featured" id="c8-feat23">
+      <a class="card-anchor" href="#c8-feat23" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c8-feat23-h3">Every end-to-end test worker gets its own database</h3>
+      <p data-i18n="c8-feat23-p1">The browser tests shared one database. So every spec carried cleanup code, unique names and rules about which seed data it could touch, and specs could not run fully in parallel.</p>
+      <ol class="steps">
+        <li><span data-i18n="c8-feat23-step1"><strong>One database per worker, reset before every test.</strong> Triggers note which tables a test wrote, and only those are copied back from the seed: 26 to 44 ms per test on average.</span></li>
+        <li><span data-i18n="c8-feat23-step2"><strong>The specs lost their isolation code.</strong> No cleanup, no restores, no unique names, and full parallel runs are on. The change removed more lines than it added: 4,887 in, 5,360 out.</span></li>
+        <li><span data-i18n="c8-feat23-step3"><strong>Review knows the new rules.</strong> The code-review instructions check new specs against one database per worker, so the old patterns do not come back.</span></li>
+      </ol>
+      <p data-i18n="c8-feat23-p2">It was the last step of a month spent on the suite's reliability. The writeup tells the whole story, including the flaky tests the agent wrote itself.</p>
+      <div class="tags"><span class="tag" data-i18n="c8-feat23-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/e2e-reliability.html" data-i18n="c8-feat23-link">Read the full writeup →</a>
+    </div>
+
+    <div class="card featured" id="c8-feat24">
+      <a class="card-anchor" href="#c8-feat24" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
+      <h3 data-i18n="c8-feat24-h3">A runtime upgrade that would have moved amounts by a cent</h3>
+      <p data-i18n="c8-feat24-p1">Security support for the old PHP version ends on 31 December 2026, so the upgrade to 8.5 had to land before my last day. The risk was not the syntax. From PHP 8.4, a computed half cent rounds down: 2.50 × 1.19 = 2.975 gives 2.97.</p>
+      <ol class="steps">
+        <li><span data-i18n="c8-feat24-step1"><strong>Keep the old result where money is involved.</strong> All 206 rounding calls go through one helper that returns what the old version returned.</span></li>
+        <li><span data-i18n="c8-feat24-step2"><strong>A test fails on any new native rounding call.</strong> On the day of the merge it caught two calls that other pull requests had added in the meantime. The fix was two lines.</span></li>
+        <li><span data-i18n="c8-feat24-step3"><strong>Deprecations are guarded the same way.</strong> A second test fails on any new call that the new version deprecates.</span></li>
+      </ol>
+      <p data-i18n="c8-feat24-p2">448 files changed, in one reviewed pull request.</p>
+      <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="c8-feat24-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="c8-feat24-tag-testing">Testing</span></div>
+    </div>
+
+    <div class="card" id="c8-card25">
+      <a class="card-anchor" href="#c8-card25" aria-label="Copy link to this entry" title="Copy link">🔗</a>
+      <h3 data-i18n="c8-card25-h3">Two major test-framework versions in one pull request</h3>
+      <p data-i18n="c8-card25-p">Pest 3 to 5 with PHPUnit 13, each major version checked on its own. The new version records every deprecation and warning, so the code now avoids them at the cause. Log noise now fails the run: main had 42 stray log lines, now 0. The full backend suite passed with 22,241 tests and a clean log.</p>
+      <div class="tags"><span class="tag" data-i18n="c8-card25-tag-testing">Testing</span><span class="tag" data-i18n="c8-card25-tag-techdebt">Tech Debt</span></div>
+    </div>
+  </section>
+
   <section class="block" id="cycle-20261009">
     <div class="block-head">
-      <p class="kicker" data-i18n="c7-kicker">October 9 – November 11, 2026 <span class="cycle-status current" data-i18n="status-current">Current</span></p>
+      <p class="kicker" data-i18n="c7-kicker">October 9 – November 11, 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Superseded</span></p>
       <h2 data-i18n="c7-h2">805 commits, 16 workstreams</h2>
-      <p data-i18n="c7-p">Still live on the homepage today — logged here too, so it's covered the moment the next cycle replaces it.</p>
+      <p data-i18n="c7-p">Replaced on the homepage by the November 12 – 26 cycle — kept here in full.</p>
     </div>
 
     <div class="stats">
@@ -667,7 +719,7 @@
 
 <footer>
   <div class="wrap">
-    <span data-i18n="footer-copy">&copy; 2026 David Irving. Full archive, appended every cycle.</span>
+    <span data-i18n="footer-copy">&copy; 2026 David Irving. Full archive of every cycle.</span>
     <div class="footer-links">
       <a href="index.html" data-i18n="footer-home">← Back to homepage</a>
       <a href="impressum.html" data-i18n="footer-impressum">Impressum</a>
@@ -718,9 +770,9 @@
 
   I18N.de = {
     'stat-tickets': 'Tickets',
-    'c7-kicker': '9. Oktober – 11. November 2026 <span class="cycle-status current" data-i18n="status-current">Aktuell</span>',
+    'c7-kicker': '9. Oktober – 11. November 2026 <span class="cycle-status superseded" data-i18n="status-superseded">Abgelöst</span>',
     'c7-h2': '805 Commits, 16 Workstreams',
-    'c7-p': 'Noch heute live auf der Startseite — hier zusätzlich protokolliert, damit es abgedeckt ist, sobald der nächste Zyklus es ersetzt.',
+    'c7-p': 'Auf der Startseite durch den Zyklus vom 12. – 26. November ersetzt — hier vollständig erhalten.',
     'c7-stats-note': '*Ohne rund 12k Zeilen bestehender Test-Specs, die zwischen Repositories verschoben wurden, und einen Prototyp mit 8k Zeilen.',
     'c7-feat20-h3': `Die App und ihre End-to-End-Tests in einem Repository`,
     'c7-feat20-p1': `Die Playwright-Specs lagen in einem eigenen Repository, also konnten ein Feature und sein Test nie im selben Commit geändert werden. Im Oktober baute ich einen Workaround, der jeden Branch auf eine Spec-Version festlegte. Er ließ den Main-Branch dreimal fehlschlagen.`,
@@ -805,6 +857,31 @@
       auf der Startseite ersetzt wird, damit nichts, was einmal fertig war, einfach
       verschwindet.`,
     'status-current': 'Aktuell',
+    'status-last': 'Letzter Zyklus',
+    'c8-kicker': '12. – 26. November 2026 <span class="cycle-status current" data-i18n="status-last">Letzter Zyklus</span>',
+    'c8-h2': '433 Commits, 27 Workstreams',
+    'c8-p': 'Der letzte Zyklus. Meine Zeit im Unternehmen endet mit 2026, also hört die monatliche Reihe hier auf; auf der Startseite bleibt sie als abgeschlossene Aufzeichnung stehen.',
+    'c8-stats-note': '*Hinzugefügte plus entfernte Zeilen in den 53 gemergten Pull Requests; rund 20k davon stammen aus zweien: dem Runtime-Upgrade und den Testdatenbanken pro Worker. Commits ohne Merges; Workstreams sind die verschiedenen Tickets hinter den gemergten Pull Requests.',
+    'c8-feat23-h3': `Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank`,
+    'c8-feat23-p1': `Die Browser-Tests teilten sich eine Datenbank. Darum trug jede Spec Aufräumcode, eindeutige Namen und Regeln, welche Seed-Daten sie anfassen durfte, und Specs konnten nicht voll parallel laufen.`,
+    'c8-feat23-step1': `<strong>Eine Datenbank pro Worker, vor jedem Test zurückgesetzt.</strong> Trigger merken sich, welche Tabellen ein Test geschrieben hat, und nur diese werden aus dem Seed zurückkopiert: im Schnitt 26 bis 44 ms pro Test.`,
+    'c8-feat23-step2': `<strong>Die Specs haben ihren Isolationscode verloren.</strong> Kein Aufräumen, keine Wiederherstellung, keine eindeutigen Namen, und volle Parallelläufe sind an. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.`,
+    'c8-feat23-step3': `<strong>Das Review kennt die neuen Regeln.</strong> Die Code-Review-Anweisungen prüfen neue Specs gegen eine Datenbank pro Worker, damit die alten Muster nicht zurückkommen.`,
+    'c8-feat23-p2': `Es war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt. Der Bericht erzählt die ganze Geschichte, auch die instabilen Tests, die der Agent selbst geschrieben hat.`,
+    'c8-feat23-tag-testinfra': 'Test-Infrastruktur',
+    'c8-feat23-link': 'Den ganzen Bericht lesen →',
+    'c8-feat24-h3': `Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte`,
+    'c8-feat24-p1': `Der Sicherheits-Support für die alte PHP-Version endet am 31. Dezember 2026, also musste das Upgrade auf 8.5 vor meinem letzten Tag landen. Das Risiko war nicht die Syntax. Ab PHP 8.4 wird ein berechneter halber Cent abgerundet: 2,50 × 1,19 = 2,975 ergibt 2,97.`,
+    'c8-feat24-step1': `<strong>Das alte Ergebnis behalten, wo es um Geld geht.</strong> Alle 206 Rundungsaufrufe laufen über einen Helfer, der liefert, was die alte Version geliefert hat.`,
+    'c8-feat24-step2': `<strong>Ein Test schlägt bei jedem neuen nativen Rundungsaufruf fehl.</strong> Am Tag des Merges fand er zwei Aufrufe, die andere Pull Requests in der Zwischenzeit hinzugefügt hatten. Der Fix war zwei Zeilen lang.`,
+    'c8-feat24-step3': `<strong>Veraltete Aufrufe sind genauso abgesichert.</strong> Ein zweiter Test schlägt bei jedem neuen Aufruf fehl, den die neue Version als veraltet markiert.`,
+    'c8-feat24-p2': `448 geänderte Dateien, in einem geprüften Pull Request.`,
+    'c8-feat24-tag-techdebt': 'Technische Schulden',
+    'c8-feat24-tag-testing': 'Testen',
+    'c8-card25-h3': `Zwei Hauptversionen des Test-Frameworks in einem Pull Request`,
+    'c8-card25-p': `Pest 3 auf 5 mit PHPUnit 13, jede Hauptversion einzeln geprüft. Die neue Version erfasst jede Deprecation und jede Warnung, also vermeidet der Code sie jetzt an der Ursache. Log-Rauschen lässt den Lauf jetzt fehlschlagen: main hatte 42 überflüssige Log-Zeilen, jetzt 0. Die ganze Backend-Suite lief grün mit 22.241 Tests und sauberem Log.`,
+    'c8-card25-tag-testing': 'Testen',
+    'c8-card25-tag-techdebt': 'Technische Schulden',
     'status-superseded': 'Abgelöst',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
@@ -1281,7 +1358,7 @@
       Release-Vorbereitung. Kleine Diffs, aber das ist die Arbeit, die entscheidet, ob eine
       Infra-Migration leise ausgeliefert wird oder den Release-Zug zum Entgleisen bringt.`,
     'c1-card7-tag-docker-migration': 'Docker-Migration',
-    'footer-copy': '&copy; 2026 David Irving. Vollständiges Archiv, bei jedem Zyklus ergänzt.',
+    'footer-copy': '&copy; 2026 David Irving. Vollständiges Archiv aller Zyklen.',
     'footer-home': '← Zurück zur Startseite',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz'
