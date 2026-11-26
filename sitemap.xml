@@ -61,8 +61,32 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://davidirving.dev/work/one-database-per-test-worker.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://davidirving.dev/work/runtime-upgrade-rounding-guard.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://davidirving.dev/work/specs-into-the-app-repository.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://davidirving.dev/work/finance-report-18s-to-2s.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://davidirving.dev/work/e2e-reliability.html</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
