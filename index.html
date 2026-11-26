@@ -90,6 +90,11 @@
     'feat17': 'archive.html#c6-feat17',
     'feat18': 'archive.html#c6-feat18',
     'card19': 'archive.html#c6-card19',
+    // Retired 2026-11-26 when the Nov 12 - 26 cycle replaced the Oct 9 - Nov 11 one.
+    // This was the last cycle: the highlights record is closed (LM-33). Highest id used: card25.
+    'feat20': 'archive.html#c7-feat20',
+    'feat21': 'archive.html#c7-feat21',
+    'card22': 'archive.html#c7-card22',
     // Dropped from the homepage strategies teaser (cap 4); the full page is unchanged.
     'strategy-implementer-reviewer-tester': 'strategies/implementer-reviewer-tester.html',
     'strategy-instructions-style-memory': 'strategies/instructions-style-memory.html',
@@ -332,52 +337,53 @@
 
   <section class="block" id="highlights">
     <div class="block-head">
-      <p class="kicker" data-i18n="hl-kicker">Work Highlights · October 9 – November 11, 2026</p>
-      <h2 data-i18n="hl-h2">The latest work</h2>
-      <p data-i18n="hl-p">Updated monthly, straight from the actual work — not a highlight reel.</p>
+      <p class="kicker" data-i18n="hl-kicker">Work Highlights · November 12 – 26, 2026</p>
+      <h2 data-i18n="hl-h2">The last cycle</h2>
+      <p data-i18n="hl-p">The last of my monthly highlights, straight from the actual work. The record is closed now; every earlier cycle is in the archive.</p>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">805</div><div class="l" data-i18n="stat-commits">commits</div></div>
-      <div class="stat"><div class="n">16</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
-      <div class="stat"><div class="n">~39k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
+      <div class="stat"><div class="n">433</div><div class="l" data-i18n="stat-commits">commits</div></div>
+      <div class="stat"><div class="n">27</div><div class="l" data-i18n="stat-workstreams">workstreams</div></div>
+      <div class="stat"><div class="n">~44k*</div><div class="l" data-i18n="stat-lines">lines touched</div></div>
       <div class="stat"><div class="n">53</div><div class="l" data-i18n="stat-merged">PRs merged</div></div>
     </div>
-    <p class="stats-note" data-i18n="hl-stats-note">*Not counting about 12k lines of existing test specs moved between repositories, and an 8k-line prototype.</p>
+    <p class="stats-note" data-i18n="hl-stats-note">*Lines added plus removed in the 53 merged pull requests; about 20k of them come from two: the runtime upgrade and the per-worker test databases. Commits without merges; workstreams are the distinct tickets behind the merged pull requests.</p>
 
-    <div class="card featured" id="feat20">
-      <a class="card-anchor" href="#feat20" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat23">
+      <a class="card-anchor" href="#feat23" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat20-h3">The app and its end-to-end tests in one repository</h3>
-      <p data-i18n="feat20-p1">The Playwright specs lived in a separate repository, so a feature and its test could never change in one commit. In October I built a workaround that pinned each branch to a spec version. It broke the main branch three times.</p>
+      <h3 data-i18n="feat23-h3">Every end-to-end test worker gets its own database</h3>
+      <p data-i18n="feat23-p1">The browser tests shared one database. So every spec carried cleanup code, unique names and rules about which seed data it could touch, and specs could not run fully in parallel.</p>
       <ol class="steps">
-        <li><span data-i18n="feat20-step1"><strong>Delete the workaround instead of patching it again.</strong> I hardened the pin once, then moved the specs into the application repository in one cutover. The 390 lines of pin-checking code went with it.</span></li>
-        <li><span data-i18n="feat20-step2"><strong>Open work moves with a tool, not by hand.</strong> A script and an agent skill carry an open spec pull request across to the new layout. Eleven moved that way on the day of the cutover.</span></li>
-        <li><span data-i18n="feat20-step3"><strong>Each check in the cheapest layer that can catch it.</strong> New React component tests took over pixel, CSS and error-state checks. 59 end-to-end tests were removed and 17 slimmed down, and a lint rule stops new ones of that kind.</span></li>
+        <li><span data-i18n="feat23-step1"><strong>One database per worker, reset before every test.</strong> Triggers note which tables a test wrote, and only those are copied back from the seed: 26 to 44 ms per test on average.</span></li>
+        <li><span data-i18n="feat23-step2"><strong>The specs lost their isolation code.</strong> No cleanup, no restores, no unique names, and full parallel runs are on. The change removed more lines than it added: 4,887 in, 5,360 out.</span></li>
+        <li><span data-i18n="feat23-step3"><strong>Review knows the new rules.</strong> The code-review instructions check new specs against one database per worker, so the old patterns do not come back.</span></li>
       </ol>
-      <p data-i18n="feat20-p2">A CI step that took 5 to 10 minutes on every run is gone, and a new push cancels the branch's older CI run instead of queuing behind it.</p>
-      <div class="tags"><span class="tag" data-i18n="feat20-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">Vitest</span><span class="tag">CI/CD</span></div>
+      <p data-i18n="feat23-p2">It was the last step of a month spent on the suite's reliability. The writeup tells the whole story, including the flaky tests the agent wrote itself.</p>
+      <div class="tags"><span class="tag" data-i18n="feat23-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">CI/CD</span></div>
+      <a class="card-link" href="work/e2e-reliability.html" data-i18n="feat23-link">Read the full writeup →</a>
     </div>
 
-    <div class="card featured" id="feat21">
-      <a class="card-anchor" href="#feat21" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+    <div class="card featured" id="feat24">
+      <a class="card-anchor" href="#feat24" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
-      <h3 data-i18n="feat21-h3">A finance report, from 18 seconds to 2</h3>
-      <p data-i18n="feat21-p1">One customer's valuation report took almost 20 seconds at the median in the production access log. The query plan showed 88% of the time in one correlated subquery.</p>
+      <h3 data-i18n="feat24-h3">A runtime upgrade that would have moved amounts by a cent</h3>
+      <p data-i18n="feat24-p1">Security support for the old PHP version ends on 31 December 2026, so the upgrade to 8.5 had to land before my last day. The risk was not the syntax. From PHP 8.4, a computed half cent rounds down: 2.50 × 1.19 = 2.975 gives 2.97.</p>
       <ol class="steps">
-        <li><span data-i18n="feat21-step1"><strong>Measure before changing anything.</strong> The subquery's filter pointed at the outer row, so it could not use the index and read about 45.8 million rows.</span></li>
-        <li><span data-i18n="feat21-step2"><strong>One condition moved.</strong> With the filter inside the subquery, the query took 2.3 seconds instead of 18.2 on a copy of the customer's data. The two slowest columns went from 10.7 and 5.3 seconds to under 50 ms each.</span></li>
-        <li><span data-i18n="feat21-step3"><strong>Same rows, proved.</strong> On generated data, the old and new queries returned identical results, checked with an md5 of the output.</span></li>
+        <li><span data-i18n="feat24-step1"><strong>Keep the old result where money is involved.</strong> All 206 rounding calls go through one helper that returns what the old version returned.</span></li>
+        <li><span data-i18n="feat24-step2"><strong>A test fails on any new native rounding call.</strong> On the day of the merge it caught two calls that other pull requests had added in the meantime. The fix was two lines.</span></li>
+        <li><span data-i18n="feat24-step3"><strong>Deprecations are guarded the same way.</strong> A second test fails on any new call that the new version deprecates.</span></li>
       </ol>
-      <p data-i18n="feat21-p2">On another customer's invoice and offer lists, grouped rows are now counted in SQL instead of in PHP.</p>
-      <div class="tags"><span class="tag">Performance</span><span class="tag">SQL</span></div>
+      <p data-i18n="feat24-p2">448 files changed, in one reviewed pull request.</p>
+      <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="feat24-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="feat24-tag-testing">Testing</span></div>
     </div>
 
-    <div class="card" id="card22">
-      <a class="card-anchor" href="#card22" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
-      <h3 data-i18n="card22-h3">Agent skills that carry the team's definition of done</h3>
-      <p data-i18n="card22-p">Our definition of done lived only in knowledge-base articles, so reviews kept sending work back for the same reasons. One agent skill now takes a ticket through those gates up to human review: tests, an end-to-end path, green CI and resolved review threads. A second one rebuilds slow-query bugs on a staging system with generated data, so QA can check a fix without a customer database. It refuses to seed anything but staging, and it measures the old and new code on the same data.</p>
-      <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="card22-tag-tooling">Developer Tooling</span><span class="tag">QA</span></div>
+    <div class="card" id="card25">
+      <a class="card-anchor" href="#card25" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <h3 data-i18n="card25-h3">Two major test-framework versions in one pull request</h3>
+      <p data-i18n="card25-p">Pest 3 to 5 with PHPUnit 13, each major version checked on its own. The new version records every deprecation and warning, so the code now avoids them at the cause. Log noise now fails the run: main had 42 stray log lines, now 0. The full backend suite passed with 22,241 tests and a clean log.</p>
+      <div class="tags"><span class="tag" data-i18n="card25-tag-testing">Testing</span><span class="tag" data-i18n="card25-tag-techdebt">Tech Debt</span></div>
     </div>
 
   </section>
@@ -537,7 +543,7 @@
 
 <footer>
   <div class="wrap">
-    <span data-i18n="footer-copy">&copy; 2026 David Irving. Updated monthly.</span>
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
     <div class="footer-links">
       <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
       <a href="impressum.html" data-i18n="footer-impressum">Impressum</a>
@@ -589,23 +595,27 @@
 
   I18N.de = {
     'stat-tickets': 'Tickets',
-    'feat20-h3': `Die App und ihre End-to-End-Tests in einem Repository`,
-    'feat20-p1': `Die Playwright-Specs lagen in einem eigenen Repository, also konnten ein Feature und sein Test nie im selben Commit geändert werden. Im Oktober baute ich einen Workaround, der jeden Branch auf eine Spec-Version festlegte. Er ließ den Main-Branch dreimal fehlschlagen.`,
-    'feat20-step1': `<strong>Den Workaround löschen, statt ihn noch einmal zu flicken.</strong> Ich habe den Pin einmal gehärtet und die Specs dann in einem Schritt ins Anwendungs-Repository verschoben. Die 390 Zeilen Pin-Prüfcode sind dabei wieder entfallen.`,
-    'feat20-step2': `<strong>Offene Arbeit zieht per Werkzeug um, nicht von Hand.</strong> Ein Skript und ein Agent-Skill übertragen einen offenen Spec-Pull-Request in die neue Struktur. Elf sind am Tag der Umstellung so umgezogen.`,
-    'feat20-step3': `<strong>Jede Prüfung in der günstigsten Schicht, die sie erkennen kann.</strong> Neue React-Komponententests übernehmen Pixel-, CSS- und Fehlerzustands-Prüfungen. 59 End-to-End-Tests wurden entfernt und 17 verschlankt, und eine Lint-Regel verhindert neue dieser Art.`,
-    'feat20-p2': `Ein CI-Schritt, der bei jedem Lauf 5 bis 10 Minuten dauerte, ist weg, und ein neuer Push bricht den älteren CI-Lauf des Branches ab, statt sich dahinter einzureihen.`,
-    'feat20-tag-testinfra': 'Test-Infrastruktur',
-    'feat21-h3': `Ein Finanzbericht, von 18 Sekunden auf 2`,
-    'feat21-p1': `Der Bewertungsbericht eines Kunden brauchte laut Produktions-Access-Log im Median fast 20 Sekunden. Der Ausführungsplan zeigte 88 % der Zeit in einer einzigen korrelierten Unterabfrage.`,
-    'feat21-step1': `<strong>Erst messen, dann ändern.</strong> Der Filter der Unterabfrage verwies auf die äußere Zeile, konnte also den Index nicht nutzen und las rund 45,8 Millionen Zeilen.`,
-    'feat21-step2': `<strong>Eine Bedingung verschoben.</strong> Mit dem Filter in der Unterabfrage brauchte die Abfrage auf einer Kopie der Kundendaten 2,3 statt 18,2 Sekunden. Die beiden langsamsten Spalten gingen von 10,7 und 5,3 Sekunden auf je unter 50 ms.`,
-    'feat21-step3': `<strong>Dieselben Zeilen, nachgewiesen.</strong> Auf generierten Daten lieferten alte und neue Abfrage identische Ergebnisse, geprüft mit einem md5 der Ausgabe.`,
-    'feat21-p2': `Bei den Rechnungs- und Angebotslisten eines weiteren Kunden werden gruppierte Zeilen jetzt in SQL statt in PHP gezählt.`,
-    'card22-h3': `Agent-Skills, die die Definition of Done des Teams mitbringen`,
-    'card22-p': `Unsere Definition of Done stand nur in Artikeln der Wissensdatenbank, also schickten Reviews Arbeit immer wieder aus denselben Gründen zurück. Ein Agent-Skill führt ein Ticket jetzt durch diese Gates bis zum menschlichen Review: Tests, ein End-to-End-Pfad, grüne CI und erledigte Review-Threads. Ein zweiter baut Bugs mit langsamen Abfragen auf einem Staging-System mit generierten Daten nach, damit QA einen Fix ohne Kundendatenbank prüfen kann. Er befüllt nur Staging-Systeme und misst alten und neuen Code auf denselben Daten.`,
-    'card22-tag-tooling': 'Entwickler-Tools',
-    'hl-stats-note': '*Ohne rund 12k Zeilen bestehender Test-Specs, die zwischen Repositories verschoben wurden, und einen Prototyp mit 8k Zeilen.',
+    'feat23-h3': `Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank`,
+    'feat23-p1': `Die Browser-Tests teilten sich eine Datenbank. Darum trug jede Spec Aufräumcode, eindeutige Namen und Regeln, welche Seed-Daten sie anfassen durfte, und Specs konnten nicht voll parallel laufen.`,
+    'feat23-step1': `<strong>Eine Datenbank pro Worker, vor jedem Test zurückgesetzt.</strong> Trigger merken sich, welche Tabellen ein Test geschrieben hat, und nur diese werden aus dem Seed zurückkopiert: im Schnitt 26 bis 44 ms pro Test.`,
+    'feat23-step2': `<strong>Die Specs haben ihren Isolationscode verloren.</strong> Kein Aufräumen, keine Wiederherstellung, keine eindeutigen Namen, und volle Parallelläufe sind an. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.`,
+    'feat23-step3': `<strong>Das Review kennt die neuen Regeln.</strong> Die Code-Review-Anweisungen prüfen neue Specs gegen eine Datenbank pro Worker, damit die alten Muster nicht zurückkommen.`,
+    'feat23-p2': `Es war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt. Der Bericht erzählt die ganze Geschichte, auch die instabilen Tests, die der Agent selbst geschrieben hat.`,
+    'feat23-tag-testinfra': 'Test-Infrastruktur',
+    'feat23-link': 'Den ganzen Bericht lesen →',
+    'feat24-h3': `Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte`,
+    'feat24-p1': `Der Sicherheits-Support für die alte PHP-Version endet am 31. Dezember 2026, also musste das Upgrade auf 8.5 vor meinem letzten Tag landen. Das Risiko war nicht die Syntax. Ab PHP 8.4 wird ein berechneter halber Cent abgerundet: 2,50 × 1,19 = 2,975 ergibt 2,97.`,
+    'feat24-step1': `<strong>Das alte Ergebnis behalten, wo es um Geld geht.</strong> Alle 206 Rundungsaufrufe laufen über einen Helfer, der liefert, was die alte Version geliefert hat.`,
+    'feat24-step2': `<strong>Ein Test schlägt bei jedem neuen nativen Rundungsaufruf fehl.</strong> Am Tag des Merges fand er zwei Aufrufe, die andere Pull Requests in der Zwischenzeit hinzugefügt hatten. Der Fix war zwei Zeilen lang.`,
+    'feat24-step3': `<strong>Veraltete Aufrufe sind genauso abgesichert.</strong> Ein zweiter Test schlägt bei jedem neuen Aufruf fehl, den die neue Version als veraltet markiert.`,
+    'feat24-p2': `448 geänderte Dateien, in einem geprüften Pull Request.`,
+    'feat24-tag-techdebt': 'Technische Schulden',
+    'feat24-tag-testing': 'Testen',
+    'card25-h3': `Zwei Hauptversionen des Test-Frameworks in einem Pull Request`,
+    'card25-p': `Pest 3 auf 5 mit PHPUnit 13, jede Hauptversion einzeln geprüft. Die neue Version erfasst jede Deprecation und jede Warnung, also vermeidet der Code sie jetzt an der Ursache. Log-Rauschen lässt den Lauf jetzt fehlschlagen: main hatte 42 überflüssige Log-Zeilen, jetzt 0. Die ganze Backend-Suite lief grün mit 22.241 Tests und sauberem Log.`,
+    'card25-tag-testing': 'Testen',
+    'card25-tag-techdebt': 'Technische Schulden',
+    'hl-stats-note': '*Hinzugefügte plus entfernte Zeilen in den 53 gemergten Pull Requests; rund 20k davon stammen aus zweien: dem Runtime-Upgrade und den Testdatenbanken pro Worker. Commits ohne Merges; Workstreams sind die verschiedenen Tickets hinter den gemergten Pull Requests.',
     'nav-research': 'Recherche',
     'nav-archive': 'Archiv',
     'nav-featured-work': 'Featured Work',
@@ -621,9 +631,9 @@
     'fact-3': '300+ Enterprise-Kunden',
     'fact-4': 'Schwerpunkt Agentic Engineering',
     'hero-cta': 'Auf LinkedIn kontaktieren →',
-    'hl-kicker': 'Arbeits-Highlights · 9. Oktober – 11. November 2026',
-    'hl-h2': 'Die aktuellsten Arbeiten',
-    'hl-p': 'Wird monatlich aktualisiert, direkt aus der tatsächlichen Arbeit — keine Best-of-Zusammenstellung.',
+    'hl-kicker': 'Arbeits-Highlights · 12. – 26. November 2026',
+    'hl-h2': 'Der letzte Zyklus',
+    'hl-p': 'Die letzten meiner monatlichen Highlights, direkt aus der tatsächlichen Arbeit. Die Reihe ist jetzt abgeschlossen; alle früheren Zyklen stehen im Archiv.',
     'stat-commits': 'Commits',
     'stat-workstreams': 'Workstreams',
     'stat-lines': 'Zeilen bearbeitet',
@@ -805,7 +815,7 @@
     'novcountdown-step1': '<strong>macOS 26 liest den Bildschirmschoner-Ordner des Benutzers nicht mehr.</strong> Ein dort installierter Schoner fehlt in der Auswahl, ohne jede Fehlermeldung. Das Programm, das alte Schoner lädt, nennt nur den Systemordner, also installiert das Skript dorthin.',
     'novcountdown-step2': '<strong>Ein Bildschirmschoner von Drittanbietern kann kein lebendes Schreibtischbild sein.</strong> Das Hintergrundbild ist deshalb ein Standbild derselben Szene, pro Bildschirm gerendert und von einem launchd-Agenten alle 30 Minuten erneuert.',
     'novcountdown-step3': '<strong>Drei stille Fallen, vom Installer abgefangen.</strong> Der Bildschirmschoner-Prozess führt nach einer Neuinstallation weiter den alten Code aus, die Systemeinstellungen bauen ihre Liste nur beim Start auf, und ein offener Hintergrundbild-Bereich schreibt ein veraltetes Bild zurück.',
-    'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
+    'footer-copy': '&copy; 2026 David Irving.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz'
   };
