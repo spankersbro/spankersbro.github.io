@@ -509,6 +509,19 @@
       <a class="card-link" href="https://davidirving.dev/ripple-type/" target="_blank" rel="noopener" data-i18n="rippletype-link">Play →</a>
       <a class="card-link" href="https://github.com/spankersbro/ripple-type" target="_blank" rel="noopener" data-i18n="rippletype-github-link">View on GitHub →</a>
     </div>
+
+    <div class="card" id="projects-novcountdown">
+      <a class="card-anchor" href="#projects-novcountdown" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
+      <p class="eyebrow" data-i18n="eyebrow-projects">Side Project</p>
+      <h3 data-i18n="novcountdown-h3">November Countdown — a macOS screensaver and wallpaper that counted down my last working days</h3>
+      <p data-i18n="novcountdown-p1">A dark card over a drifting field of green, counting the days to the end of November 2026. The screensaver and the desktop picture share one renderer, so they cannot drift apart.</p>
+      <ol class="steps">
+        <li><span data-i18n="novcountdown-step1"><strong>macOS 26 no longer reads the per-user screensaver folder.</strong> A saver installed there is missing from the picker, with no error anywhere. The binary that loads legacy savers names only the system folder, so the installer puts it there.</span></li>
+        <li><span data-i18n="novcountdown-step2"><strong>A third-party screensaver cannot be the live desktop.</strong> So the wallpaper is a still frame of the same scene, rendered per display and refreshed by a launchd agent every 30 minutes.</span></li>
+        <li><span data-i18n="novcountdown-step3"><strong>Three silent traps, handled by the installer.</strong> The screensaver host keeps running the old code after a reinstall, System Settings builds its list only at launch, and an open Wallpaper pane writes a stale picture back.</span></li>
+      </ol>
+      <div class="tags"><span class="tag">Swift</span><span class="tag">ScreenSaver</span><span class="tag">launchd</span></div>
+    </div>
   </section>
 
 </div>
@@ -774,6 +787,11 @@
     'rippletype-step3': '<strong>Zwei Wellenebenen, nicht eine.</strong> Eine konstante Welle niedriger Amplitude hält den Text im Ruhezustand lebendig; ein Klick irgendwo legt eine stärkere, abklingende Welle darüber.',
     'rippletype-link': 'Spielen →',
     'rippletype-github-link': 'Auf GitHub ansehen →',
+    'novcountdown-h3': 'November Countdown — ein macOS-Bildschirmschoner mit Hintergrundbild, der meine letzten Arbeitstage heruntergezählt hat',
+    'novcountdown-p1': 'Eine dunkle Karte über einem wandernden grünen Farbfeld, die die Tage bis Ende November 2026 zählt. Bildschirmschoner und Schreibtischbild nutzen denselben Renderer und können deshalb nicht auseinanderlaufen.',
+    'novcountdown-step1': '<strong>macOS 26 liest den Bildschirmschoner-Ordner des Benutzers nicht mehr.</strong> Ein dort installierter Schoner fehlt in der Auswahl, ohne jede Fehlermeldung. Das Programm, das alte Schoner lädt, nennt nur den Systemordner, also installiert das Skript dorthin.',
+    'novcountdown-step2': '<strong>Ein Bildschirmschoner von Drittanbietern kann kein lebendes Schreibtischbild sein.</strong> Das Hintergrundbild ist deshalb ein Standbild derselben Szene, pro Bildschirm gerendert und von einem launchd-Agenten alle 30 Minuten erneuert.',
+    'novcountdown-step3': '<strong>Drei stille Fallen, vom Installer abgefangen.</strong> Der Bildschirmschoner-Prozess führt nach einer Neuinstallation weiter den alten Code aus, die Systemeinstellungen bauen ihre Liste nur beim Start auf, und ein offener Hintergrundbild-Bereich schreibt ein veraltetes Bild zurück.',
     'footer-copy': '&copy; 2026 David Irving. Wird monatlich aktualisiert.',
     'footer-impressum': 'Impressum',
     'footer-privacy': 'Datenschutz'
