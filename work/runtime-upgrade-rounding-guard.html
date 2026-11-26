@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.">
+<link rel="canonical" href="https://davidirving.dev/work/runtime-upgrade-rounding-guard.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe">
+<meta property="og:description" content="Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.">
+<meta property="og:url" content="https://davidirving.dev/work/runtime-upgrade-rounding-guard.html">
+<meta property="article:published_time" content="2026-11-26">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe">
+<meta name="twitter:description" content="Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe",
+  "description": "Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.",
+  "author": {
+    "@type": "Person",
+    "name": "David Irving",
+    "url": "https://davidirving.dev/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "David Irving"
+  },
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://davidirving.dev/work/runtime-upgrade-rounding-guard.html"
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">A Runtime Upgrade That Would Have Moved Amounts by a Cent: Guards That Make a 448-File Change Safe</h1>
+    <p class="lede" data-i18n="hero-lede">A rounding change that moves money, the tests that keep it out, and the test that caught two new calls on the day of the merge.</p>
+    <p class="meta-row" data-i18n="meta-date">November 2026 · Runtime upgrade</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three guards: 206 rounding calls behind one helper, a test that fails on a new native rounding call, a test that fails on a new deprecated call. Security advisories: 34 before, 1 after.">
+        <text x="0" y="24" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-guards">Three guards</text>
+        <rect x="0" y="34" width="204" height="58" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="14" y="58" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-g1a">206 rounding calls</text>
+        <text x="14" y="78" font-size="12" fill="var(--chip-ink)" data-i18n="d-g1b">behind one helper</text>
+        <rect x="218" y="34" width="204" height="58" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="232" y="58" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-g2a">New native rounding</text>
+        <text x="232" y="78" font-size="12" fill="var(--chip-ink)" data-i18n="d-g2b">fails a test</text>
+        <rect x="436" y="34" width="204" height="58" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="450" y="58" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-g3a">New deprecated call</text>
+        <text x="450" y="78" font-size="12" fill="var(--chip-ink)" data-i18n="d-g3b">fails a test</text>
+        <text x="0" y="136" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-adv">Security advisories in the libraries</text>
+        <rect x="0" y="146" width="640" height="30" rx="8" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="14" y="166" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-adv-before">34 before</text>
+        <rect x="0" y="190" width="19" height="30" rx="6" fill="var(--accent)"/>
+        <text x="30" y="210" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-adv-after">1 after, low severity, with its own ticket</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">The advisory bars are to scale.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why it had to happen now</h2>
+    <p data-i18n="why-p1">Security support for PHP 8.2 ends on 31 December 2026, and the product ran on it. So the upgrade to 8.5 had to land before the end of the year, and before my last day. A colleague had started it: their upgrade commits and their rounding tests are in the final pull request and keep their name. I brought the work together into one landing and took it through review.</p>
+
+    <h2 data-i18n="trap-h2">The trap: a half cent</h2>
+    <p data-i18n="trap-p1">Most of an upgrade like this is routine: new types, removed functions, updated libraries. One change is not. From PHP 8.4, rounding a computed value that ends in a half cent can go down instead of up. 2.50 × 1.19 is 2.975, and that now rounds to 2.97 instead of 2.98.</p>
+    <p data-i18n="trap-p2">In an ERP that writes invoices, that is not a detail. The decision, made with the people responsible for the product, was to keep today's results exactly.</p>
+
+    <h2 data-i18n="guards-h2">Three guards</h2>
+    <ul>
+      <li data-i18n="guard-li1"><strong>One helper for all rounding.</strong> All 206 rounding and number-formatting calls, in 101 files, now go through one helper that returns what PHP 8.2 returned. No signature changed. While the code still ran on 8.2, a test compared the helper with the built-in functions on 20,000 values.</li>
+      <li data-i18n="guard-li2"><strong>A new native rounding call fails a test.</strong> The helper only works if nobody goes around it. So a test scans the code and fails on any new call to the built-in rounding functions.</li>
+      <li data-i18n="guard-li3"><strong>A new deprecated call fails a test.</strong> The same idea for the calls PHP 8.5 marks as deprecated, so the next upgrade does not start with a backlog.</li>
+    </ul>
+    <p data-i18n="guards-p1">The library updates followed one method: tests first on the old version, one library at a time, the full suite after each. The dependency audit listed 34 security advisories before and one after, low in severity and tracked in its own ticket.</p>
+
+    <h2 data-i18n="land-h2">One landing</h2>
+    <p data-i18n="land-p1">The work had grown into three stacked pull requests: rounding, runtime, libraries. They landed as one, so the main branch never ran a half-upgraded state. 448 files changed. The full backend suite passed on PHP 8.5: 20,895 tests, none failed.</p>
+    <p data-i18n="land-p2">An automated reviewer went over it in two passes, plus two review-only pull requests for the files its first review did not list. It found one thing, which was fixed. A colleague approved the merge.</p>
+    <p data-i18n="land-p3">Two changes users can see are written down in the pull request instead of discovered later. A spreadsheet import reads a time cell at exactly half a second one second lower. And a broken sign-in cookie is now rejected instead of causing a server error.</p>
+
+    <h2 data-i18n="caught-h2">The guard on merge day</h2>
+    <p data-i18n="caught-p1">The pull request was merged at 09:12. Shortly after, the main branch was red: the rounding test had found two new native calls. Two other pull requests had added them after this one's last CI run, and the branch rules did not require an up-to-date branch before a merge. So none of the three checks had seen the combination.</p>
+    <p data-i18n="caught-p2">The fix was two lines: both calls go through the helper. It was merged at 10:24. Without the test, those two places would have rounded differently from the rest of the product, quietly, by a cent.</p>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>A rule that is not checked is a wish.</strong> "Always use the helper" would not have survived a week. A test that fails did not survive the first hour.</li>
+      <li data-i18n="reflect-li2"><strong>Land big changes as one.</strong> Three stacked pull requests are easier to review. One landing keeps the main branch in a state that was actually tested.</li>
+      <li data-i18n="reflect-li3"><strong>Credit stays with the work.</strong> The commits of the colleague who started it keep their name. The agent did a lot of the volume; the decisions on rounding and on what users see were people's.</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag">PHP</span>
+      <span class="tag" data-i18n="tag-techdebt">Tech Debt</span>
+      <span class="tag" data-i18n="tag-testing">Testing</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': "Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte: Absicherungen, die eine Änderung an 448 Dateien sicher machen",
+    'hero-lede': "Eine Rundungsänderung, die Geld verschiebt, die Tests, die sie fernhalten, und der Test, der am Tag des Merges zwei neue Aufrufe fand.",
+    'meta-date': "November 2026 · Runtime-Upgrade",
+    "d-guards": "Drei Absicherungen",
+    "d-g1a": "206 Rundungsaufrufe",
+    "d-g1b": "hinter einem Helfer",
+    "d-g2a": "Neues natives Runden",
+    "d-g2b": "lässt einen Test scheitern",
+    "d-g3a": "Neuer veralteter Aufruf",
+    "d-g3b": "lässt einen Test scheitern",
+    "d-adv": "Sicherheitshinweise in den Bibliotheken",
+    "d-adv-before": "34 vorher",
+    "d-adv-after": "1 nachher, geringer Schweregrad, mit eigenem Ticket",
+    "diagram1-caption": "Die Balken der Sicherheitshinweise sind maßstabsgetreu.",
+    "why-h2": "Warum es jetzt sein musste",
+    "why-p1": "Der Sicherheits-Support für PHP 8.2 endet am 31. Dezember 2026, und das Produkt lief darauf. Also musste das Upgrade auf 8.5 vor dem Jahresende landen, und vor meinem letzten Tag. Ein Teammitglied hatte es begonnen: Dessen Upgrade-Commits und Rundungstests stecken im finalen Pull Request und tragen weiter dessen Namen. Ich habe die Arbeit zu einer Landung zusammengeführt und durch das Review gebracht.",
+    "trap-h2": "Die Falle: ein halber Cent",
+    "trap-p1": "Das meiste an so einem Upgrade ist Routine: neue Typen, entfernte Funktionen, aktualisierte Bibliotheken. Eine Änderung ist es nicht. Ab PHP 8.4 kann das Runden eines berechneten Werts, der auf einen halben Cent endet, nach unten statt nach oben gehen. 2,50 × 1,19 ergibt 2,975, und das wird jetzt zu 2,97 statt 2,98 gerundet.",
+    "trap-p2": "In einem ERP, das Rechnungen schreibt, ist das kein Detail. Die Entscheidung, getroffen mit den Verantwortlichen für das Produkt, war, die heutigen Ergebnisse exakt zu behalten.",
+    "guards-h2": "Drei Absicherungen",
+    "guard-li1": "<strong>Ein Helfer für alles Runden.</strong> Alle 206 Aufrufe zum Runden und Formatieren von Zahlen, in 101 Dateien, laufen jetzt über einen Helfer, der liefert, was PHP 8.2 geliefert hat. Keine Signatur hat sich geändert. Solange der Code noch auf 8.2 lief, verglich ein Test den Helfer auf 20.000 Werten mit den eingebauten Funktionen.",
+    "guard-li2": "<strong>Ein neuer nativer Rundungsaufruf lässt einen Test scheitern.</strong> Der Helfer wirkt nur, wenn niemand an ihm vorbeigeht. Also durchsucht ein Test den Code und schlägt bei jedem neuen Aufruf der eingebauten Rundungsfunktionen fehl.",
+    "guard-li3": "<strong>Ein neuer veralteter Aufruf lässt einen Test scheitern.</strong> Dieselbe Idee für die Aufrufe, die PHP 8.5 als veraltet markiert, damit das nächste Upgrade nicht mit einem Rückstand beginnt.",
+    "guards-p1": "Die Bibliotheks-Updates folgten einer Methode: zuerst Tests auf der alten Version, eine Bibliothek nach der anderen, nach jeder die ganze Suite. Die Abhängigkeitsprüfung zeigte vorher 34 Sicherheitshinweise und nachher einen, mit geringem Schweregrad und in einem eigenen Ticket verfolgt.",
+    "land-h2": "Eine Landung",
+    "land-p1": "Die Arbeit war zu drei gestapelten Pull Requests gewachsen: Rundung, Runtime, Bibliotheken. Sie landeten als einer, damit der Main-Branch nie einen halb aktualisierten Stand hatte. 448 Dateien geändert. Die ganze Backend-Suite lief auf PHP 8.5 grün: 20.895 Tests, keiner fehlgeschlagen.",
+    "land-p2": "Ein automatischer Reviewer ging ihn in zwei Durchläufen durch, dazu zwei reine Review-Pull-Requests für die Dateien, die sein erstes Review nicht aufgelistet hatte. Er fand eine Sache, die behoben wurde. Ein Teammitglied hat den Merge freigegeben.",
+    "land-p3": "Zwei Änderungen, die Benutzer sehen können, stehen im Pull Request, statt später entdeckt zu werden. Ein Tabellenimport liest eine Zeitzelle bei genau einer halben Sekunde eine Sekunde niedriger. Und ein kaputtes Anmelde-Cookie wird jetzt abgelehnt, statt einen Serverfehler auszulösen.",
+    "caught-h2": "Die Absicherung am Tag des Merges",
+    "caught-p1": "Der Pull Request wurde um 09:12 gemergt. Kurz danach war der Main-Branch rot: Der Rundungstest hatte zwei neue native Aufrufe gefunden. Zwei andere Pull Requests hatten sie nach dem letzten CI-Lauf dieses einen hinzugefügt, und die Branch-Regeln verlangten keinen aktuellen Branch vor einem Merge. Also hatte keiner der drei Checks die Kombination gesehen.",
+    "caught-p2": "Der Fix war zwei Zeilen lang: Beide Aufrufe laufen über den Helfer. Er wurde um 10:24 gemergt. Ohne den Test hätten diese zwei Stellen anders gerundet als der Rest des Produkts, still, um einen Cent.",
+    "reflect-h2": "Was ich daraus mitnehme",
+    "reflect-li1": "<strong>Eine Regel, die nicht geprüft wird, ist ein Wunsch.</strong> „Immer den Helfer verwenden“ hätte keine Woche überlebt. Ein Test, der fehlschlägt, hat die erste Stunde nicht überlebt.",
+    "reflect-li2": "<strong>Große Änderungen als eine landen.</strong> Drei gestapelte Pull Requests lassen sich leichter reviewen. Eine Landung hält den Main-Branch in einem Zustand, der wirklich getestet wurde.",
+    "reflect-li3": "<strong>Die Anerkennung bleibt bei der Arbeit.</strong> Die Commits des Teammitglieds, das es begonnen hat, tragen dessen Namen. Der Agent hat viel von der Menge erledigt; die Entscheidungen über die Rundung und über das, was Benutzer sehen, trafen Menschen.",
+    "tag-techdebt": "Technische Schulden",
+    "tag-testing": "Testen",
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: "Upgrading a twenty-year-old product from PHP 8.2 to 8.5: a rounding change that moves money, the guards that keep it out, and the guard that caught two new calls on merge day.",
+    de: "Ein zwanzig Jahre altes Produkt von PHP 8.2 auf 8.5 heben: eine Rundungsänderung, die Geld verschiebt, die Absicherungen dagegen, und die Absicherung, die am Tag des Merges zwei neue Aufrufe fand."
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
