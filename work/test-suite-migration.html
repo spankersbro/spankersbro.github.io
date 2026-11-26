@@ -190,6 +190,33 @@
     <p data-i18n="why-p1">The product's PHP test suite was split across roughly two dozen modules — finance, framework, sync, staff, project management, file storage, and more — and every one of them carried a bespoke dual-runner setup: a "Live" test class and a separate non-live test class per feature, each inheriting from one of two custom base classes that existed purely to work around that split. It ran, and it mostly passed, but it was two parallel test formats doing the same job, and nobody had ever run a module's Live and non-Live suites in the same process to see what happened.</p>
     <p data-i18n="why-p2">The plan was to migrate everything to Pest 3 — one test format, one bootstrap, no more artificial live/unit split. What actually happened split into three phases, and each one mattered more than the last.</p>
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The five phases of the migration, from one test format to the merge on 21 September.">
+        <line x1="18" y1="18" x2="18" y2="268" stroke="var(--line)" stroke-width="2"/>
+        <circle cx="18" cy="18" r="14" fill="var(--chip)" stroke="var(--accent)"/>
+        <text x="18" y="23" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">1</text>
+        <text x="46" y="23" font-size="14" font-weight="700" fill="var(--ink)" data-i18n="ph-t0">One test format, not two</text>
+        <text x="46" y="43" font-size="12.5" fill="var(--sub)" data-i18n="ph-l0">Paired live and unit classes merged; bugs that isolation hid surfaced</text>
+        <circle cx="18" cy="76" r="14" fill="var(--chip)" stroke="var(--accent)"/>
+        <text x="18" y="81" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">2</text>
+        <text x="46" y="81" font-size="14" font-weight="700" fill="var(--ink)" data-i18n="ph-t1">Hardened</text>
+        <text x="46" y="101" font-size="12.5" fill="var(--sub)" data-i18n="ph-l1">A transaction per test; the suite becomes a required CI gate</text>
+        <circle cx="18" cy="134" r="14" fill="var(--chip)" stroke="var(--accent)"/>
+        <text x="18" y="139" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">3</text>
+        <text x="46" y="139" font-size="14" font-weight="700" fill="var(--ink)" data-i18n="ph-t2">The fix had its own bug</text>
+        <text x="46" y="159" font-size="12.5" fill="var(--sub)" data-i18n="ph-l2">An extension on the wrong event never ran; five parallel workers</text>
+        <circle cx="18" cy="192" r="14" fill="var(--chip)" stroke="var(--accent)"/>
+        <text x="18" y="197" font-size="13" font-weight="700" fill="var(--chip-ink)" text-anchor="middle">4</text>
+        <text x="46" y="197" font-size="14" font-weight="700" fill="var(--ink)" data-i18n="ph-t3">Outgrew the plan</text>
+        <text x="46" y="217" font-size="12.5" fill="var(--sub)" data-i18n="ph-l3">2,071 files; 16,136 tests in 29 suites; five tries at the CI layout</text>
+        <circle cx="18" cy="250" r="14" fill="var(--accent)" stroke="var(--accent)"/>
+        <text x="18" y="255" font-size="13" font-weight="700" fill="var(--accent-ink)" text-anchor="middle">5</text>
+        <text x="46" y="255" font-size="14" font-weight="700" fill="var(--ink)" data-i18n="ph-t4">Merged on 21 September</text>
+        <text x="46" y="275" font-size="12.5" fill="var(--sub)" data-i18n="ph-l4">16,000+ tests on five workers in about 70 s; a warning fails the run</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="ph-caption">The five phases, each with what it changed.</p>
+    </div>
+
     <h3 data-i18n="p1-h3">Phase one: one test format, not two</h3>
     <p data-i18n="p1-p1">Every module's paired Live and non-Live test classes were merged into single Pest-style files, batch by batch, retiring both custom base classes entirely. This was mechanical work at real scale — the line count actually went <em>down</em> once duplicate Live variants were folded together, and it accounts for the large majority of the diff across both phases.</p>
     <p data-i18n="p1-p2">But the mechanical merge is exactly what exposed what running tests in isolation had been hiding. Nearly every module gave up at least one previously-invisible bug the moment its tests stopped running in separate, isolated processes: a field-cache poisoning issue in a core data class that crossed module boundaries, a mock/real class collision in the holiday-calendar code, another one in the notification-message class, and a third affecting an application-level class that had been silently affecting dozens of test files without ever failing a single one. None of these were things you'd find reading the code — they only existed as an interaction between tests that had never been allowed to run next to each other before.</p>
@@ -334,6 +361,17 @@
   });
 
   I18N.de = {
+    "ph-t0": "Ein Testformat statt zwei",
+    "ph-l0": "Gepaarte Live- und Unit-Klassen zusammengeführt; versteckte Bugs tauchten auf",
+    "ph-t1": "Gehärtet",
+    "ph-l1": "Eine Transaktion pro Test; die Suite wird zum Pflicht-Gate in der CI",
+    "ph-t2": "Der Fix hatte selbst einen Bug",
+    "ph-l2": "Eine Erweiterung am falschen Event lief nie; fünf parallele Worker",
+    "ph-t3": "Über den Plan hinausgewachsen",
+    "ph-l3": "2.071 Dateien; 16.136 Tests in 29 Suiten; fünf Anläufe für das CI-Layout",
+    "ph-t4": "Am 21. September gemergt",
+    "ph-l4": "Über 16.000 Tests auf fünf Workern in etwa 70 s; eine Warnung lässt den Lauf scheitern",
+    "ph-caption": "Die fünf Phasen, jede mit dem, was sie verändert hat.",
     'nav-home': '← Startseite',
     'nav-work': 'Alle Featured Work',
     'hero-kicker': 'Featured Work',

@@ -170,6 +170,36 @@
     <h2 data-i18n="why-h2">Why this exists</h2>
     <p data-i18n="why-p">This is a workflow I used recently to ship a real production feature — new alphanumeric client/project number support, including several downstream effects on invoicing and reporting that nobody had scoped up front — end to end with Claude Code doing most of the implementation. None of what follows is exotic. It's the same discipline you'd want from a good human team: scope before you build, separate the person writing the code from the person checking it, and verify claims instead of trusting them. The difference with AI agents is that you can run implementer, reviewer, and tester as genuinely separate, cheap, parallel roles instead of hoping one person wears all three hats carefully.</p>
 
+    <div class="diagram">
+      <svg viewBox="0 0 640 348" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The twelve lessons in four groups: before code, while building, proving it, and catching the rest.">
+        <rect x="0" y="0" width="312" height="166" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <rect x="0" y="0" width="6" height="166" rx="3" fill="var(--accent)"/>
+        <text x="20" y="28" font-size="13.5" font-weight="700" fill="var(--chip-ink)" data-i18n="map-t1">Before code</text>
+        <text x="20" y="54" font-size="12.5" fill="var(--ink)" data-i18n="map-a1">1   Scope the ticket first</text>
+        <text x="20" y="78" font-size="12.5" fill="var(--ink)" data-i18n="map-a2">2   Split by risk, not by file type</text>
+        <rect x="328" y="0" width="312" height="166" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <rect x="328" y="0" width="6" height="166" rx="3" fill="var(--accent)"/>
+        <text x="348" y="28" font-size="13.5" font-weight="700" fill="var(--chip-ink)" data-i18n="map-t2">While building</text>
+        <text x="348" y="54" font-size="12.5" fill="var(--ink)" data-i18n="map-b1">3   Implementer → reviewer → tester</text>
+        <text x="348" y="78" font-size="12.5" fill="var(--ink)" data-i18n="map-b2">7   Plain questions, evidence attached</text>
+        <rect x="0" y="182" width="312" height="166" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <rect x="0" y="182" width="6" height="166" rx="3" fill="var(--accent)"/>
+        <text x="20" y="210" font-size="13.5" font-weight="700" fill="var(--chip-ink)" data-i18n="map-t3">Proving it</text>
+        <text x="20" y="236" font-size="12.5" fill="var(--ink)" data-i18n="map-c1">4   “No change for others” is testable</text>
+        <text x="20" y="260" font-size="12.5" fill="var(--ink)" data-i18n="map-c2">5   Browser-verify before “done”</text>
+        <text x="20" y="284" font-size="12.5" fill="var(--ink)" data-i18n="map-c3">8   “Green” is one log, not a fact</text>
+        <text x="20" y="308" font-size="12.5" fill="var(--ink)" data-i18n="map-c4">9   Match the tool to the claim</text>
+        <text x="20" y="332" font-size="12.5" fill="var(--ink)" data-i18n="map-c5">10  Test hypotheses live</text>
+        <rect x="328" y="182" width="312" height="166" rx="12" fill="var(--chip)" stroke="var(--line)"/>
+        <rect x="328" y="182" width="6" height="166" rx="3" fill="var(--accent)"/>
+        <text x="348" y="210" font-size="13.5" font-weight="700" fill="var(--chip-ink)" data-i18n="map-t4">Catching the rest</text>
+        <text x="348" y="236" font-size="12.5" fill="var(--ink)" data-i18n="map-d1">6   Ask “does that actually work?”</text>
+        <text x="348" y="260" font-size="12.5" fill="var(--ink)" data-i18n="map-d2">11  A second, independent reviewer</text>
+        <text x="348" y="284" font-size="12.5" fill="var(--ink)" data-i18n="map-d3">12  CI failures: read the evidence</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="map-caption">The twelve lessons below, grouped by when they apply.</p>
+    </div>
+
     <h3 data-i18n="s1-h3">1. Don't start coding until the ticket is actually scoped</h3>
     <p data-i18n="s1-p1">The feature arrived as a vague ask. Before writing anything, I pushed back in writing until the real blockers surfaced — payment-reference formats that assumed the old numbering scheme, project-number generation logic that assumed it too, a legacy UI layer nobody had mentioned. Every open question became an explicit, numbered decision, and I got an actual sign-off on all of them before implementation started. It took real back-and-forth, but it meant the build phase had almost no "wait, what did we actually mean by X" moments.</p>
     <p data-i18n="s1-p2">The fastest implementation is the one that never has to backtrack. Spend the first chunk of time turning a vague ask into a checklist someone with authority has actually approved.</p>
@@ -283,6 +313,23 @@
   });
 
   I18N.de = {
+    "map-t1": "Vor dem Code",
+    "map-a1": "1   Erst das Ticket klären",
+    "map-a2": "2   Nach Risiko teilen, nicht nach Dateityp",
+    "map-t2": "Beim Bauen",
+    "map-b1": "3   Implementierer → Reviewer → Tester",
+    "map-b2": "7   Einfache Fragen, mit Belegen",
+    "map-t3": "Beweisen",
+    "map-c1": "4   „Keine Änderung für andere“ ist testbar",
+    "map-c2": "5   Im Browser prüfen, dann „fertig“",
+    "map-c3": "8   „Grün“ ist ein Log, keine Tatsache",
+    "map-c4": "9   Das Werkzeug passt zur Behauptung",
+    "map-c5": "10  Hypothesen live testen",
+    "map-t4": "Den Rest finden",
+    "map-d1": "6   Fragen: „Funktioniert das wirklich?“",
+    "map-d2": "11  Ein zweiter, unabhängiger Reviewer",
+    "map-d3": "12  CI-Fehler: die Belege lesen",
+    "map-caption": "Die zwölf Lektionen unten, gruppiert danach, wann sie gelten.",
     'nav-home': '← Startseite',
     'nav-strategies': 'Alle Strategies',
     'hero-kicker': 'Agentic Strategies',
