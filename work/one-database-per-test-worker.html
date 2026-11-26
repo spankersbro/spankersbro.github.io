@@ -172,7 +172,7 @@
     </div>
 
     <h2 data-i18n="why-h2">Why shared test data was the problem</h2>
-    <p data-i18n="why-p1">Our end-to-end tests drive a real browser through the product, and all of them used one database. So every spec had to protect itself and the others: clean up after itself, restore what it changed, give records unique names, avoid the seed data other specs relied on, sometimes create its own users. That code was a large part of the specs, and a common source of flaky tests: when it missed something, a later test failed for no reason of its own.</p>
+    <p data-i18n="why-p1">Our end-to-end tests drive a real browser through the product, and all of them used one database. So every spec had to protect itself and the others: clean up after itself, restore what it changed, give records unique names, avoid the seed data other specs relied on, sometimes create its own users. When that code missed something, a later test failed for no reason of its own.</p>
     <p data-i18n="why-p2">It also kept the suite from running fully in parallel: the tests in one file had to run one after another. This was the last step of a month spent on the suite's reliability; the story of that month is in <a href="e2e-reliability.html">The Agent Wrote Flaky Tests Too</a>.</p>
 
     <h2 data-i18n="how-h2">How it works</h2>
@@ -187,7 +187,7 @@
     <p data-i18n="gone-p2">To keep it that way, the instructions for the automated code reviewer now check new specs against the new rules: no cleanup code, state set up inside the test, no extra users unless a test needs other rights.</p>
 
     <h2 data-i18n="bugs-h2">Two real bugs found on the way</h2>
-    <p data-i18n="bugs-p1">Running every spec fully in parallel on a clean database showed problems that shared data had hidden. Each was fixed with a failing test first:</p>
+    <p data-i18n="bugs-p1">Four fixes came out of the work, each with a failing test first:</p>
     <ul>
       <li data-i18n="bugs-li1"><strong>Unsaved input could disappear.</strong> A layout read that arrived late rebuilt a dashboard grid and dropped what the user had typed. The same code is used on the project, person and company pages.</li>
       <li data-i18n="bugs-li2"><strong>A new list column stayed empty.</strong> After adding a column to a list, the list did not load its rows again, so the new column showed nothing until a reload.</li>
@@ -195,7 +195,7 @@
     </ul>
 
     <h2 data-i18n="proof-h2">The proof</h2>
-    <p data-i18n="proof-p1">After the final merge of the main branch, on the local CI stack with four workers: all 370 tests passed. Then the whole suite three times in a row: 1,110 of 1,110 passed, no flaky test, in 14.5 minutes. The backend suite passed too: 21,231 tests. The flaky tests that showed up during the work were fixed at their cause, in five specs.</p>
+    <p data-i18n="proof-p1">After the final merge of the main branch, on the local CI stack with four workers: all 370 tests passed. Then every test three times: 1,110 of 1,110 passed, no flaky test, in 14.5 minutes. The backend suite passed too: 21,231 tests. The flaky tests that showed up during the work were fixed at their cause, in five specs.</p>
 
     <h2 data-i18n="limit-h2">Known limits</h2>
     <ul>
@@ -207,7 +207,7 @@
     <h2 data-i18n="reflect-h2">What I take from it</h2>
     <ul>
       <li data-i18n="reflect-li1"><strong>Fix the setup, not each test.</strong> All that careful cleanup code went away with one change to how tests get their data.</li>
-      <li data-i18n="reflect-li2"><strong>Isolation finds bugs.</strong> Two of the problems it uncovered were real bugs for users, not test problems.</li>
+      <li data-i18n="reflect-li2"><strong>Test work finds product bugs.</strong> Two of the fixes were real bugs for users, not test problems.</li>
       <li data-i18n="reflect-li3"><strong>Write the limits down.</strong> The pull request lists what the reset does not cover, including one thing nobody could explain yet.</li>
     </ul>
 
@@ -289,29 +289,29 @@
     "d-time": "Im Schnitt 26 bis 44 ms pro Test, vor jedem Test, in jedem Worker",
     "diagram1-caption": "Das Zurücksetzen, das vor jedem End-to-End-Test läuft.",
     "why-h2": "Warum geteilte Testdaten das Problem waren",
-    "why-p1": "Unsere End-to-End-Tests steuern einen echten Browser durch das Produkt, und alle nutzten eine Datenbank. Also musste jede Spec sich selbst und die anderen schützen: hinter sich aufräumen, wiederherstellen, was sie geändert hat, Datensätzen eindeutige Namen geben, die Seed-Daten meiden, auf die andere Specs sich verließen, manchmal eigene Benutzer anlegen. Dieser Code war ein großer Teil der Specs und eine häufige Quelle flaky Tests: Wenn er etwas übersah, schlug ein späterer Test ohne eigene Schuld fehl.",
+    "why-p1": "Unsere End-to-End-Tests steuern einen echten Browser durch das Produkt, und alle nutzten eine Datenbank. Also musste jede Spec sich selbst und die anderen schützen: hinter sich aufräumen, wiederherstellen, was sie geändert hat, Datensätzen eindeutige Namen geben, die Seed-Daten meiden, auf die andere Specs sich verließen, manchmal eigene Benutzer anlegen. Wenn dieser Code etwas übersah, schlug ein späterer Test ohne eigene Schuld fehl.",
     "why-p2": "Er verhinderte auch, dass die Suite voll parallel lief: Die Tests einer Datei mussten nacheinander laufen. Das war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt; die Geschichte dieses Monats steht in <a href=\"e2e-reliability.html\">Auch der Agent schrieb flaky Tests</a>.",
     "how-h2": "Wie es funktioniert",
     "how-li1": "<strong>Eine Datenbank pro Worker.</strong> Jeder Test-Worker bekommt eine eigene Kopie der Seed-Daten. Ein Cookie schickt die Anfragen des Workers an seine eigenen Anwendungsprozesse, also sieht ein Worker nie die Daten eines anderen. Ohne das Cookie verhält sich die Anwendung wie bisher.",
     "how-li2": "<strong>Vor jedem Test zurückgesetzt, in Millisekunden.</strong> Vor jedem Test eine ganze Datenbank zu kopieren wäre viel zu langsam. Also merken sich Datenbank-Trigger, welche Tabellen ein Test geschrieben hat, und das Zurücksetzen kopiert nur diese zurück. Im Schnitt dauerte das 26 bis 44 ms pro Test.",
     "how-li3": "<strong>Überall gleich.</strong> Ein Skript legt die Datenbanken an, auf dieselbe Weise in der CI und im Entwicklungscontainer. Die eigene Datenbank eines Entwicklers wird nie angefasst.",
     "gone-h2": "Was die Specs nicht mehr brauchen",
-    "gone-p1": "Mit einer sauberen Datenbank vor jedem Test hatte der Isolationscode keine Aufgabe mehr. Die Specs verloren ihr Aufräumen, ihre Wiederherstellungen, ihre eindeutigen Namen, ihre Regeln zu den Seed-Daten und die meisten eigenen Benutzer. Volle Parallelläufe sind an. 21 alte Tests, die andere Testschichten schon abdeckten, wurden entfernt. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.",
+    "gone-p1": "Mit einer sauberen Datenbank vor jedem Test hatte der Isolationscode keine Aufgabe mehr. Die Specs verloren ihr Aufräumen, ihre Wiederherstellungen, ihre eindeutigen Namen, ihre Regeln zu den Seed-Daten und die meisten eigenen Benutzer. Volle Parallelläufe sind jetzt aktiviert. 21 alte Tests, die andere Testschichten schon abdeckten, wurden entfernt. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.",
     "gone-p2": "Damit es so bleibt, prüfen die Anweisungen für den automatischen Code-Reviewer neue Specs jetzt gegen die neuen Regeln: kein Aufräumcode, Zustand im Test selbst aufgebaut, keine zusätzlichen Benutzer, außer ein Test braucht andere Rechte.",
     "bugs-h2": "Zwei echte Bugs, unterwegs gefunden",
-    "bugs-p1": "Jede Spec voll parallel auf einer sauberen Datenbank laufen zu lassen, zeigte Probleme, die geteilte Daten verdeckt hatten. Jedes wurde mit einem zuerst fehlschlagenden Test behoben:",
+    "bugs-p1": "Vier Fixes entstanden bei der Arbeit, jeder mit einem zuerst fehlschlagenden Test:",
     "bugs-li1": "<strong>Nicht gespeicherte Eingaben konnten verschwinden.</strong> Ein verspätet eintreffender Layout-Abruf baute ein Dashboard-Raster neu auf und verwarf, was der Benutzer getippt hatte. Derselbe Code wird auf den Projekt-, Personen- und Firmenseiten verwendet.",
     "bugs-li2": "<strong>Eine neue Listenspalte blieb leer.</strong> Nachdem eine Spalte zu einer Liste hinzugefügt wurde, lud die Liste ihre Zeilen nicht neu, also zeigte die neue Spalte bis zum Neuladen nichts.",
     "bugs-li3": "<strong>Zwei kleinere.</strong> Eine Tabelle wurde mit einer Anweisung geleert, die still jede offene Transaktion committete. Und in der Entwicklung ließ eine fehlende Klasse den Loader bei jeder Anfrage 3.845 Dateien neu durchsuchen.",
     "proof-h2": "Der Nachweis",
-    "proof-p1": "Nach dem letzten Merge des Main-Branches, auf dem lokalen CI-Stack mit vier Workern: alle 370 Tests grün. Dann die ganze Suite dreimal hintereinander: 1.110 von 1.110 bestanden, kein flaky Test, in 14,5 Minuten. Auch die Backend-Suite lief grün: 21.231 Tests. Die flaky Tests, die während der Arbeit auftauchten, wurden an ihrer Ursache behoben, in fünf Specs.",
+    "proof-p1": "Nach dem letzten Merge des Main-Branches, auf dem lokalen CI-Stack mit vier Workern: alle 370 Tests grün. Dann jeder Test dreimal: 1.110 von 1.110 bestanden, kein flaky Test, in 14,5 Minuten. Auch die Backend-Suite lief grün: 21.231 Tests. Die flaky Tests, die während der Arbeit auftauchten, wurden an ihrer Ursache behoben, in fünf Specs.",
     "limit-h2": "Bekannte Grenzen",
     "limit-li1": "Eine Anfrage, die der vorige Test noch laufen ließ, kann nach dem Zurücksetzen noch schreiben.",
     "limit-li2": "Dateien im Speicher teilen sich alle Worker, und Datensatzzähler werden nicht zurückgesetzt.",
     "limit-li3": "Eine Listeneinstellung, die pro Browser-Tab gespeichert wird, überstand das Zurücksetzen. Drei Specs umgehen das mit einem eigenen Tab. Die Ursache wurde nicht gefunden.",
     "reflect-h2": "Was ich daraus mitnehme",
     "reflect-li1": "<strong>Den Aufbau reparieren, nicht jeden Test.</strong> All der sorgfältige Aufräumcode verschwand mit einer Änderung daran, wie Tests zu ihren Daten kommen.",
-    "reflect-li2": "<strong>Isolation findet Bugs.</strong> Zwei der Probleme, die sie aufdeckte, waren echte Bugs für Benutzer, keine Testprobleme.",
+    "reflect-li2": "<strong>Testarbeit findet Produktfehler.</strong> Zwei der Fixes waren echte Bugs für Benutzer, keine Testprobleme.",
     "reflect-li3": "<strong>Die Grenzen aufschreiben.</strong> Der Pull Request listet, was das Zurücksetzen nicht abdeckt, einschließlich einer Sache, die noch niemand erklären konnte.",
     "tag-testinfra": "Test-Infrastruktur",
     'footer-copy': '&copy; 2026 David Irving.',

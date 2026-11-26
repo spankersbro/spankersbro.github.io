@@ -150,7 +150,7 @@
     <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
     <h1 data-i18n="hero-h1">The Agent Wrote Flaky Tests Too: Turning Its Mistakes into Rules</h1>
     <p class="lede" data-i18n="hero-lede">Two weeks of end-to-end test work with an AI agent. It did the volume. It also made mistakes, and most kinds of mistake became a rule that the next test had to pass.</p>
-    <p class="meta-row" data-i18n="meta-date">4 – 17 November 2026 · End-to-end tests, an AI agent and the rules between them</p>
+    <p class="meta-row" data-i18n="meta-date">4 – 17 November 2026, numbers to 26 November · End-to-end tests, an AI agent and the rules between them</p>
   </section>
 
   <article class="article">
@@ -185,7 +185,7 @@
     </div>
 
     <h2 data-i18n="start-h2">Where it started</h2>
-    <p data-i18n="start-p1">The end-to-end tests drive a real browser through a twenty-year-old product. Between 1 October and 3 November, 61 of 131 runs on the main branch had a flaky test: one that failed and then passed on its retry. The retry made the run green anyway.</p>
+    <p data-i18n="start-p1">The end-to-end tests drive a real browser through a twenty-year-old product. Between 1 October and 3 November, 61 of the 131 runs on the main branch with a test report had a flaky test: one that failed and then passed on its retry. The retry made the run green anyway.</p>
     <p data-i18n="start-p2">The suite was also slow, and the first thing to settle was why. A plan to split the slowest test files ended early: from CI data, the agent showed that a perfect split would save under a minute. Later measurements showed the real cause. The same 395 tests took 9.5 minutes on a quiet CI runner and 27.5 on a busy one. The same build took 4.6 minutes on my machine and 18.5 in CI. Most of the slowness was runner load, not the tests.</p>
     <p data-i18n="start-p3">So the goal became two things: every check in the right test layer, and a suite whose green means something.</p>
 
@@ -284,10 +284,10 @@
         <rect x="70" y="251" width="38" height="20" rx="5" fill="var(--accent)"/>
         <text x="116" y="266" font-size="12.5" font-weight="700" fill="var(--ink)">1 %</text>
       </svg>
-      <p class="diagram-caption" data-i18n="diagram3-caption">All runs on the main branch: 131 between 1 October and 3 November, 102 between 18 and 26 November. Each pair is to scale. In that time the suite grew from about 155 to 374 tests per run.</p>
+      <p class="diagram-caption" data-i18n="diagram3-caption">All runs on the main branch with a test report: 131 between 1 October and 3 November, 102 between 18 and 26 November. Each pair is to scale. In that time the suite grew from about 155 to 374 tests per run.</p>
     </div>
-    <p data-i18n="num-p1">The first numbers came from one day and looked better than the whole period does. On 17 November, 10 % of runs had a flaky test. Over the nine days that followed it was 27 %: 0.5 flaky results per 1,000 in the first five days, 1.3 in the last four. Measured per test, flaky results still fell by about three quarters, while the suite more than doubled. Hard failures almost disappeared, and the median number of skipped tests per run went from 18 to 0.</p>
-    <p data-i18n="num-p2">My target was a suite under five minutes. It was not reached. Over the last nine days the median run took 9.1 minutes, for more than twice as many tests as in October. Fixed waits in the suite went from 15 to 4, and the component tests from none to 386.</p>
+    <p data-i18n="num-p1">Over the nine days after the work, 27 % of runs still had a flaky test: 0.5 flaky results per 1,000 in the first five days, 1.3 in the last four. Measured per test, flaky results fell by about three quarters while the suite more than doubled. Runs with a hard failure went from 13 % to 1 %. But 28 % of runs still went red, almost all of them because a flaky test now fails the run instead of hiding behind a retry. The median number of skipped tests per run went from 18 to 0.</p>
+    <p data-i18n="num-p2">My target was a suite under five minutes. In October the median run took about 4.9 minutes, for about 155 tests. Over the last nine days it took about 9 minutes, for 374. Each test runs faster than before, but the whole suite does not fit the target. Fixed waits in the suite went from 15 to 4, and the component tests from none to 386.</p>
 
     <div class="diagram">
       <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Test layers: about 100 tests left the browser suite, 81 to component tests and 6 to backend tests; 59 pixel, CSS and screenshot checks were removed and QA checks the design">
@@ -395,7 +395,7 @@
     'hero-kicker': 'Featured Work',
     'hero-h1': 'Auch der Agent schrieb flaky Tests: wie seine Fehler zu Regeln wurden',
     'hero-lede': 'Zwei Wochen Arbeit an End-to-End-Tests mit einem KI-Agenten. Er lieferte die Menge. Er machte auch Fehler, und die meisten Arten von Fehlern wurden zu einer Regel, die der nächste Test erfüllen musste.',
-    'meta-date': '4. – 17. November 2026 · End-to-End-Tests, ein KI-Agent und die Regeln dazwischen',
+    'meta-date': '4. – 17. November 2026, Zahlen bis 26. November · End-to-End-Tests, ein KI-Agent und die Regeln dazwischen',
     'l1a': 'Der Agent schreibt',
     'l1b': 'oder verschiebt Tests',
     'l1c': 'schnell, in Menge',
@@ -408,7 +408,7 @@
     'l4': 'der nächste Test muss die Regel erfüllen',
     'diagram1-caption': 'Die Schleife, die die Arbeit gemacht hat. Der Agent lieferte die Menge, die Regeln hielten sein Ergebnis ehrlich.',
     'start-h2': 'Der Ausgangspunkt',
-    'start-p1': 'Die End-to-End-Tests steuern einen echten Browser durch ein zwanzig Jahre altes Produkt. Zwischen 1. Oktober und 3. November hatten 61 von 131 Läufen auf dem Main-Branch einen flaky Test: einen, der fehlschlug und beim zweiten Versuch bestand. Der zweite Versuch machte den Lauf trotzdem grün.',
+    'start-p1': 'Die End-to-End-Tests steuern einen echten Browser durch ein zwanzig Jahre altes Produkt. Zwischen dem 1. Oktober und dem 3. November hatten 61 der 131 Läufe auf dem Main-Branch mit Testbericht einen flaky Test: einen, der fehlschlug und beim zweiten Versuch bestand. Der zweite Versuch machte den Lauf trotzdem grün.',
     'start-p2': 'Die Suite war auch langsam, und als Erstes war zu klären, warum. Ein Plan, die langsamsten Testdateien aufzuteilen, endete früh: Aus CI-Daten zeigte der Agent, dass eine perfekte Aufteilung weniger als eine Minute spart. Spätere Messungen zeigten die eigentliche Ursache. Dieselben 395 Tests brauchten 9,5 Minuten auf einem ruhigen CI-Runner und 27,5 auf einem ausgelasteten. Derselbe Build brauchte 4,6 Minuten auf meinem Rechner und 18,5 in der CI. Der Großteil der Langsamkeit war Runner-Last, nicht die Tests.',
     'start-p3': 'Das Ziel wurde also zweierlei: jede Prüfung in der richtigen Testschicht, und eine Suite, deren Grün etwas bedeutet.',
     'split-h2': 'Wer was gemacht hat',
@@ -473,9 +473,9 @@
     'c2b': '3,9',
     'c2a': '0,9',
     'c3': 'Läufe mit einem harten Fehler',
-    'diagram3-caption': 'Alle Läufe auf dem Main-Branch: 131 zwischen 1. Oktober und 3. November, 102 zwischen 18. und 26. November. Jedes Paar ist maßstabsgetreu. In dieser Zeit wuchs die Suite von etwa 155 auf 374 Tests pro Lauf.',
-    'num-p2': 'Mein Ziel war eine Suite unter fünf Minuten. Es wurde nicht erreicht. In den letzten neun Tagen dauerte der Median-Lauf 9,1 Minuten, für mehr als doppelt so viele Tests wie im Oktober. Feste Wartezeiten in der Suite gingen von 15 auf 4 zurück, und die Komponententests stiegen von null auf 386.',
-    'num-p1': 'Die ersten Zahlen stammten aus einem Tag und sahen besser aus als der ganze Zeitraum. Am 17. November hatten 10 % der Läufe einen flaky Test. Über die neun Tage danach waren es 27 %: 0,5 flaky Ergebnisse pro 1.000 in den ersten fünf Tagen, 1,3 in den letzten vier. Pro Test gerechnet fielen die flaky Ergebnisse trotzdem um etwa drei Viertel, während sich die Suite mehr als verdoppelte. Harte Fehler sind fast verschwunden, und der Median übersprungener Tests pro Lauf ging von 18 auf 0.',
+    'diagram3-caption': 'Alle Läufe auf dem Main-Branch mit Testbericht: 131 zwischen dem 1. Oktober und dem 3. November, 102 zwischen dem 18. und dem 26. November. Jedes Paar ist maßstabsgetreu. In dieser Zeit wuchs die Suite von etwa 155 auf 374 Tests pro Lauf.',
+    'num-p2': 'Mein Ziel war eine Suite unter fünf Minuten. Im Oktober dauerte der Median-Lauf etwa 4,9 Minuten, für etwa 155 Tests. In den letzten neun Tagen dauerte er etwa 9 Minuten, für 374. Jeder Test läuft schneller als vorher, aber die ganze Suite erreicht das Ziel nicht. Feste Wartezeiten in der Suite gingen von 15 auf 4 zurück, und die Komponententests stiegen von null auf 386.',
+    'num-p1': 'In den neun Tagen nach der Arbeit hatten noch 27 % der Läufe einen flaky Test: 0,5 flaky Ergebnisse pro 1.000 in den ersten fünf Tagen, 1,3 in den letzten vier. Pro Test gerechnet fielen die flaky Ergebnisse um etwa drei Viertel, während sich die Suite mehr als verdoppelte. Läufe mit einem harten Fehler gingen von 13 % auf 1 % zurück. Trotzdem wurden 28 % der Läufe rot, fast alle, weil ein flaky Test den Lauf jetzt scheitern lässt, statt sich hinter einem zweiten Versuch zu verstecken. Der Median übersprungener Tests pro Lauf ging von 18 auf 0.',
     'ly1a': 'Browser-Tests (End-to-End)',
     'ly1b': 'Abläufe durch das echte Produkt',
     'ly2a': 'Komponententests',

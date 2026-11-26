@@ -179,7 +179,7 @@
 
     <h2 data-i18n="trap-h2">The trap: a half cent</h2>
     <p data-i18n="trap-p1">Most of an upgrade like this is routine: new types, removed functions, updated libraries. One change is not. From PHP 8.4, rounding a computed value that ends in a half cent can go down instead of up. 2.50 × 1.19 is 2.975, and that now rounds to 2.97 instead of 2.98.</p>
-    <p data-i18n="trap-p2">In an ERP that writes invoices, that is not a detail. The decision, made with the people responsible for the product, was to keep today's results exactly.</p>
+    <p data-i18n="trap-p2">In an ERP that writes invoices, that is not a detail. The decision, made on the product side, was to keep today's results exactly.</p>
 
     <h2 data-i18n="guards-h2">Three guards</h2>
     <ul>
@@ -195,8 +195,8 @@
     <p data-i18n="land-p3">Two changes users can see are written down in the pull request instead of discovered later. A spreadsheet import reads a time cell at exactly half a second one second lower. And a broken sign-in cookie is now rejected instead of causing a server error.</p>
 
     <h2 data-i18n="caught-h2">The guard on merge day</h2>
-    <p data-i18n="caught-p1">The pull request was merged at 09:12. Shortly after, the main branch was red: the rounding test had found two new native calls. Two other pull requests had added them after this one's last CI run, and the branch rules did not require an up-to-date branch before a merge. So none of the three checks had seen the combination.</p>
-    <p data-i18n="caught-p2">The fix was two lines: both calls go through the helper. It was merged at 10:24. Without the test, those two places would have rounded differently from the rest of the product, quietly, by a cent.</p>
+    <p data-i18n="caught-p1">Shortly after the merge, the main branch was red: the rounding test had found two new native calls. Two other pull requests had added them after this one's last CI run, and the branch rules did not require an up-to-date branch before a merge. So no CI run had seen the three changes together.</p>
+    <p data-i18n="caught-p2">The fix was two lines: both calls go through the helper. It was merged 72 minutes after the upgrade. Without the test, those two places could have rounded differently from the rest of the product, quietly, by a cent.</p>
 
     <h2 data-i18n="reflect-h2">What I take from it</h2>
     <ul>
@@ -286,25 +286,25 @@
     "d-adv-after": "1 nachher, geringer Schweregrad, mit eigenem Ticket",
     "diagram1-caption": "Die Balken der Sicherheitshinweise sind maßstabsgetreu.",
     "why-h2": "Warum es jetzt sein musste",
-    "why-p1": "Der Sicherheits-Support für PHP 8.2 endet am 31. Dezember 2026, und das Produkt lief darauf. Also musste das Upgrade auf 8.5 vor dem Jahresende landen, und vor meinem letzten Tag. Ein Teammitglied hatte es begonnen: Dessen Upgrade-Commits und Rundungstests stecken im finalen Pull Request und tragen weiter dessen Namen. Ich habe die Arbeit zu einer Landung zusammengeführt und durch das Review gebracht.",
+    "why-p1": "Der Sicherheits-Support für PHP 8.2 endet am 31. Dezember 2026, und das Produkt lief darauf. Also musste das Upgrade auf 8.5 vor dem Jahresende landen, und vor meinem letzten Tag. Ein Teammitglied hatte es begonnen: Dessen Upgrade-Commits und Rundungstests stecken im finalen Pull Request und tragen weiter dessen Namen. Ich habe die Arbeit in einem Merge zusammengeführt und durch das Review gebracht.",
     "trap-h2": "Die Falle: ein halber Cent",
     "trap-p1": "Das meiste an so einem Upgrade ist Routine: neue Typen, entfernte Funktionen, aktualisierte Bibliotheken. Eine Änderung ist es nicht. Ab PHP 8.4 kann das Runden eines berechneten Werts, der auf einen halben Cent endet, nach unten statt nach oben gehen. 2,50 × 1,19 ergibt 2,975, und das wird jetzt zu 2,97 statt 2,98 gerundet.",
-    "trap-p2": "In einem ERP, das Rechnungen schreibt, ist das kein Detail. Die Entscheidung, getroffen mit den Verantwortlichen für das Produkt, war, die heutigen Ergebnisse exakt zu behalten.",
+    "trap-p2": "In einem ERP, das Rechnungen schreibt, ist das kein Detail. Die Entscheidung, auf der Produktseite getroffen, war, die heutigen Ergebnisse exakt zu behalten.",
     "guards-h2": "Drei Absicherungen",
     "guard-li1": "<strong>Ein Helfer für alles Runden.</strong> Alle 206 Aufrufe zum Runden und Formatieren von Zahlen, in 101 Dateien, laufen jetzt über einen Helfer, der liefert, was PHP 8.2 geliefert hat. Keine Signatur hat sich geändert. Solange der Code noch auf 8.2 lief, verglich ein Test den Helfer auf 20.000 Werten mit den eingebauten Funktionen.",
     "guard-li2": "<strong>Ein neuer nativer Rundungsaufruf lässt einen Test scheitern.</strong> Der Helfer wirkt nur, wenn niemand an ihm vorbeigeht. Also durchsucht ein Test den Code und schlägt bei jedem neuen Aufruf der eingebauten Rundungsfunktionen fehl.",
     "guard-li3": "<strong>Ein neuer veralteter Aufruf lässt einen Test scheitern.</strong> Dieselbe Idee für die Aufrufe, die PHP 8.5 als veraltet markiert, damit das nächste Upgrade nicht mit einem Rückstand beginnt.",
     "guards-p1": "Die Bibliotheks-Updates folgten einer Methode: zuerst Tests auf der alten Version, eine Bibliothek nach der anderen, nach jeder die ganze Suite. Die Abhängigkeitsprüfung zeigte vorher 34 Sicherheitshinweise und nachher einen, mit geringem Schweregrad und in einem eigenen Ticket verfolgt.",
-    "land-h2": "Eine Landung",
-    "land-p1": "Die Arbeit war zu drei gestapelten Pull Requests gewachsen: Rundung, Runtime, Bibliotheken. Sie landeten als einer, damit der Main-Branch nie einen halb aktualisierten Stand hatte. 448 Dateien geändert. Die ganze Backend-Suite lief auf PHP 8.5 grün: 20.895 Tests, keiner fehlgeschlagen.",
+    "land-h2": "Ein gemeinsamer Merge",
+    "land-p1": "Die Arbeit war zu drei gestapelten Pull Requests gewachsen: Rundung, Runtime, Bibliotheken. Sie wurden in einem Merge zusammengeführt, damit der Main-Branch nie einen halb aktualisierten Stand hatte. 448 Dateien geändert. Die ganze Backend-Suite lief auf PHP 8.5 grün: 20.895 Tests, keiner fehlgeschlagen.",
     "land-p2": "Ein automatischer Reviewer ging ihn in zwei Durchläufen durch, dazu zwei reine Review-Pull-Requests für die Dateien, die sein erstes Review nicht aufgelistet hatte. Er fand eine Sache, die behoben wurde. Ein Teammitglied hat den Merge freigegeben.",
     "land-p3": "Zwei Änderungen, die Benutzer sehen können, stehen im Pull Request, statt später entdeckt zu werden. Ein Tabellenimport liest eine Zeitzelle bei genau einer halben Sekunde eine Sekunde niedriger. Und ein kaputtes Anmelde-Cookie wird jetzt abgelehnt, statt einen Serverfehler auszulösen.",
     "caught-h2": "Die Absicherung am Tag des Merges",
-    "caught-p1": "Der Pull Request wurde um 09:12 gemergt. Kurz danach war der Main-Branch rot: Der Rundungstest hatte zwei neue native Aufrufe gefunden. Zwei andere Pull Requests hatten sie nach dem letzten CI-Lauf dieses einen hinzugefügt, und die Branch-Regeln verlangten keinen aktuellen Branch vor einem Merge. Also hatte keiner der drei Checks die Kombination gesehen.",
-    "caught-p2": "Der Fix war zwei Zeilen lang: Beide Aufrufe laufen über den Helfer. Er wurde um 10:24 gemergt. Ohne den Test hätten diese zwei Stellen anders gerundet als der Rest des Produkts, still, um einen Cent.",
+    "caught-p1": "Kurz nach dem Merge war der Main-Branch rot: Der Rundungstest hatte zwei neue native Aufrufe gefunden. Zwei andere Pull Requests hatten sie nach dem letzten CI-Lauf dieses einen hinzugefügt, und die Branch-Regeln verlangten keinen aktuellen Branch vor einem Merge. Also hatte kein CI-Lauf die drei Änderungen zusammen gesehen.",
+    "caught-p2": "Der Fix war zwei Zeilen lang: Beide Aufrufe laufen über den Helfer. Er wurde 72 Minuten nach dem Upgrade gemergt. Ohne den Test hätten diese zwei Stellen anders runden können als der Rest des Produkts, unbemerkt, um einen Cent.",
     "reflect-h2": "Was ich daraus mitnehme",
     "reflect-li1": "<strong>Eine Regel, die nicht geprüft wird, ist ein Wunsch.</strong> „Immer den Helfer verwenden“ hätte keine Woche überlebt. Ein Test, der fehlschlägt, hat die erste Stunde nicht überlebt.",
-    "reflect-li2": "<strong>Große Änderungen als eine landen.</strong> Drei gestapelte Pull Requests lassen sich leichter reviewen. Eine Landung hält den Main-Branch in einem Zustand, der wirklich getestet wurde.",
+    "reflect-li2": "<strong>Große Änderungen in einem Merge zusammenführen.</strong> Drei gestapelte Pull Requests lassen sich leichter reviewen. Ein gemeinsamer Merge hält den Main-Branch in einem Zustand, der wirklich getestet wurde.",
     "reflect-li3": "<strong>Die Anerkennung bleibt bei der Arbeit.</strong> Die Commits des Teammitglieds, das es begonnen hat, tragen dessen Namen. Der Agent hat viel von der Menge erledigt; die Entscheidungen über die Rundung und über das, was Benutzer sehen, trafen Menschen.",
     "tag-techdebt": "Technische Schulden",
     "tag-testing": "Testen",
