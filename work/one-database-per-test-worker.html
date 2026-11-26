@@ -186,7 +186,7 @@
     <p data-i18n="gone-p1">With a clean database before every test, the isolation code had no job left. The specs lost their cleanup, their restores, their unique names, their rules about the seed data and most of their own users. Full parallel runs are on. 21 old tests that other test layers already covered were removed. The change removed more lines than it added: 4,887 in, 5,360 out.</p>
     <p data-i18n="gone-p2">To keep it that way, the instructions for the automated code reviewer now check new specs against the new rules: no cleanup code, state set up inside the test, no extra users unless a test needs other rights.</p>
 
-    <h2 data-i18n="bugs-h2">Two real bugs found on the way</h2>
+    <h2 data-i18n="bugs-h2">Four fixes, two of them real bugs</h2>
     <p data-i18n="bugs-p1">Four fixes came out of the work, each with a failing test first:</p>
     <ul>
       <li data-i18n="bugs-li1"><strong>Unsaved input could disappear.</strong> A layout read that arrived late rebuilt a dashboard grid and dropped what the user had typed. The same code is used on the project, person and company pages.</li>
@@ -298,7 +298,7 @@
     "gone-h2": "Was die Specs nicht mehr brauchen",
     "gone-p1": "Mit einer sauberen Datenbank vor jedem Test hatte der Isolationscode keine Aufgabe mehr. Die Specs verloren ihr Aufräumen, ihre Wiederherstellungen, ihre eindeutigen Namen, ihre Regeln zu den Seed-Daten und die meisten eigenen Benutzer. Volle Parallelläufe sind jetzt aktiviert. 21 alte Tests, die andere Testschichten schon abdeckten, wurden entfernt. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.",
     "gone-p2": "Damit es so bleibt, prüfen die Anweisungen für den automatischen Code-Reviewer neue Specs jetzt gegen die neuen Regeln: kein Aufräumcode, Zustand im Test selbst aufgebaut, keine zusätzlichen Benutzer, außer ein Test braucht andere Rechte.",
-    "bugs-h2": "Zwei echte Bugs, unterwegs gefunden",
+    "bugs-h2": "Vier Fixes, zwei davon echte Bugs",
     "bugs-p1": "Vier Fixes entstanden bei der Arbeit, jeder mit einem zuerst fehlschlagenden Test:",
     "bugs-li1": "<strong>Nicht gespeicherte Eingaben konnten verschwinden.</strong> Ein verspätet eintreffender Layout-Abruf baute ein Dashboard-Raster neu auf und verwarf, was der Benutzer getippt hatte. Derselbe Code wird auf den Projekt-, Personen- und Firmenseiten verwendet.",
     "bugs-li2": "<strong>Eine neue Listenspalte blieb leer.</strong> Nachdem eine Spalte zu einer Liste hinzugefügt wurde, lud die Liste ihre Zeilen nicht neu, also zeigte die neue Spalte bis zum Neuladen nichts.",
