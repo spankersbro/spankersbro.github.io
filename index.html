@@ -380,7 +380,7 @@
     <div class="card" id="ae8">
       <a class="card-anchor" href="#ae8" aria-label="Copy link to this entry" title="Copy link">🔗</a>
       <h3 data-i18n="ae8-h3">Deleting a workaround instead of patching it</h3>
-      <p data-i18n="ae8-p">A pin that tied each branch to a version of the tests broke the main branch three times. I hardened it once, then moved the tests into the application repository.</p>
+      <p data-i18n="ae8-p">A pin that tied each branch to a version of the tests broke the main branch three times in two days. I hardened it once, then moved the tests into the application repository.</p>
       <div class="tags"><span class="tag">Agentic Engineering</span><span class="tag" data-i18n="ae-tag-testinfra">Test Infrastructure</span></div>
       <a class="card-link" href="work/specs-into-the-app-repository.html" data-i18n="ae-link">Read the full writeup →</a>
     </div>
@@ -433,16 +433,16 @@
         <li><span data-i18n="feat23-step2"><strong>The specs lost their isolation code.</strong> No cleanup, no restores, no unique names, and full parallel runs are on. The change removed more lines than it added: 4,887 in, 5,360 out.</span></li>
         <li><span data-i18n="feat23-step3"><strong>Review knows the new rules.</strong> The code-review instructions check new specs against one database per worker, so the old patterns do not come back.</span></li>
       </ol>
-      <p data-i18n="feat23-p2">It was the last step of a month spent on the suite's reliability. The writeup tells the whole story, including the flaky tests the agent wrote itself.</p>
+      <p data-i18n="feat23-p2">It was the last step of a month spent on the suite's reliability.</p>
       <div class="tags"><span class="tag" data-i18n="feat23-tag-testinfra">Test Infrastructure</span><span class="tag">Playwright</span><span class="tag">CI/CD</span></div>
-      <a class="card-link" href="work/e2e-reliability.html" data-i18n="feat23-link">Read the full writeup →</a>
+      <a class="card-link" href="work/one-database-per-test-worker.html" data-i18n="feat23-link">Read the full writeup →</a>
     </div>
 
     <div class="card featured" id="feat24">
       <a class="card-anchor" href="#feat24" aria-label="Copy link to this highlight" title="Copy link">🔗</a>
       <p class="eyebrow" data-i18n="eyebrow-featured">Featured build</p>
       <h3 data-i18n="feat24-h3">A runtime upgrade that would have moved amounts by a cent</h3>
-      <p data-i18n="feat24-p1">Security support for the old PHP version ends on 31 December 2026, so the upgrade to 8.5 had to land before my last day. The risk was not the syntax. From PHP 8.4, a computed half cent rounds down: 2.50 × 1.19 = 2.975 gives 2.97.</p>
+      <p data-i18n="feat24-p1">Security support for the old PHP version ends on 31 December 2026, so the upgrade to 8.5 had to land before my last day. A colleague started it; I brought it together and through review. The risk was not the syntax. From PHP 8.4, a computed half cent rounds down: 2.50 × 1.19 = 2.975 gives 2.97.</p>
       <ol class="steps">
         <li><span data-i18n="feat24-step1"><strong>Keep the old result where money is involved.</strong> All 206 rounding calls go through one helper that returns what the old version returned.</span></li>
         <li><span data-i18n="feat24-step2"><strong>A test fails on any new native rounding call.</strong> On the day of the merge it caught two calls that other pull requests had added in the meantime. The fix was two lines.</span></li>
@@ -450,6 +450,7 @@
       </ol>
       <p data-i18n="feat24-p2">448 files changed, in one reviewed pull request.</p>
       <div class="tags"><span class="tag">PHP</span><span class="tag" data-i18n="feat24-tag-techdebt">Tech Debt</span><span class="tag" data-i18n="feat24-tag-testing">Testing</span></div>
+      <a class="card-link" href="work/runtime-upgrade-rounding-guard.html" data-i18n="feat24-link">Read the full writeup →</a>
     </div>
 
     <div class="card" id="card25">
@@ -671,7 +672,7 @@
     'ae10-h3': 'KI-Agenten sicher in ein zwanzig Jahre altes Produkt lassen',
     'ae9-p': 'Der Abfrageplan zeigte 16 von 18 Sekunden in einer Unterabfrage. Eine Bedingung verschoben, und ein Vergleich Zeile für Zeile auf den Kundendaten bewies dieselben 276 Zeilen.',
     'ae9-h3': 'Ein Finanzbericht von 18 Sekunden auf 2',
-    'ae8-p': 'Ein Pin, der jeden Branch an eine Version der Tests band, machte den Main-Branch dreimal kaputt. Ich habe ihn einmal gehärtet und dann die Tests ins Anwendungs-Repository verschoben.',
+    'ae8-p': 'Ein Pin, der jeden Branch an eine Version der Tests band, machte den Main-Branch an zwei Tagen dreimal kaputt. Ich habe ihn einmal gehärtet und dann die Tests ins Anwendungs-Repository verschoben.',
     'ae8-h3': 'Einen Workaround löschen, statt ihn zu flicken',
     'ae7-p': 'PHP 8.2 auf 8.5, wo ein berechneter halber Cent abgerundet wird. 206 Rundungsaufrufe hinter einem Helfer und ein Test, der bei jedem neuen nativen Aufruf fehlschlägt. Am Tag des Merges fand er zwei.',
     'ae7-h3': 'Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte',
@@ -698,11 +699,12 @@
     'feat23-step1': `<strong>Eine Datenbank pro Worker, vor jedem Test zurückgesetzt.</strong> Trigger merken sich, welche Tabellen ein Test geschrieben hat, und nur diese werden aus dem Seed zurückkopiert: im Schnitt 26 bis 44 ms pro Test.`,
     'feat23-step2': `<strong>Die Specs haben ihren Isolationscode verloren.</strong> Kein Aufräumen, keine Wiederherstellung, keine eindeutigen Namen, und volle Parallelläufe sind an. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.`,
     'feat23-step3': `<strong>Das Review kennt die neuen Regeln.</strong> Die Code-Review-Anweisungen prüfen neue Specs gegen eine Datenbank pro Worker, damit die alten Muster nicht zurückkommen.`,
-    'feat23-p2': `Es war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt. Der Bericht erzählt die ganze Geschichte, auch die instabilen Tests, die der Agent selbst geschrieben hat.`,
+    'feat23-p2': `Es war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt.`,
     'feat23-tag-testinfra': 'Test-Infrastruktur',
-    'feat23-link': 'Den ganzen Bericht lesen →',
+    'feat23-link': 'Den vollständigen Text lesen →',
+    'feat24-link': 'Den vollständigen Text lesen →',
     'feat24-h3': `Ein Runtime-Upgrade, das Beträge um einen Cent verschoben hätte`,
-    'feat24-p1': `Der Sicherheits-Support für die alte PHP-Version endet am 31. Dezember 2026, also musste das Upgrade auf 8.5 vor meinem letzten Tag landen. Das Risiko war nicht die Syntax. Ab PHP 8.4 wird ein berechneter halber Cent abgerundet: 2,50 × 1,19 = 2,975 ergibt 2,97.`,
+    'feat24-p1': `Der Sicherheits-Support für die alte PHP-Version endet am 31. Dezember 2026, also musste das Upgrade auf 8.5 vor meinem letzten Tag landen. Ein Teammitglied hat es begonnen; ich habe es zusammengeführt und durch das Review gebracht. Das Risiko war nicht die Syntax. Ab PHP 8.4 wird ein berechneter halber Cent abgerundet: 2,50 × 1,19 = 2,975 ergibt 2,97.`,
     'feat24-step1': `<strong>Das alte Ergebnis behalten, wo es um Geld geht.</strong> Alle 206 Rundungsaufrufe laufen über einen Helfer, der liefert, was die alte Version geliefert hat.`,
     'feat24-step2': `<strong>Ein Test schlägt bei jedem neuen nativen Rundungsaufruf fehl.</strong> Am Tag des Merges fand er zwei Aufrufe, die andere Pull Requests in der Zwischenzeit hinzugefügt hatten. Der Fix war zwei Zeilen lang.`,
     'feat24-step3': `<strong>Veraltete Aufrufe sind genauso abgesichert.</strong> Ein zweiter Test schlägt bei jedem neuen Aufruf fehl, den die neue Version als veraltet markiert.`,
