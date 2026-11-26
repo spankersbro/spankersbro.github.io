@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.">
+<link rel="canonical" href="https://davidirving.dev/work/one-database-per-test-worker.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone">
+<meta property="og:description" content="Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.">
+<meta property="og:url" content="https://davidirving.dev/work/one-database-per-test-worker.html">
+<meta property="article:published_time" content="2026-11-26">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone">
+<meta name="twitter:description" content="Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone",
+  "description": "Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.",
+  "author": {
+    "@type": "Person",
+    "name": "David Irving",
+    "url": "https://davidirving.dev/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "David Irving"
+  },
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://davidirving.dev/work/one-database-per-test-worker.html"
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Every End-to-End Test Worker Gets Its Own Database: Reset in Milliseconds, and the Isolation Code Is Gone</h1>
+    <p class="lede" data-i18n="hero-lede">Shared test data made every spec carry cleanup code. One database per worker, reset before every test, removed it, and found two real bugs on the way.</p>
+    <p class="meta-row" data-i18n="meta-date">November 2026 · Test infrastructure</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before each test: the test writes some tables, triggers note which ones, and the reset copies only those back from the seed, in 26 to 44 milliseconds on average.">
+        <rect x="0" y="20" width="186" height="76" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="14" y="48" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-b1a">A test runs</text>
+        <text x="14" y="70" font-size="12" fill="var(--chip-ink)" data-i18n="d-b1b">and writes some tables</text>
+        <text x="196" y="64" font-size="18" fill="var(--sub)">→</text>
+        <rect x="222" y="20" width="186" height="76" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="236" y="48" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-b2a">Triggers note</text>
+        <text x="236" y="70" font-size="12" fill="var(--chip-ink)" data-i18n="d-b2b">which tables changed</text>
+        <text x="418" y="64" font-size="18" fill="var(--sub)">→</text>
+        <rect x="444" y="20" width="196" height="76" rx="10" fill="var(--accent)"/>
+        <text x="458" y="48" font-size="13" font-weight="700" fill="var(--accent-ink)" data-i18n="d-b3a">Only those are copied</text>
+        <text x="458" y="70" font-size="12" fill="var(--accent-ink)" data-i18n="d-b3b">back from the seed</text>
+        <text x="0" y="132" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-time">26 to 44 ms per test on average, before every test, in every worker</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">The reset that runs before each end-to-end test.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Why shared test data was the problem</h2>
+    <p data-i18n="why-p1">Our end-to-end tests drive a real browser through the product, and all of them used one database. So every spec had to protect itself and the others: clean up after itself, restore what it changed, give records unique names, avoid the seed data other specs relied on, sometimes create its own users. That code was a large part of the specs, and a common source of flaky tests: when it missed something, a later test failed for no reason of its own.</p>
+    <p data-i18n="why-p2">It also kept the suite from running fully in parallel: the tests in one file had to run one after another. This was the last step of a month spent on the suite's reliability; the story of that month is in <a href="e2e-reliability.html">The Agent Wrote Flaky Tests Too</a>.</p>
+
+    <h2 data-i18n="how-h2">How it works</h2>
+    <ul>
+      <li data-i18n="how-li1"><strong>One database per worker.</strong> Each test worker gets its own copy of the seed data. A cookie sends the worker's requests to its own application processes, so one worker never sees another's data. Without the cookie, the application behaves as before.</li>
+      <li data-i18n="how-li2"><strong>Reset before every test, in milliseconds.</strong> Copying a whole database before each test would be far too slow. So database triggers note which tables a test wrote, and the reset copies only those back. On average that took 26 to 44 ms per test.</li>
+      <li data-i18n="how-li3"><strong>The same everywhere.</strong> One script seeds the databases, the same way in CI and in the development container. A developer's own database is never touched.</li>
+    </ul>
+
+    <h2 data-i18n="gone-h2">What the specs no longer need</h2>
+    <p data-i18n="gone-p1">With a clean database before every test, the isolation code had no job left. The specs lost their cleanup, their restores, their unique names, their rules about the seed data and most of their own users. Full parallel runs are on. 21 old tests that other test layers already covered were removed. The change removed more lines than it added: 4,887 in, 5,360 out.</p>
+    <p data-i18n="gone-p2">To keep it that way, the instructions for the automated code reviewer now check new specs against the new rules: no cleanup code, state set up inside the test, no extra users unless a test needs other rights.</p>
+
+    <h2 data-i18n="bugs-h2">Two real bugs found on the way</h2>
+    <p data-i18n="bugs-p1">Running every spec fully in parallel on a clean database showed problems that shared data had hidden. Each was fixed with a failing test first:</p>
+    <ul>
+      <li data-i18n="bugs-li1"><strong>Unsaved input could disappear.</strong> A layout read that arrived late rebuilt a dashboard grid and dropped what the user had typed. The same code is used on the project, person and company pages.</li>
+      <li data-i18n="bugs-li2"><strong>A new list column stayed empty.</strong> After adding a column to a list, the list did not load its rows again, so the new column showed nothing until a reload.</li>
+      <li data-i18n="bugs-li3"><strong>Two smaller ones.</strong> A table was cleared with a statement that silently committed any open transaction. And in development, a missing class made the loader rescan 3,845 files on every request.</li>
+    </ul>
+
+    <h2 data-i18n="proof-h2">The proof</h2>
+    <p data-i18n="proof-p1">After the final merge of the main branch, on the local CI stack with four workers: all 370 tests passed. Then the whole suite three times in a row: 1,110 of 1,110 passed, no flaky test, in 14.5 minutes. The backend suite passed too: 21,231 tests. The flaky tests that showed up during the work were fixed at their cause, in five specs.</p>
+
+    <h2 data-i18n="limit-h2">Known limits</h2>
+    <ul>
+      <li data-i18n="limit-li1">A request that the previous test left running can still write after the reset.</li>
+      <li data-i18n="limit-li2">Files in storage are shared by all workers, and record counters are not reset.</li>
+      <li data-i18n="limit-li3">One list setting that is stored per browser tab survived the reset. Three specs work around it with a tab of their own. The cause was not found.</li>
+    </ul>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>Fix the setup, not each test.</strong> All that careful cleanup code went away with one change to how tests get their data.</li>
+      <li data-i18n="reflect-li2"><strong>Isolation finds bugs.</strong> Two of the problems it uncovered were real bugs for users, not test problems.</li>
+      <li data-i18n="reflect-li3"><strong>Write the limits down.</strong> The pull request lists what the reset does not cover, including one thing nobody could explain yet.</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-testinfra">Test Infrastructure</span>
+      <span class="tag">Playwright</span>
+      <span class="tag">CI/CD</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': "Jeder End-to-End-Test-Worker bekommt eine eigene Datenbank: in Millisekunden zurückgesetzt, und der Isolationscode ist weg",
+    'hero-lede': "Geteilte Testdaten zwangen jede Spec, Aufräumcode mitzuschleppen. Eine Datenbank pro Worker, vor jedem Test zurückgesetzt, hat ihn entfernt und unterwegs zwei echte Bugs gefunden.",
+    'meta-date': "November 2026 · Test-Infrastruktur",
+    "d-b1a": "Ein Test läuft",
+    "d-b1b": "und schreibt einige Tabellen",
+    "d-b2a": "Trigger merken sich,",
+    "d-b2b": "welche Tabellen sich änderten",
+    "d-b3a": "Nur diese werden",
+    "d-b3b": "aus dem Seed zurückkopiert",
+    "d-time": "Im Schnitt 26 bis 44 ms pro Test, vor jedem Test, in jedem Worker",
+    "diagram1-caption": "Das Zurücksetzen, das vor jedem End-to-End-Test läuft.",
+    "why-h2": "Warum geteilte Testdaten das Problem waren",
+    "why-p1": "Unsere End-to-End-Tests steuern einen echten Browser durch das Produkt, und alle nutzten eine Datenbank. Also musste jede Spec sich selbst und die anderen schützen: hinter sich aufräumen, wiederherstellen, was sie geändert hat, Datensätzen eindeutige Namen geben, die Seed-Daten meiden, auf die andere Specs sich verließen, manchmal eigene Benutzer anlegen. Dieser Code war ein großer Teil der Specs und eine häufige Quelle flaky Tests: Wenn er etwas übersah, schlug ein späterer Test ohne eigene Schuld fehl.",
+    "why-p2": "Er verhinderte auch, dass die Suite voll parallel lief: Die Tests einer Datei mussten nacheinander laufen. Das war der letzte Schritt eines Monats, der der Zuverlässigkeit der Suite galt; die Geschichte dieses Monats steht in <a href=\"e2e-reliability.html\">Auch der Agent schrieb flaky Tests</a>.",
+    "how-h2": "Wie es funktioniert",
+    "how-li1": "<strong>Eine Datenbank pro Worker.</strong> Jeder Test-Worker bekommt eine eigene Kopie der Seed-Daten. Ein Cookie schickt die Anfragen des Workers an seine eigenen Anwendungsprozesse, also sieht ein Worker nie die Daten eines anderen. Ohne das Cookie verhält sich die Anwendung wie bisher.",
+    "how-li2": "<strong>Vor jedem Test zurückgesetzt, in Millisekunden.</strong> Vor jedem Test eine ganze Datenbank zu kopieren wäre viel zu langsam. Also merken sich Datenbank-Trigger, welche Tabellen ein Test geschrieben hat, und das Zurücksetzen kopiert nur diese zurück. Im Schnitt dauerte das 26 bis 44 ms pro Test.",
+    "how-li3": "<strong>Überall gleich.</strong> Ein Skript legt die Datenbanken an, auf dieselbe Weise in der CI und im Entwicklungscontainer. Die eigene Datenbank eines Entwicklers wird nie angefasst.",
+    "gone-h2": "Was die Specs nicht mehr brauchen",
+    "gone-p1": "Mit einer sauberen Datenbank vor jedem Test hatte der Isolationscode keine Aufgabe mehr. Die Specs verloren ihr Aufräumen, ihre Wiederherstellungen, ihre eindeutigen Namen, ihre Regeln zu den Seed-Daten und die meisten eigenen Benutzer. Volle Parallelläufe sind an. 21 alte Tests, die andere Testschichten schon abdeckten, wurden entfernt. Die Änderung hat mehr Zeilen entfernt als hinzugefügt: 4.887 dazu, 5.360 weg.",
+    "gone-p2": "Damit es so bleibt, prüfen die Anweisungen für den automatischen Code-Reviewer neue Specs jetzt gegen die neuen Regeln: kein Aufräumcode, Zustand im Test selbst aufgebaut, keine zusätzlichen Benutzer, außer ein Test braucht andere Rechte.",
+    "bugs-h2": "Zwei echte Bugs, unterwegs gefunden",
+    "bugs-p1": "Jede Spec voll parallel auf einer sauberen Datenbank laufen zu lassen, zeigte Probleme, die geteilte Daten verdeckt hatten. Jedes wurde mit einem zuerst fehlschlagenden Test behoben:",
+    "bugs-li1": "<strong>Nicht gespeicherte Eingaben konnten verschwinden.</strong> Ein verspätet eintreffender Layout-Abruf baute ein Dashboard-Raster neu auf und verwarf, was der Benutzer getippt hatte. Derselbe Code wird auf den Projekt-, Personen- und Firmenseiten verwendet.",
+    "bugs-li2": "<strong>Eine neue Listenspalte blieb leer.</strong> Nachdem eine Spalte zu einer Liste hinzugefügt wurde, lud die Liste ihre Zeilen nicht neu, also zeigte die neue Spalte bis zum Neuladen nichts.",
+    "bugs-li3": "<strong>Zwei kleinere.</strong> Eine Tabelle wurde mit einer Anweisung geleert, die still jede offene Transaktion committete. Und in der Entwicklung ließ eine fehlende Klasse den Loader bei jeder Anfrage 3.845 Dateien neu durchsuchen.",
+    "proof-h2": "Der Nachweis",
+    "proof-p1": "Nach dem letzten Merge des Main-Branches, auf dem lokalen CI-Stack mit vier Workern: alle 370 Tests grün. Dann die ganze Suite dreimal hintereinander: 1.110 von 1.110 bestanden, kein flaky Test, in 14,5 Minuten. Auch die Backend-Suite lief grün: 21.231 Tests. Die flaky Tests, die während der Arbeit auftauchten, wurden an ihrer Ursache behoben, in fünf Specs.",
+    "limit-h2": "Bekannte Grenzen",
+    "limit-li1": "Eine Anfrage, die der vorige Test noch laufen ließ, kann nach dem Zurücksetzen noch schreiben.",
+    "limit-li2": "Dateien im Speicher teilen sich alle Worker, und Datensatzzähler werden nicht zurückgesetzt.",
+    "limit-li3": "Eine Listeneinstellung, die pro Browser-Tab gespeichert wird, überstand das Zurücksetzen. Drei Specs umgehen das mit einem eigenen Tab. Die Ursache wurde nicht gefunden.",
+    "reflect-h2": "Was ich daraus mitnehme",
+    "reflect-li1": "<strong>Den Aufbau reparieren, nicht jeden Test.</strong> All der sorgfältige Aufräumcode verschwand mit einer Änderung daran, wie Tests zu ihren Daten kommen.",
+    "reflect-li2": "<strong>Isolation findet Bugs.</strong> Zwei der Probleme, die sie aufdeckte, waren echte Bugs für Benutzer, keine Testprobleme.",
+    "reflect-li3": "<strong>Die Grenzen aufschreiben.</strong> Der Pull Request listet, was das Zurücksetzen nicht abdeckt, einschließlich einer Sache, die noch niemand erklären konnte.",
+    "tag-testinfra": "Test-Infrastruktur",
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: "Browser tests that shared one database carried cleanup code and could not run in parallel. One database per worker, reset to the seed before every test, removed both, and found two real bugs on the way.",
+    de: "Browser-Tests, die sich eine Datenbank teilten, trugen Aufräumcode und konnten nicht parallel laufen. Eine Datenbank pro Worker, vor jedem Test auf den Seed zurückgesetzt, hat beides beseitigt und unterwegs zwei echte Bugs gefunden."
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
