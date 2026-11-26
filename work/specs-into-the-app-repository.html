@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.">
+<link rel="canonical" href="https://davidirving.dev/work/specs-into-the-app-repository.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository">
+<meta property="og:description" content="A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.">
+<meta property="og:url" content="https://davidirving.dev/work/specs-into-the-app-repository.html">
+<meta property="article:published_time" content="2026-11-26">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository">
+<meta name="twitter:description" content="A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository",
+  "description": "A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.",
+  "author": {
+    "@type": "Person",
+    "name": "David Irving",
+    "url": "https://davidirving.dev/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "David Irving"
+  },
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://davidirving.dev/work/specs-into-the-app-repository.html"
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">Deleting a Workaround Instead of Patching It: End-to-End Tests Move Into the App Repository</h1>
+    <p class="lede" data-i18n="hero-lede">A pin that tied each branch to a version of the tests broke the main branch three times. So I hardened it once, then removed the reason for it.</p>
+    <p class="meta-row" data-i18n="meta-date">October – November 2026 · Test infrastructure</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Timeline: 14 October the pin is added; 20 and 21 October the main branch goes red three times; 21 October the pin is hardened; 3 November the tests move into the application repository; 4 November a leftover pin fails its branch.">
+        <line x1="20" y1="60" x2="620" y2="60" stroke="var(--line)" stroke-width="2"/>
+        <circle cx="20" cy="60" r="7" fill="var(--chip-ink)"/>
+        <text x="0" y="30" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="t1-d">14 Oct</text>
+        <text x="0" y="92" font-size="12" fill="var(--sub)" data-i18n="t1-a">Pin added</text>
+        <circle cx="170" cy="60" r="7" fill="#cf222e"/>
+        <text x="140" y="30" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="t2-d">20–21 Oct</text>
+        <text x="130" y="92" font-size="12" fill="var(--sub)" data-i18n="t2-a">Main red 3×</text>
+        <circle cx="300" cy="60" r="7" fill="var(--chip-ink)"/>
+        <text x="280" y="30" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="t3-d">21 Oct</text>
+        <text x="262" y="92" font-size="12" fill="var(--sub)" data-i18n="t3-a">Pin hardened</text>
+        <circle cx="450" cy="60" r="9" fill="var(--accent)"/>
+        <text x="432" y="30" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="t4-d">3 Nov</text>
+        <text x="408" y="92" font-size="12" font-weight="700" fill="var(--ink)" data-i18n="t4-a">Tests move in</text>
+        <circle cx="610" cy="60" r="7" fill="var(--chip-ink)"/>
+        <text x="586" y="30" font-size="12.5" font-weight="700" fill="var(--ink)" data-i18n="t5-d">4 Nov</text>
+        <text x="540" y="92" font-size="12" fill="var(--sub)" data-i18n="t5-a">Leftover pin fails</text>
+        <text x="0" y="150" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-sum1">Before: a feature and its test in two repositories, joined by a pin.</text>
+        <text x="0" y="178" font-size="13" font-weight="700" fill="var(--accent)" data-i18n="d-sum2">After: one pull request holds the feature and its test.</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">October to November 2026.</p>
+    </div>
+
+    <h2 data-i18n="why-h2">Two repositories, one feature</h2>
+    <p data-i18n="why-p1">Our end-to-end tests lived in their own repository. A feature and its test could never change in the same commit, and the order of merges between the two repositories mattered. A feature merged before its test, or the other way round, and CI ran the wrong test against the right code.</p>
+
+    <h2 data-i18n="pin-h2">The workaround: a pin</h2>
+    <p data-i18n="pin-p1">My first fix, in mid-October, was a pin: one small file in a feature branch names the branch of the test repository that CI should use. Without the file, CI used the tests' main branch as before. On the main branch, a pin was an error, so a leaked pin turned it red until someone removed it.</p>
+    <p data-i18n="pin-p2">It worked on feature branches. It failed at merge time. On 20 October the main branch went red twice, and on 21 October again: pull requests had been merged with their pin still in. The main branch had no protection that would have stopped such a merge.</p>
+    <p data-i18n="pin-p3">So I hardened the pin once. On the main branch it is ignored, with a notice. On any other branch, a pin it inherited from the main branch is ignored too; only a pin the branch set itself counts. Twelve new test cases cover the rules, and each rule was broken on purpose to see a test fail.</p>
+
+    <h2 data-i18n="decide-h2">The decision: remove the reason</h2>
+    <p data-i18n="decide-p1">The hardened pin would have worked. But every rule I added made the workaround harder to understand, and the problem it worked around was still there. So I stopped patching it and removed the reason for it: the tests move into the application repository. A test then goes into the same pull request as its feature: no pin, no merge order.</p>
+    <p data-i18n="decide-p2">The plan went into an architecture decision record first, so the team could argue with it before anything moved.</p>
+
+    <h2 data-i18n="cut-h2">The cutover</h2>
+    <ul>
+      <li data-i18n="cut-li1"><strong>One copy, at a known commit.</strong> The tests were copied from the test repository's main branch after QA had merged its last ready pull requests. CI ran from the new folder, green, before the merge.</li>
+      <li data-i18n="cut-li2"><strong>Open work moves with a tool.</strong> A script and an agent skill carry an open test pull request into the new layout, screenshots included, and stop on a conflict. That part is told in <a href="agent-skills.html">Eleven Pull Requests in One Day</a>.</li>
+      <li data-i18n="cut-li3"><strong>A lint for the tests from day one.</strong> A new lint workflow checks the specs, and its five findings were fixed in the same change.</li>
+    </ul>
+    <p data-i18n="cut-p1">The cutover pull request, about 11,900 lines, was merged in the evening of 3 November.</p>
+
+    <h2 data-i18n="leak-h2">The last leak, and the guard against it</h2>
+    <p data-i18n="leak-p1">On the merge day itself, three more pins reached the main branch through squash merges of branches that still carried one. A leaked pin now did real harm: the branch's own test was lost, and the main branch failed. So the next morning a pin on a feature branch became an error instead of a warning. The tests at the pin still run, so the report shows their result, but the branch cannot pass until its tests are ported. Release and hotfix branches keep their pins.</p>
+
+    <h2 data-i18n="after-h2">What it changed</h2>
+    <ul>
+      <li data-i18n="after-li1">A feature and its test are reviewed and merged together.</li>
+      <li data-i18n="after-li2">There is no merge order between two repositories to remember, and no pin to forget.</li>
+      <li data-i18n="after-li3">The tests could now be reorganised with the code. Moving checks into faster test layers, and later one database per test worker, both built on this.</li>
+    </ul>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>Harden once, then question.</strong> The first failure deserved a fix. The third one deserved the question why the workaround existed at all.</li>
+      <li data-i18n="reflect-li2"><strong>A warning is not a guard.</strong> The pin warned for weeks. Only an error stopped the leaks.</li>
+      <li data-i18n="reflect-li3"><strong>The decision was mine, the volume was not.</strong> Moving the tests was a decision for a person. Porting the open work, writing the guard tests and checking every rule was the volume, and the agent did most of it.</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag" data-i18n="tag-testinfra">Test Infrastructure</span>
+      <span class="tag">Playwright</span>
+      <span class="tag">CI/CD</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': "Einen Workaround löschen, statt ihn zu flicken: Die End-to-End-Tests ziehen ins App-Repository",
+    'hero-lede': "Ein Pin, der jeden Branch an eine Version der Tests band, machte den Main-Branch dreimal kaputt. Also habe ich ihn einmal gehärtet und dann seinen Grund entfernt.",
+    'meta-date': "Oktober – November 2026 · Test-Infrastruktur",
+    "t1-d": "14. Okt.",
+    "t1-a": "Pin eingeführt",
+    "t2-d": "20.–21. Okt.",
+    "t2-a": "Main 3× rot",
+    "t3-d": "21. Okt.",
+    "t3-a": "Pin gehärtet",
+    "t4-d": "3. Nov.",
+    "t4-a": "Tests ziehen um",
+    "t5-d": "4. Nov.",
+    "t5-a": "Alter Pin scheitert",
+    "d-sum1": "Vorher: ein Feature und sein Test in zwei Repositories, verbunden durch einen Pin.",
+    "d-sum2": "Nachher: ein Pull Request enthält das Feature und seinen Test.",
+    "diagram1-caption": "Oktober bis November 2026.",
+    "why-h2": "Zwei Repositories, ein Feature",
+    "why-p1": "Unsere End-to-End-Tests lagen in einem eigenen Repository. Ein Feature und sein Test konnten nie im selben Commit geändert werden, und die Reihenfolge der Merges zwischen den beiden Repositories zählte. Wurde ein Feature vor seinem Test gemergt oder umgekehrt, lief in der CI der falsche Test gegen den richtigen Code.",
+    "pin-h2": "Der Workaround: ein Pin",
+    "pin-p1": "Mein erster Fix, Mitte Oktober, war ein Pin: Eine kleine Datei in einem Feature-Branch nennt den Branch des Test-Repositorys, den die CI verwenden soll. Ohne die Datei nutzte die CI wie bisher den Main-Branch der Tests. Auf dem Main-Branch war ein Pin ein Fehler, also machte ein durchgerutschter Pin ihn rot, bis jemand ihn entfernte.",
+    "pin-p2": "Auf Feature-Branches funktionierte das. Beim Mergen scheiterte es. Am 20. Oktober wurde der Main-Branch zweimal rot, am 21. Oktober noch einmal: Pull Requests waren mit ihrem Pin gemergt worden. Der Main-Branch hatte keinen Schutz, der so einen Merge verhindert hätte.",
+    "pin-p3": "Also habe ich den Pin einmal gehärtet. Auf dem Main-Branch wird er ignoriert, mit einem Hinweis. Auf jedem anderen Branch wird ein Pin, den er vom Main-Branch geerbt hat, ebenfalls ignoriert; nur ein Pin, den der Branch selbst gesetzt hat, zählt. Zwölf neue Testfälle decken die Regeln ab, und jede Regel wurde absichtlich kaputt gemacht, um einen Test scheitern zu sehen.",
+    "decide-h2": "Die Entscheidung: den Grund entfernen",
+    "decide-p1": "Der gehärtete Pin hätte funktioniert. Aber jede Regel, die ich hinzufügte, machte den Workaround schwerer zu verstehen, und das Problem, um das er herumarbeitete, war immer noch da. Also habe ich aufgehört, ihn zu flicken, und seinen Grund entfernt: Die Tests ziehen ins Anwendungs-Repository. Ein Test kommt dann in denselben Pull Request wie sein Feature: kein Pin, keine Merge-Reihenfolge.",
+    "decide-p2": "Der Plan kam zuerst in einen Architecture Decision Record, damit das Team darüber streiten konnte, bevor sich etwas bewegte.",
+    "cut-h2": "Die Umstellung",
+    "cut-li1": "<strong>Eine Kopie, bei einem bekannten Commit.</strong> Die Tests wurden vom Main-Branch des Test-Repositorys kopiert, nachdem QA seine letzten fertigen Pull Requests gemergt hatte. Die CI lief vor dem Merge grün aus dem neuen Ordner.",
+    "cut-li2": "<strong>Offene Arbeit zieht per Werkzeug um.</strong> Ein Skript und ein Agent-Skill übertragen einen offenen Test-Pull-Request in die neue Struktur, Screenshots inklusive, und halten bei einem Konflikt an. Dieser Teil steht in <a href=\"agent-skills.html\">Elf Pull Requests an einem Tag</a>.",
+    "cut-li3": "<strong>Ein Lint für die Tests vom ersten Tag an.</strong> Ein neuer Lint-Workflow prüft die Specs, und seine fünf Funde wurden in derselben Änderung behoben.",
+    "cut-p1": "Der Umstellungs-Pull-Request, rund 11.900 Zeilen, wurde am Abend des 3. November gemergt.",
+    "leak-h2": "Das letzte Leck und der Schutz dagegen",
+    "leak-p1": "Am Tag des Merges selbst erreichten drei weitere Pins den Main-Branch, über Squash-Merges von Branches, die noch einen trugen. Ein durchgerutschter Pin richtete jetzt echten Schaden an: Der eigene Test des Branches ging verloren, und der Main-Branch scheiterte. Also wurde am nächsten Morgen ein Pin auf einem Feature-Branch zu einem Fehler statt einer Warnung. Die Tests am Pin laufen weiter, damit der Bericht ihr Ergebnis zeigt, aber der Branch kann erst bestehen, wenn seine Tests übertragen sind. Release- und Hotfix-Branches behalten ihre Pins.",
+    "after-h2": "Was es verändert hat",
+    "after-li1": "Ein Feature und sein Test werden zusammen reviewt und gemergt.",
+    "after-li2": "Es gibt keine Merge-Reihenfolge zwischen zwei Repositories mehr, an die man denken muss, und keinen Pin, den man vergessen kann.",
+    "after-li3": "Die Tests ließen sich jetzt zusammen mit dem Code umbauen. Das Verschieben von Prüfungen in schnellere Testschichten und später eine Datenbank pro Test-Worker bauten beide darauf auf.",
+    "reflect-h2": "Was ich daraus mitnehme",
+    "reflect-li1": "<strong>Einmal härten, dann hinterfragen.</strong> Der erste Fehler verdiente einen Fix. Der dritte verdiente die Frage, warum es den Workaround überhaupt gab.",
+    "reflect-li2": "<strong>Eine Warnung ist kein Schutz.</strong> Der Pin warnte wochenlang. Erst ein Fehler stoppte die Lecks.",
+    "reflect-li3": "<strong>Die Entscheidung war meine, die Menge nicht.</strong> Die Tests zu verschieben war eine Entscheidung für einen Menschen. Die offene Arbeit zu übertragen, die Schutztests zu schreiben und jede Regel zu prüfen, das war die Menge, und die hat großteils der Agent erledigt.",
+    "tag-testinfra": "Test-Infrastruktur",
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: "A pin that tied each branch to a version of the end-to-end tests broke the main branch three times. Hardening it once, then removing the reason for it: moving the tests into the application repository in one cutover.",
+    de: "Ein Pin, der jeden Branch an eine Version der End-to-End-Tests band, machte den Main-Branch dreimal kaputt. Ihn einmal härten, dann seinen Grund entfernen: die Tests in einer Umstellung ins Anwendungs-Repository verschieben."
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
