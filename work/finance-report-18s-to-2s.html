@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows — David Irving</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="description" id="metaDesc" content="A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.">
+<link rel="canonical" href="https://davidirving.dev/work/finance-report-18s-to-2s.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="David Irving">
+<meta property="og:title" content="A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows">
+<meta property="og:description" content="A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.">
+<meta property="og:url" content="https://davidirving.dev/work/finance-report-18s-to-2s.html">
+<meta property="article:published_time" content="2026-11-26">
+<meta property="article:section" content="Featured Work">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows">
+<meta name="twitter:description" content="A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows",
+  "description": "A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.",
+  "author": {
+    "@type": "Person",
+    "name": "David Irving",
+    "url": "https://davidirving.dev/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "David Irving"
+  },
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://davidirving.dev/work/finance-report-18s-to-2s.html"
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+    --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+    --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  }
+  :root[data-theme="dark"]{ --bg:#12131a; --panel:#191b23; --ink:#eef0f5; --sub:#9aa0ac; --line:#292c36;
+           --accent:#3fb950; --accent-ink:#0d1117; --chip:#0f5323; --chip-ink:#aff5b4;
+           --mono-bg:#0f2818; --mono-ink:#7ee2a8; --ring:0 1px 2px rgba(0,0,0,.3); }
+  :root[data-theme="light"]{ --bg:#f6fbf8; --panel:#ffffff; --ink:#14231b; --sub:#4d6b57; --line:#dcece2;
+           --accent:#1a7f37; --accent-ink:#ffffff; --chip:#e6ffec; --chip-ink:#116329;
+           --mono-bg:#e6ffec; --mono-ink:#116329; --ring:0 1px 2px rgba(20,60,40,.06); }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:hidden}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:700px;margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-wrap:wrap;row-gap:8px}
+  nav .brand{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0}
+  nav .links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  nav a.nav-link{color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+  nav a.nav-link:hover{color:var(--ink)}
+  .icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--sub);border-radius:8px;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;padding:0;flex-shrink:0}
+  .icon-btn:hover{color:var(--ink);border-color:var(--sub)}
+  .btn-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  #menuBtn{display:none}
+  @media (max-width:560px){
+    nav .links{gap:8px}
+    nav a.nav-link{display:none}
+    #menuBtn{display:flex}
+    nav.menu-open .btn-group{order:-1}
+    nav.menu-open .links{flex-basis:100%;flex-direction:column;align-items:flex-start;
+      order:3;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+    nav.menu-open a.nav-link{display:block;width:100%;padding:8px 0}
+  }
+
+  /* hero */
+  .hero{padding:48px 0 28px}
+  .hero .kicker{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .hero h1{font-size:clamp(26px,4.5vw,34px);line-height:1.2;margin:0 0 14px;letter-spacing:-.02em;font-weight:700}
+  .hero p.lede{font-size:17px;color:var(--sub);margin:0 0 14px}
+  .meta-row{color:var(--sub);font-size:13px}
+
+  /* article prose */
+  .article{padding:8px 0 56px}
+  .article h2{font-size:21px;margin:38px 0 14px;letter-spacing:-.01em}
+  .article h2:first-of-type{margin-top:8px}
+  .article h3{font-size:17.5px;margin:32px 0 10px;letter-spacing:-.005em}
+  .article p{margin:0 0 14px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article ul{margin:0 0 16px;padding-left:22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .article li{margin-bottom:10px}
+  .article li:last-child{margin-bottom:0}
+  .article strong{color:var(--ink)}
+  .article a{color:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+  .tag{background:var(--chip);color:var(--chip-ink);font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600}
+
+  .diagram{margin:0 0 32px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--ring)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram-caption{margin:10px 0 0;color:var(--sub);font-size:12.5px;text-align:center}
+
+  footer{padding:40px 0 64px;color:var(--sub);font-size:13px}
+  footer .wrap{max-width:760px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--sub);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ink)}
+  footer .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="../index.html" class="brand">David Irving</a>
+    <div class="links">
+      <a class="nav-link" data-i18n="nav-home" href="../index.html">← Home</a>
+      <a class="nav-link" data-i18n="nav-work" href="index.html">All Featured Work</a>
+      <div class="btn-group">
+        <button class="icon-btn" id="langBtn" aria-label="Switch language" title="Switch language">DE</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" title="Menu">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="kicker" data-i18n="hero-kicker">Featured Work</p>
+    <h1 data-i18n="hero-h1">A Finance Report From 18 Seconds to 2: Measure First, Move One Condition, Prove the Rows</h1>
+    <p class="lede" data-i18n="hero-lede">Where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.</p>
+    <p class="meta-row" data-i18n="meta-date">October – November 2026 · Performance</p>
+  </section>
+
+  <article class="article">
+
+    <div class="diagram">
+      <svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The report query on a copy of the customer's data: 18.2 seconds before, 2.3 seconds after">
+        <text x="0" y="30" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-before">Before</text>
+        <rect x="0" y="40" width="640" height="34" rx="8" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="14" y="62" font-size="13" font-weight="700" fill="var(--chip-ink)" data-i18n="d-before-v">18.2 s, of which 16.0 s in three columns</text>
+        <text x="0" y="112" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-after">After</text>
+        <rect x="0" y="122" width="81" height="34" rx="8" fill="var(--accent)"/>
+        <text x="95" y="144" font-size="13" font-weight="700" fill="var(--ink)" data-i18n="d-after-v">2.3 s, same 276 rows</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="diagram1-caption">The report's query on a copy of one customer's data. Bars to scale.</p>
+    </div>
+
+    <h2 data-i18n="start-h2">Where it started</h2>
+    <p data-i18n="start-p1">One customer's valuation report, a finance overview of work in progress, took about 20 seconds to load. The median in the production access log was 19.6 seconds.</p>
+    <p data-i18n="start-p2">I worked on it with an AI agent, under the same rules as every change: measure before changing anything, write a failing test first, and prove the result on real data.</p>
+
+    <h2 data-i18n="measure-h2">Measure first</h2>
+    <p data-i18n="measure-p1">The query plan, run with real timings on a copy of the customer's data, answered the question at once. Of 18.2 seconds, 16.0 went into three columns: the latest comment, who made the valuation, and when.</p>
+    <p data-i18n="measure-p2">All three come from the same lookup: find the newest valuation entry for each row. That lookup is a subquery, and its filter pointed at the outer row instead of at its own table. So the database could not use the index built for exactly this lookup. It read all 6,778 valuation entries once for every row of the report.</p>
+    <p data-i18n="measure-p3">The cause was old. The lookup came with a much earlier change, and nobody had measured it with this much data behind it.</p>
+
+    <h2 data-i18n="fix-h2">One condition moved</h2>
+    <p data-i18n="fix-p1">The fix is one condition in a different place: the subquery now filters its own rows, and the outer query keeps its filter as before. Nothing else in the report changed.</p>
+    <ul>
+      <li data-i18n="fix-li1"><strong>A failing test first.</strong> A new test checks that the lookup can use the index and that the columns show the newest values. On the old code, two of its four cases failed.</li>
+      <li data-i18n="fix-li2"><strong>Measured on generated data.</strong> With 27,840 generated entries, the three columns went from 3.3 seconds to 0.13.</li>
+      <li data-i18n="fix-li3"><strong>Measured on the customer's data.</strong> On the copy, the whole query went from 18.2 seconds to 2.3.</li>
+    </ul>
+
+    <h2 data-i18n="prove-h2">Prove the rows</h2>
+    <p data-i18n="prove-p1">A faster query that returns different numbers is a new bug in a finance report. So the old and the new query ran against the same copy and their results were compared row by row: 276 rows, none different.</p>
+    <p data-i18n="prove-p2">One case does behave differently, and it is written down as a decision instead of hidden. A task that also has a newer entry of another kind, which only the API can create, now shows its own values instead of empty columns. That is the correct value, and the pull request says so.</p>
+
+    <h2 data-i18n="limit-h2">What it did not cover</h2>
+    <p data-i18n="limit-p1">There is no end-to-end test for the speed. The test data is far too small to show the difference, and the feature is off there. The backend test covers the values and the index. The time in the browser was to be checked after the release.</p>
+
+    <h2 data-i18n="reflect-h2">What I take from it</h2>
+    <ul>
+      <li data-i18n="reflect-li1"><strong>The plan names the cause.</strong> Guessing would have started with caching or a bigger server. The plan pointed at three columns and one subquery.</li>
+      <li data-i18n="reflect-li2"><strong>Speed is not the proof.</strong> The proof is the same rows. Without the comparison, this would only have been a faster report.</li>
+      <li data-i18n="reflect-li3"><strong>Small fixes need the same rules.</strong> A one-condition change got a failing test, two measurements and a written decision. That is what made it safe to ship quickly.</li>
+    </ul>
+
+    <div class="tags">
+      <span class="tag">Agentic Engineering</span>
+      <span class="tag">Performance</span>
+      <span class="tag">SQL</span>
+    </div>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="footer-copy">&copy; 2026 David Irving.</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/davidrichardirving" target="_blank" rel="noopener">linkedin.com/in/davidrichardirving</a>
+      <a href="../impressum.html" data-i18n="footer-impressum">Impressum</a>
+      <a href="../datenschutz.html" data-i18n="footer-privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var storedTheme = localStorage.getItem('theme');
+  if(storedTheme) root.setAttribute('data-theme', storedTheme);
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ---------- mobile burger menu ---------- */
+  var navEl = document.querySelector('nav');
+  var menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', function(){
+    var open = navEl.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? '✕' : '☰';
+  });
+  navEl.querySelectorAll('a.nav-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      navEl.classList.remove('menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.textContent = '☰';
+    });
+  });
+
+  /* ---------- language toggle ---------- */
+  var I18N = { en: {}, de: {} };
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in I18N.en)) I18N.en[key] = el.innerHTML.trim();
+  });
+
+  I18N.de = {
+    'nav-home': '← Startseite',
+    'nav-work': 'Alle Featured Work',
+    'hero-kicker': 'Featured Work',
+    'hero-h1': "Ein Finanzbericht von 18 Sekunden auf 2: erst messen, eine Bedingung verschieben, die Zeilen beweisen",
+    'hero-lede': "Wohin die Zeit ging, die eine Bedingung, die es behob, und wie ich bewiesen habe, dass der Bericht dieselben Zeilen zeigt.",
+    'meta-date': "Oktober – November 2026 · Performance",
+    "d-before": "Vorher",
+    "d-before-v": "18,2 s, davon 16,0 s in drei Spalten",
+    "d-after": "Nachher",
+    "d-after-v": "2,3 s, dieselben 276 Zeilen",
+    "diagram1-caption": "Die Abfrage des Berichts auf einer Kopie der Daten eines Kunden. Balken maßstabsgetreu.",
+    "start-h2": "Wo es anfing",
+    "start-p1": "Der Bewertungsbericht eines Kunden, ein Finanzüberblick über laufende Arbeit, brauchte etwa 20 Sekunden zum Laden. Der Median im Zugriffslog der Produktion lag bei 19,6 Sekunden.",
+    "start-p2": "Ich habe es mit einem KI-Agenten bearbeitet, nach denselben Regeln wie jede Änderung: messen, bevor man etwas ändert, zuerst ein fehlschlagender Test, und das Ergebnis auf echten Daten beweisen.",
+    "measure-h2": "Erst messen",
+    "measure-p1": "Der Abfrageplan, mit echten Zeiten auf einer Kopie der Kundendaten ausgeführt, beantwortete die Frage sofort. Von 18,2 Sekunden gingen 16,0 in drei Spalten: der letzte Kommentar, wer die Bewertung gemacht hat und wann.",
+    "measure-p2": "Alle drei kommen aus derselben Suche: den neuesten Bewertungseintrag für jede Zeile finden. Diese Suche ist eine Unterabfrage, und ihr Filter zeigte auf die äußere Zeile statt auf die eigene Tabelle. Also konnte die Datenbank den Index nicht nutzen, der genau für diese Suche gebaut ist. Sie las alle 6.778 Bewertungseinträge einmal für jede Zeile des Berichts.",
+    "measure-p3": "Die Ursache war alt. Die Suche kam mit einer viel früheren Änderung, und niemand hatte sie mit so vielen Daten dahinter gemessen.",
+    "fix-h2": "Eine Bedingung verschoben",
+    "fix-p1": "Der Fix ist eine Bedingung an einer anderen Stelle: Die Unterabfrage filtert jetzt ihre eigenen Zeilen, und die äußere Abfrage behält ihren Filter wie bisher. Sonst hat sich am Bericht nichts geändert.",
+    "fix-li1": "<strong>Zuerst ein fehlschlagender Test.</strong> Ein neuer Test prüft, dass die Suche den Index nutzen kann und dass die Spalten die neuesten Werte zeigen. Auf dem alten Code schlugen zwei seiner vier Fälle fehl.",
+    "fix-li2": "<strong>Auf erzeugten Daten gemessen.</strong> Mit 27.840 erzeugten Einträgen gingen die drei Spalten von 3,3 Sekunden auf 0,13.",
+    "fix-li3": "<strong>Auf den Kundendaten gemessen.</strong> Auf der Kopie ging die ganze Abfrage von 18,2 Sekunden auf 2,3.",
+    "prove-h2": "Die Zeilen beweisen",
+    "prove-p1": "Eine schnellere Abfrage, die andere Zahlen liefert, ist ein neuer Bug in einem Finanzbericht. Also liefen die alte und die neue Abfrage auf derselben Kopie, und ihre Ergebnisse wurden Zeile für Zeile verglichen: 276 Zeilen, keine verschieden.",
+    "prove-p2": "Ein Fall verhält sich tatsächlich anders, und er ist als Entscheidung festgehalten statt versteckt. Eine Aufgabe, die zusätzlich einen neueren Eintrag einer anderen Art hat, den nur die API anlegen kann, zeigt jetzt ihre eigenen Werte statt leerer Spalten. Das ist der richtige Wert, und der Pull Request sagt das.",
+    "limit-h2": "Was es nicht abgedeckt hat",
+    "limit-p1": "Es gibt keinen End-to-End-Test für die Geschwindigkeit. Die Testdaten sind viel zu klein, um den Unterschied zu zeigen, und die Funktion ist dort aus. Der Backend-Test deckt die Werte und den Index ab. Die Zeit im Browser sollte nach dem Release geprüft werden.",
+    "reflect-h2": "Was ich daraus mitnehme",
+    "reflect-li1": "<strong>Der Plan nennt die Ursache.</strong> Mit Raten hätte man bei Caching oder einem größeren Server angefangen. Der Plan zeigte auf drei Spalten und eine Unterabfrage.",
+    "reflect-li2": "<strong>Geschwindigkeit ist nicht der Beweis.</strong> Der Beweis sind dieselben Zeilen. Ohne den Vergleich wäre das nur ein schnellerer Bericht gewesen.",
+    "reflect-li3": "<strong>Kleine Fixes brauchen dieselben Regeln.</strong> Eine Änderung an einer einzigen Bedingung bekam einen fehlschlagenden Test, zwei Messungen und eine schriftliche Entscheidung. Genau das hat es sicher gemacht, sie schnell auszuliefern.",
+    'footer-copy': '&copy; 2026 David Irving.',
+    'footer-impressum': 'Impressum',
+    'footer-privacy': 'Datenschutz'
+  };
+
+  var META_DESC = {
+    en: "A slow finance report, found in the production access log: where the time went, the one condition that fixed it, and how I proved the report still shows the same rows.",
+    de: "Ein langsamer Finanzbericht, gefunden im Zugriffslog der Produktion: wohin die Zeit ging, die eine Bedingung, die es behob, und wie ich bewiesen habe, dass der Bericht dieselben Zeilen zeigt."
+  };
+  var THEME_LABEL = { en: 'Toggle theme', de: 'Theme wechseln' };
+  var LANG_LABEL = { en: 'Switch language', de: 'Sprache wechseln' };
+  var MENU_LABEL = { en: 'Open menu', de: 'Menü öffnen' };
+
+  var langBtn = document.getElementById('langBtn');
+  var metaDesc = document.getElementById('metaDesc');
+
+  function applyLang(lang){
+    root.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      var val = (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+      if(val !== undefined) el.innerHTML = val;
+    });
+    metaDesc.setAttribute('content', META_DESC[lang] || META_DESC.en);
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang] || THEME_LABEL.en);
+    themeBtn.setAttribute('title', THEME_LABEL[lang] || THEME_LABEL.en);
+    langBtn.setAttribute('aria-label', LANG_LABEL[lang] || LANG_LABEL.en);
+    langBtn.setAttribute('title', LANG_LABEL[lang] || LANG_LABEL.en);
+    menuBtn.setAttribute('aria-label', MENU_LABEL[lang] || MENU_LABEL.en);
+    menuBtn.setAttribute('title', MENU_LABEL[lang] || MENU_LABEL.en);
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    localStorage.setItem('lang', lang);
+  }
+
+  var storedLang = localStorage.getItem('lang') || 'en';
+  applyLang(storedLang);
+
+  langBtn.addEventListener('click', function(){
+    var current = root.getAttribute('lang') === 'de' ? 'de' : 'en';
+    applyLang(current === 'de' ? 'en' : 'de');
+  });
+})();
+</script>
+
+</body>
+</html>
