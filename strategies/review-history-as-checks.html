@@ -213,6 +213,32 @@
       </div>
       <p class="diagram-caption" data-i18n="st-caption">The agent shows this line at the start of every message. The ETA is corrected after each stage, by how long the last one really took.</p>
     </figure>
+    <div class="diagram">
+      <svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The path from ticket to human review: pick, build, verify, review, PR and CI. Done only when all 33 checks have evidence.">
+        <rect x="0" y="10" width="118" height="64" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="59.0" y="38" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-a0">Pick</text>
+        <text x="59.0" y="58" font-size="11" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-b0">reviews first</text>
+        <text x="124.0" y="46" font-size="13" fill="var(--sub)" text-anchor="middle">›</text>
+        <rect x="130" y="10" width="118" height="64" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="189.0" y="38" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-a1">Build</text>
+        <text x="189.0" y="58" font-size="11" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-b1">failing test first</text>
+        <text x="254.0" y="46" font-size="13" fill="var(--sub)" text-anchor="middle">›</text>
+        <rect x="260" y="10" width="118" height="64" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="319.0" y="38" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-a2">Verify</text>
+        <text x="319.0" y="58" font-size="11" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-b2">full suite, like CI</text>
+        <text x="384.0" y="46" font-size="13" fill="var(--sub)" text-anchor="middle">›</text>
+        <rect x="390" y="10" width="118" height="64" rx="10" fill="var(--chip)" stroke="var(--line)"/>
+        <text x="449.0" y="38" font-size="13.5" font-weight="700" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-a3">Review</text>
+        <text x="449.0" y="58" font-size="11" fill="var(--chip-ink)" text-anchor="middle" data-i18n="pa-b3">fresh second agent</text>
+        <text x="514.0" y="46" font-size="13" fill="var(--sub)" text-anchor="middle">›</text>
+        <rect x="520" y="10" width="118" height="64" rx="10" fill="var(--accent)" stroke="var(--line)"/>
+        <text x="579.0" y="38" font-size="13.5" font-weight="700" fill="var(--accent-ink)" text-anchor="middle" data-i18n="pa-a4">PR + CI</text>
+        <text x="579.0" y="58" font-size="11" fill="var(--accent-ink)" text-anchor="middle" data-i18n="pa-b4">green, all answered</text>
+        <text x="0" y="108" font-size="12" font-weight="700" fill="var(--ink)" data-i18n="pa-done">“Done” only when all 33 checks have evidence: the command, its output, the commit.</text>
+      </svg>
+      <p class="diagram-caption" data-i18n="pa-caption">The path below, in one line.</p>
+    </div>
+
     <ul>
       <li data-i18n="s3-li1"><strong>Pick:</strong> reviews for colleagues come first, because a waiting review blocks someone else. Then the agent checks whether the problem already has a ticket, and whether a more urgent ticket is open.</li>
       <li data-i18n="s3-li2"><strong>Build:</strong> a failing test first, so the bug is proven before it is fixed. Then the fix.</li>
@@ -294,6 +320,18 @@
   });
 
   I18N.de = {
+    "pa-a0": "Auswählen",
+    "pa-b0": "Reviews zuerst",
+    "pa-a1": "Bauen",
+    "pa-b1": "zuerst ein roter Test",
+    "pa-a2": "Prüfen",
+    "pa-b2": "ganze Suite wie CI",
+    "pa-a3": "Review",
+    "pa-b3": "frischer Agent",
+    "pa-a4": "PR + CI",
+    "pa-b4": "grün, beantwortet",
+    "pa-done": "„Fertig“ erst, wenn alle 33 Checks Belege haben: den Befehl, seine Ausgabe, den Commit.",
+    "pa-caption": "Der Weg unten, in einer Zeile.",
     'nav-home': `← Startseite`,
     'nav-strategies': `Alle Strategies`,
     'hero-kicker': `Agentic Strategies`,
